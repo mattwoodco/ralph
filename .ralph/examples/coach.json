@@ -1,0 +1,613 @@
+{
+  "name": "Coach",
+  "description": "A one-on-one video coaching platform with Daily.co integration, student management, lesson planning, analytics, payments, and marketing funnel",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Coach project with Next.js and core dependencies",
+      "description": "Bootstrap the coaching platform with Next.js, TypeScript, Tailwind CSS, shadcn/ui, and Biome. Establish the foundational architecture with responsive design and authentication-ready structure.",
+      "acceptance": [
+        "Next.js app created via `bunx create-next-app@latest app --ts --tailwind --no-eslint --app --src-dir --use-bun --yes`",
+        "Changed into app directory: `cd app`",
+        "shadcn/ui initialized via `bunx shadcn@latest init -y`",
+        "Biome configured via `bun add -d @biomejs/biome && bunx biome init`",
+        "Essential shadcn components added: button, card, dialog, input, label, avatar, badge, tabs, separator, dropdown-menu",
+        "Project structure established with /src/app/(marketing), /src/app/(dashboard), /src/app/(auth) route groups",
+        "Tailwind configured with custom design tokens for brand colors and spacing",
+        "TypeScript strict mode enabled in tsconfig.json",
+        "`bun run build` completes without errors",
+        "`bunx biome check .` passes with no errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "database-setup",
+      "title": "Configure database schema with Drizzle ORM and SQLite",
+      "description": "Set up the database layer with Drizzle ORM and SQLite for local development. Define core tables for users, students, lessons, payments, and analytics.",
+      "acceptance": [
+        "Drizzle ORM and better-sqlite3 installed via `bun add drizzle-orm better-sqlite3 && bun add -d drizzle-kit @types/better-sqlite3`",
+        "Database schema file created at /src/lib/db/schema.ts",
+        "Users table: id, email, name, role (coach|student), avatarUrl, bio, timezone, createdAt, updatedAt",
+        "Students table: id, userId, coachId, status (active|inactive|pending), notes, createdAt",
+        "Lessons table: id, coachId, studentId, title, description, scheduledAt, duration, status (scheduled|completed|cancelled), roomUrl, recordingUrl",
+        "LessonPlans table: id, coachId, title, description, objectives, materials, isDraft, createdAt, updatedAt",
+        "Payments table: id, coachId, studentId, amount, currency, status (pending|completed|failed|refunded), stripePaymentId, createdAt",
+        "Analytics table: id, coachId, eventType, eventData (JSON), createdAt",
+        "Database connection singleton at /src/lib/db/index.ts",
+        "Drizzle config file at drizzle.config.ts with migrations directory",
+        "`bunx drizzle-kit generate` creates initial migration",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-system",
+      "title": "Implement authentication with NextAuth.js and credentials provider",
+      "description": "Set up authentication system using NextAuth.js with email/password credentials. Include session management, protected routes, and role-based access control.",
+      "acceptance": [
+        "NextAuth.js installed via `bun add next-auth@beta`",
+        "Auth configuration at /src/lib/auth.ts with credentials provider",
+        "Password hashing using bcrypt via `bun add bcryptjs && bun add -d @types/bcryptjs`",
+        "API route at /src/app/api/auth/[...nextauth]/route.ts",
+        "Session includes user id, email, name, role, and avatarUrl",
+        "Middleware at /src/middleware.ts protecting /dashboard routes",
+        "Role-based route protection: coaches access /dashboard/coach/*, students access /dashboard/student/*",
+        "Auth context provider wrapping the application",
+        "Sign in page at /src/app/(auth)/login/page.tsx with email and password fields",
+        "Sign up page at /src/app/(auth)/register/page.tsx with role selection",
+        "Sign out functionality clears session and redirects to home",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "marketing-landing",
+      "title": "Build marketing landing page with hero section and features",
+      "description": "Create the main marketing landing page with compelling hero section, feature highlights, testimonials section, and clear call-to-action buttons driving sign-ups.",
+      "acceptance": [
+        "Landing page at /src/app/(marketing)/page.tsx",
+        "Hero section with headline, subheadline, and primary CTA button",
+        "Features grid showcasing: 1:1 video, lesson planning, payments, analytics",
+        "Each feature card has icon, title, and description",
+        "Social proof section with placeholder testimonial cards",
+        "Pricing preview section linking to full pricing page",
+        "Responsive design: single column mobile, multi-column desktop",
+        "Navigation header with logo, nav links, and Sign In / Get Started buttons",
+        "Footer with links, copyright, and social media placeholders",
+        "Page loads correctly at http://localhost:3000",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "marketing-pricing",
+      "title": "Create pricing page with plan comparison and sign-up flow",
+      "description": "Build a pricing page displaying different subscription tiers for coaches. Include feature comparison table, FAQ section, and direct links to registration.",
+      "acceptance": [
+        "Pricing page at /src/app/(marketing)/pricing/page.tsx",
+        "Three pricing tiers displayed: Starter (free), Professional, Enterprise",
+        "Each tier shows price, billing period, included features list",
+        "Feature comparison table highlighting differences between plans",
+        "CTA buttons on each tier link to /register with plan parameter",
+        "FAQ accordion section addressing common pricing questions",
+        "Money-back guarantee badge for paid plans",
+        "Annual vs monthly toggle showing discounted annual pricing",
+        "Responsive card layout stacking on mobile",
+        "Page loads correctly at http://localhost:3000/pricing",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "marketing-about",
+      "title": "Build about page with team and mission content",
+      "description": "Create an about page explaining the platform's mission, team background, and value proposition for both coaches and students.",
+      "acceptance": [
+        "About page at /src/app/(marketing)/about/page.tsx",
+        "Mission statement section with compelling copy",
+        "Team section with placeholder profiles (image, name, role, bio)",
+        "Platform story timeline or key milestones section",
+        "Values section highlighting platform principles",
+        "CTA section encouraging visitors to start coaching",
+        "Consistent styling with other marketing pages",
+        "Page loads correctly at http://localhost:3000/about",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "coach-dashboard",
+      "title": "Create coach dashboard with overview and quick actions",
+      "description": "Build the main coach dashboard displaying key metrics, upcoming lessons, recent activity, and quick action buttons for common tasks.",
+      "acceptance": [
+        "Coach dashboard at /src/app/(dashboard)/dashboard/coach/page.tsx",
+        "Protected route requiring authenticated coach role",
+        "Dashboard layout with sidebar navigation at /src/app/(dashboard)/layout.tsx",
+        "Overview cards showing: total students, lessons this week, revenue this month, average rating",
+        "Upcoming lessons list showing next 5 scheduled sessions with student name, time, and join button",
+        "Recent activity feed showing last 10 events (new students, completed lessons, payments)",
+        "Quick action buttons: Schedule Lesson, Add Student, Create Lesson Plan",
+        "Welcome message with coach's name and current date",
+        "Responsive layout collapsing sidebar to hamburger menu on mobile",
+        "Page loads correctly when authenticated as coach",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "student-dashboard",
+      "title": "Create student dashboard with lessons and progress",
+      "description": "Build the student-facing dashboard showing their upcoming lessons, lesson history, and progress with their coach.",
+      "acceptance": [
+        "Student dashboard at /src/app/(dashboard)/dashboard/student/page.tsx",
+        "Protected route requiring authenticated student role",
+        "Shared dashboard layout with student-specific navigation items",
+        "Upcoming lessons card showing scheduled sessions with coach name and join button",
+        "Past lessons list with dates, topics covered, and any recordings available",
+        "Coach info card showing assigned coach's profile and contact option",
+        "Progress section with completed lessons count and hours logged",
+        "Quick action to request/schedule new lesson with coach",
+        "Notification area for lesson reminders and messages",
+        "Page loads correctly when authenticated as student",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "student-management",
+      "title": "Build student management interface for coaches",
+      "description": "Create the student management section where coaches can view, add, edit, and manage their students. Include student profiles, notes, and session history.",
+      "acceptance": [
+        "Students list page at /src/app/(dashboard)/dashboard/coach/students/page.tsx",
+        "Table/grid view of all students with avatar, name, email, status, lessons count",
+        "Search and filter functionality by name, email, or status",
+        "Add student dialog with form: name, email, initial notes",
+        "POST /api/students creates new student and sends invitation email placeholder",
+        "Student detail page at /src/app/(dashboard)/dashboard/coach/students/[id]/page.tsx",
+        "Detail page shows: profile info, session history, notes, payment history",
+        "Editable notes field with auto-save functionality",
+        "Status toggle to activate/deactivate student",
+        "Delete student with confirmation dialog and cascade handling",
+        "GET /api/students returns paginated list with filtering support",
+        "GET /api/students/[id] returns full student details with relations",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "lesson-plans-crud",
+      "title": "Implement lesson plan creation and management",
+      "description": "Build the lesson plan system allowing coaches to create, edit, and organize reusable lesson templates. Support draft/published states and categorization.",
+      "acceptance": [
+        "Lesson plans list at /src/app/(dashboard)/dashboard/coach/plans/page.tsx",
+        "Card grid showing all lesson plans with title, description preview, and draft badge",
+        "Create new plan button opening full-page editor",
+        "Plan editor at /src/app/(dashboard)/dashboard/coach/plans/new/page.tsx",
+        "Editor form fields: title, description (rich text), objectives list, materials list",
+        "Add/remove items in objectives and materials dynamically",
+        "Save as draft or publish toggle",
+        "POST /api/lesson-plans creates new plan",
+        "Edit page at /src/app/(dashboard)/dashboard/coach/plans/[id]/edit/page.tsx",
+        "PUT /api/lesson-plans/[id] updates existing plan",
+        "DELETE /api/lesson-plans/[id] removes plan with confirmation",
+        "Duplicate plan action creating copy with '(Copy)' suffix",
+        "Search and filter by title or draft status",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "lesson-plans-drafts",
+      "title": "Add auto-save drafts and version history for lesson plans",
+      "description": "Enhance the lesson plan editor with automatic draft saving, unsaved changes detection, and basic version history for recovering previous versions.",
+      "acceptance": [
+        "Auto-save triggers after 3 seconds of inactivity while editing",
+        "Draft indicator shows 'Saving...' and 'Saved' states in editor header",
+        "Unsaved changes detected with browser beforeunload warning",
+        "Leave page confirmation dialog if unsaved changes exist",
+        "Version history stored in LessonPlanVersions table (id, planId, content, createdAt)",
+        "Version history panel accessible from editor showing last 10 versions",
+        "Each version entry shows timestamp and preview of changes",
+        "Restore version action replaces current content with historical version",
+        "POST /api/lesson-plans/[id]/versions creates new version snapshot",
+        "GET /api/lesson-plans/[id]/versions returns version history",
+        "Manual save button always available alongside auto-save",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "lesson-scheduling",
+      "title": "Build lesson scheduling with calendar interface",
+      "description": "Create the lesson scheduling system with a calendar view for coaches to manage their availability and schedule sessions with students.",
+      "acceptance": [
+        "Schedule page at /src/app/(dashboard)/dashboard/coach/schedule/page.tsx",
+        "Weekly calendar view showing days and time slots",
+        "Scheduled lessons displayed as blocks on calendar with student name and topic",
+        "Click on empty slot opens schedule lesson dialog",
+        "Schedule dialog: select student, set title, choose lesson plan (optional), set duration",
+        "POST /api/lessons creates scheduled lesson",
+        "Drag and drop to reschedule lessons (updates scheduledAt)",
+        "Click on lesson block shows details with edit/cancel options",
+        "PUT /api/lessons/[id] updates lesson details",
+        "Cancel lesson sets status to cancelled with optional reason",
+        "Calendar navigation: previous/next week, jump to date",
+        "GET /api/lessons?week=YYYY-WW returns lessons for calendar display",
+        "Color coding by lesson status: scheduled (blue), completed (green), cancelled (gray)",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "daily-integration",
+      "title": "Integrate Daily.co SDK for video room creation",
+      "description": "Set up Daily.co integration for creating and managing video rooms. Include API routes for room creation and configuration.",
+      "acceptance": [
+        "Daily.co SDK installed via `bun add @daily-co/daily-js`",
+        "Environment variables: DAILY_API_KEY in .env.local (with .env.example template)",
+        "Daily API helper at /src/lib/daily.ts with room creation functions",
+        "POST /api/rooms creates Daily.co room with unique name and returns roomUrl",
+        "Room settings: enable_chat, enable_screenshare, max_participants: 2",
+        "Room expiry set to lesson scheduledAt + duration + 30 minutes buffer",
+        "Room URL stored in lessons.roomUrl when scheduling",
+        "GET /api/rooms/[name] returns room details and status",
+        "DELETE /api/rooms/[name] destroys room after lesson completion",
+        "Error handling for Daily.co API failures with user-friendly messages",
+        "Type definitions for Daily.co responses at /src/types/daily.ts",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "video-room-ui",
+      "title": "Build video call interface with Daily.co components",
+      "description": "Create the video call room UI with Daily.co embedded, showing local and remote video streams, audio controls, and screen sharing capability.",
+      "acceptance": [
+        "Video room page at /src/app/(dashboard)/room/[id]/page.tsx",
+        "DailyProvider wrapper component initializing Daily.co call object",
+        "Local video preview showing user's camera feed",
+        "Remote participant video displayed when they join",
+        "Audio mute/unmute toggle button with visual indicator",
+        "Video on/off toggle button with visual indicator",
+        "Screen share button starting/stopping screen share",
+        "Participant names displayed on video tiles",
+        "Connection status indicator (connecting, connected, reconnecting)",
+        "Leave call button ending session and redirecting to dashboard",
+        "Pre-join screen showing camera preview and device selection",
+        "Responsive layout: side-by-side on desktop, stacked on mobile",
+        "Video works correctly - both participants can see and hear each other",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "video-controls",
+      "title": "Add advanced video controls and in-call features",
+      "description": "Enhance the video call experience with chat, recording controls, picture-in-picture, and fullscreen mode for a professional coaching experience.",
+      "acceptance": [
+        "In-call chat panel toggled by chat button, slides in from right",
+        "Chat messages stored locally during call with timestamp and sender",
+        "Recording button (placeholder - triggers toast about premium feature)",
+        "Picture-in-picture button using browser PiP API for local video",
+        "Fullscreen toggle for entire call interface",
+        "Settings gear opening device selection dialog mid-call",
+        "Device selection: camera dropdown, microphone dropdown, speaker dropdown",
+        "Network quality indicator showing connection strength",
+        "Timer showing call duration since joining",
+        "End call confirmation dialog preventing accidental exits",
+        "Keyboard shortcuts: M for mute, V for video, S for screenshare",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "payments-stripe",
+      "title": "Integrate Stripe for payment processing",
+      "description": "Set up Stripe integration for processing one-time payments and subscriptions. Include checkout flow, webhook handling, and payment status tracking.",
+      "acceptance": [
+        "Stripe SDK installed via `bun add stripe @stripe/stripe-js`",
+        "Environment variables: STRIPE_SECRET_KEY, STRIPE_PUBLISHABLE_KEY, STRIPE_WEBHOOK_SECRET",
+        "Stripe client helpers at /src/lib/stripe.ts",
+        "POST /api/checkout creates Stripe checkout session for lesson payment",
+        "Checkout session includes lesson details, amount, and success/cancel URLs",
+        "POST /api/webhooks/stripe handles Stripe webhook events",
+        "Webhook verifies signature and processes: checkout.session.completed, payment_intent.succeeded",
+        "Payment record created in database on successful webhook",
+        "Checkout success page at /src/app/(dashboard)/checkout/success/page.tsx",
+        "Checkout cancel page at /src/app/(dashboard)/checkout/cancel/page.tsx",
+        "Payment status synced between Stripe and local database",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "payments-ui",
+      "title": "Build payment management interface for coaches",
+      "description": "Create the payments section where coaches can view earnings, transaction history, and manage pricing for their lessons.",
+      "acceptance": [
+        "Payments page at /src/app/(dashboard)/dashboard/coach/payments/page.tsx",
+        "Earnings overview cards: total earnings, this month, pending payouts",
+        "Transaction history table with date, student, amount, status, actions",
+        "Filter transactions by date range, student, or status",
+        "Export transactions as CSV download",
+        "Pricing settings section to set hourly rate",
+        "GET /api/payments returns paginated payment history",
+        "GET /api/payments/stats returns aggregated earnings data",
+        "Refund button on completed payments (with confirmation)",
+        "POST /api/payments/[id]/refund initiates Stripe refund",
+        "Payment detail modal showing full transaction information",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "student-payments",
+      "title": "Create student payment flow and history",
+      "description": "Build the student-facing payment experience including lesson booking with payment, payment history, and saved payment methods.",
+      "acceptance": [
+        "Book lesson flow includes payment step before confirmation",
+        "Lesson price displayed based on coach's hourly rate and duration",
+        "Stripe Elements embedded for card input on booking page",
+        "Payment processing shows loading state during Stripe API call",
+        "Success state confirms booking and payment together",
+        "Student payment history at /src/app/(dashboard)/dashboard/student/payments/page.tsx",
+        "History shows date, lesson, amount, receipt link",
+        "Stripe receipts accessible via receipt URL from payment record",
+        "Saved cards section showing previously used payment methods",
+        "Add new card option using Stripe SetupIntent flow",
+        "Default card selection for faster checkout",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "analytics-tracking",
+      "title": "Implement analytics event tracking system",
+      "description": "Build the analytics infrastructure to track key events like lesson completions, payments, and user engagement for coach insights.",
+      "acceptance": [
+        "Analytics service at /src/lib/analytics.ts with trackEvent function",
+        "Events tracked: lesson_scheduled, lesson_completed, lesson_cancelled, payment_received, student_added",
+        "Event data includes timestamp, coachId, and event-specific metadata",
+        "POST /api/analytics/track records event to Analytics table",
+        "Batch insert support for multiple events",
+        "Client-side tracking for page views and UI interactions",
+        "Server-side tracking for API-triggered events",
+        "Event validation ensuring required fields present",
+        "GET /api/analytics/events returns paginated event log",
+        "Filter events by type and date range",
+        "Analytics events fire correctly on lesson completion and payment",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "analytics-dashboard",
+      "title": "Build analytics dashboard with charts and insights",
+      "description": "Create a comprehensive analytics dashboard for coaches showing lesson trends, revenue graphs, student engagement, and key performance metrics.",
+      "acceptance": [
+        "Analytics page at /src/app/(dashboard)/dashboard/coach/analytics/page.tsx",
+        "Date range selector: last 7 days, 30 days, 90 days, custom",
+        "Lessons chart showing completed lessons over time (line/bar chart)",
+        "Revenue chart showing earnings over time with trend line",
+        "Student growth chart showing active students over time",
+        "Key metrics cards: completion rate, average lesson duration, revenue per student",
+        "Top students table by lessons completed or revenue",
+        "Charts built using recharts via `bun add recharts`",
+        "GET /api/analytics/metrics returns aggregated metrics for date range",
+        "Loading skeletons while data fetches",
+        "Empty state when no data available for selected period",
+        "Export analytics data as CSV",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "notifications-system",
+      "title": "Implement in-app notification system",
+      "description": "Build a notification system for lesson reminders, payment confirmations, and important updates. Include notification bell, dropdown, and preferences.",
+      "acceptance": [
+        "Notifications table in schema: id, userId, type, title, message, read, createdAt",
+        "Notification bell icon in dashboard header showing unread count badge",
+        "Dropdown panel showing recent notifications with mark as read",
+        "Notification types: lesson_reminder, payment_received, new_student, lesson_cancelled",
+        "POST /api/notifications creates notification for user",
+        "GET /api/notifications returns user's notifications sorted by date",
+        "PUT /api/notifications/[id]/read marks notification as read",
+        "PUT /api/notifications/read-all marks all as read",
+        "Notification preferences page at /src/app/(dashboard)/dashboard/settings/notifications/page.tsx",
+        "Toggle settings for each notification type (email, in-app)",
+        "Automatic lesson reminder notifications 24h and 1h before scheduled time",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "profile-settings",
+      "title": "Create user profile and settings pages",
+      "description": "Build profile management allowing users to update their personal information, avatar, timezone, and account settings.",
+      "acceptance": [
+        "Settings page at /src/app/(dashboard)/dashboard/settings/page.tsx",
+        "Profile section: name, email (read-only), bio, timezone dropdown",
+        "Avatar upload with image preview and crop functionality",
+        "Avatar stored as base64 or uploaded to public folder",
+        "PUT /api/users/me updates current user's profile",
+        "Password change section with current password verification",
+        "Timezone dropdown with common timezones, auto-detect option",
+        "Coach-specific settings: hourly rate, availability description, specialties",
+        "Account deletion with confirmation and data export option",
+        "Success toast on save, error handling for failures",
+        "Form validation with helpful error messages",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "error-handling",
+      "title": "Implement comprehensive error handling and boundaries",
+      "description": "Add robust error handling throughout the application including error boundaries, API error responses, and user-friendly error pages.",
+      "acceptance": [
+        "Global error boundary at /src/app/error.tsx with retry button",
+        "Not found page at /src/app/not-found.tsx with navigation links",
+        "API routes return consistent error format: { error: string, code: string }",
+        "HTTP status codes used correctly: 400 bad request, 401 unauthorized, 403 forbidden, 404 not found, 500 server error",
+        "Try-catch blocks in all API route handlers",
+        "Database errors caught and logged without exposing internals",
+        "Form submission errors displayed inline with fields",
+        "Network error handling with retry suggestions",
+        "Toast notifications for transient errors",
+        "Loading states prevent interaction during async operations",
+        "Console errors logged in development only",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "loading-states",
+      "title": "Add loading states and skeleton screens",
+      "description": "Implement loading states throughout the application using skeleton screens and spinners for a polished user experience during data fetching.",
+      "acceptance": [
+        "Skeleton components created for: card, table row, avatar, text line",
+        "Dashboard pages show skeletons while fetching initial data",
+        "Loading.tsx files in each route group for Suspense boundaries",
+        "Button loading states disable interaction and show spinner",
+        "Form submission shows loading indicator on submit button",
+        "Table pagination shows loading state during page changes",
+        "Modal content shows skeleton until data loaded",
+        "Image components show placeholder until loaded",
+        "Skeleton animations use subtle pulse effect",
+        "Loading states don't cause layout shift when content loads",
+        "All pages load correctly without flash of unstyled content",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "responsive-polish",
+      "title": "Polish responsive design and mobile experience",
+      "description": "Ensure all pages and components work flawlessly on mobile devices with proper touch targets, responsive layouts, and mobile-specific optimizations.",
+      "acceptance": [
+        "All pages tested at 320px, 768px, and 1024px breakpoints",
+        "Touch targets minimum 44px for all interactive elements",
+        "Dashboard sidebar collapses to hamburger menu on mobile",
+        "Tables switch to card layout on small screens",
+        "Modals become full-screen sheets on mobile",
+        "Video call interface adapts to portrait and landscape",
+        "Forms have appropriate input types (tel, email, date)",
+        "Keyboard doesn't obscure focused inputs on mobile",
+        "Pull-to-refresh disabled to prevent accidental navigation",
+        "Safe area insets respected on notched devices",
+        "Font sizes readable without zooming (minimum 16px inputs)",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "accessibility",
+      "title": "Ensure WCAG 2.1 accessibility compliance",
+      "description": "Audit and fix accessibility issues to meet WCAG 2.1 AA standards. Include proper ARIA labels, keyboard navigation, and screen reader support.",
+      "acceptance": [
+        "All images have descriptive alt text",
+        "Form inputs have associated labels",
+        "ARIA labels on icon-only buttons",
+        "Focus indicators visible on all interactive elements",
+        "Keyboard navigation works for all features (Tab, Enter, Escape)",
+        "Skip to main content link at top of page",
+        "Color contrast meets AA standard (4.5:1 for text)",
+        "Error messages announced to screen readers",
+        "Modals trap focus and return focus on close",
+        "Page titles unique and descriptive for each route",
+        "Headings follow proper hierarchy (h1 > h2 > h3)",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "seo-metadata",
+      "title": "Add SEO metadata and Open Graph tags",
+      "description": "Implement SEO best practices for marketing pages including meta descriptions, Open Graph tags, and structured data for search engine visibility.",
+      "acceptance": [
+        "Root layout has default metadata with site title and description",
+        "Each marketing page has unique title and description via generateMetadata",
+        "Open Graph tags for title, description, image on marketing pages",
+        "Twitter card tags for social sharing",
+        "Canonical URLs set to prevent duplicate content",
+        "Sitemap generated at /sitemap.xml listing public pages",
+        "Robots.txt at /robots.txt allowing search engine crawling",
+        "Structured data (JSON-LD) for Organization on home page",
+        "Page titles follow format: Page Name | Coach",
+        "Meta descriptions under 160 characters",
+        "OG images sized at 1200x630 for optimal sharing",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "testing-setup",
+      "title": "Configure testing infrastructure with Vitest",
+      "description": "Set up testing infrastructure using Vitest for unit and integration tests. Include test utilities and example tests for critical paths.",
+      "acceptance": [
+        "Vitest installed via `bun add -d vitest @testing-library/react @testing-library/jest-dom jsdom`",
+        "Vitest config at vitest.config.ts with jsdom environment",
+        "Test setup file at /src/test/setup.ts with testing-library matchers",
+        "Test script added to package.json: \"test\": \"vitest\"",
+        "Example unit test for utility function",
+        "Example component test using testing-library",
+        "Example API route test using mock requests",
+        "Test coverage script: \"test:coverage\": \"vitest --coverage\"",
+        "Tests can be run with `bun run test`",
+        "All example tests pass",
+        "`bun run build` completes without errors"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "final-validation",
+      "title": "Final validation, linting, type checking, and build",
+      "description": "Perform final validation ensuring all pages load correctly, linting passes, TypeScript compiles without errors, and production build succeeds.",
+      "acceptance": [
+        "All marketing pages load without errors: /, /pricing, /about",
+        "Auth pages load without errors: /login, /register",
+        "Coach dashboard pages load when authenticated: /dashboard/coach, /dashboard/coach/students, /dashboard/coach/plans, /dashboard/coach/schedule, /dashboard/coach/payments, /dashboard/coach/analytics",
+        "Student dashboard pages load when authenticated: /dashboard/student, /dashboard/student/payments",
+        "Video room page loads and Daily.co initializes: /room/test",
+        "Settings pages load: /dashboard/settings, /dashboard/settings/notifications",
+        "`bunx biome check .` passes with no errors",
+        "`bunx biome lint .` passes with no errors",
+        "`bun run typecheck` (tsc --noEmit) passes with no errors",
+        "`bun run build` completes successfully",
+        "No console errors in browser during page navigation",
+        "Build output size is reasonable (< 500KB first load JS)"
+      ],
+      "priority": "high",
+      "passes": false
+    }
+  ]
+}
