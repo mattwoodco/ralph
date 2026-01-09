@@ -1,0 +1,838 @@
+{
+  "name": "Inspiration Gallery",
+  "description": "A curated design inspiration website that aggregates screenshots from 144+ RSS feeds of design gallery websites, with local image caching, deduplication, and comprehensive filtering/search capabilities.",
+  "stories": [
+    {
+      "id": "setup-local-dev-environment",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-nextjs-project-init",
+      "title": "Initialize Next.js project with standard setup",
+      "description": "Bootstrap the project using create-next-app CLI with TypeScript, Tailwind CSS v4, Biome, and app router.",
+      "acceptance": [
+        "Created with: bunx create-next-app@latest inspiration-gallery --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias",
+        "Using Next.js 16",
+        "Open project in Cursor: cursor .",
+        "bun run dev starts on port 3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-shadcn-components-init",
+      "title": "Initialize shadcn/ui components",
+      "description": "Set up shadcn/ui with neutral base color for consistent component styling.",
+      "acceptance": [
+        "Run: bunx shadcn@latest init -y --base-color=neutral",
+        "components.json exists with correct configuration",
+        "Tailwind CSS v4 configured properly",
+        "src/components/ui directory created",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-biome-linting-config",
+      "title": "Configure Biome linting rules",
+      "description": "Set up Biome configuration with strict TypeScript rules and formatting.",
+      "acceptance": [
+        "biome.json configured with linter enabled",
+        "JavaScript and TypeScript rules configured",
+        "Formatter configured for consistent code style",
+        "Import organization rules enabled",
+        "bunx biome check . runs without errors",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-docker-postgresql",
+      "title": "Set up Docker with PostgreSQL",
+      "description": "Create Docker Compose configuration for local PostgreSQL database.",
+      "acceptance": [
+        "docker-compose.yml with PostgreSQL 16 service",
+        "Database exposed on port 5432",
+        "Volume for persistent data storage",
+        ".env.local with DATABASE_URL connection string",
+        "docker compose up -d starts database successfully",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-drizzle-orm-config",
+      "title": "Configure Drizzle ORM",
+      "description": "Set up Drizzle ORM with PostgreSQL driver and configuration.",
+      "acceptance": [
+        "bun add drizzle-orm postgres",
+        "bun add -D drizzle-kit",
+        "drizzle.config.ts with PostgreSQL connection",
+        "src/db/index.ts exports db client",
+        "Database connection works with docker-compose PostgreSQL",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-husky-precommit-hooks",
+      "title": "Set up pre-commit hooks",
+      "description": "Configure Husky and pre-commit hooks to enforce lint, type check, and build before commits.",
+      "acceptance": [
+        "bun add -D husky",
+        "bunx husky init creates .husky directory",
+        ".husky/pre-commit runs: bunx biome check --write . && bunx tsc --noEmit && bun run build",
+        "Commits are blocked if any check fails",
+        "package.json has prepare script for husky",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-schema-designs-table",
+      "title": "Create designs database schema",
+      "description": "Define Drizzle schema for designs table with all metadata fields.",
+      "acceptance": [
+        "src/db/schema/designs.ts with designs table",
+        "Fields: id (uuid), url, title, description, screenshotPath, thumbnailPath",
+        "Fields: site, author, designer, contentType, industry",
+        "Fields: firstSeen, lastUpdated, duplicateCount timestamps",
+        "Indexes on url, industry, contentType for fast queries",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-tags-table",
+      "title": "Create tags database schema",
+      "description": "Define Drizzle schema for tags with many-to-many relationship to designs.",
+      "acceptance": [
+        "src/db/schema/tags.ts with tags table",
+        "src/db/schema/designTags.ts for junction table",
+        "Proper foreign key relationships",
+        "Index on tag name for fast lookups",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-sources-table",
+      "title": "Create sources database schema",
+      "description": "Define Drizzle schema for RSS sources and design-source relationships.",
+      "acceptance": [
+        "src/db/schema/sources.ts with sources table",
+        "Fields: id, feedUrl, feedName, category, active",
+        "src/db/schema/designSources.ts for junction table",
+        "Tracks which sources referenced each design",
+        "foundAt timestamp on junction table",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-migrations-initial-apply",
+      "title": "Run initial database migrations",
+      "description": "Generate and apply Drizzle migrations to create database tables.",
+      "acceptance": [
+        "bunx drizzle-kit generate generates migration files",
+        "bunx drizzle-kit migrate applies migrations",
+        "All tables created in PostgreSQL",
+        "src/db/schema/index.ts exports all schemas",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-validation-zod-schemas",
+      "title": "Create Zod validation schemas",
+      "description": "Define Zod schemas for validating design and source data.",
+      "acceptance": [
+        "bun add zod",
+        "src/lib/validations/design.ts with design schemas",
+        "src/lib/validations/source.ts with source schemas",
+        "Insert and select schemas derived from Drizzle",
+        "Validation for API request/response payloads",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "data-rss-sources-config",
+      "title": "Create RSS source configuration",
+      "description": "Define the 144+ RSS feed sources organized by category.",
+      "acceptance": [
+        "src/config/sources.ts exports RSS_SOURCES array",
+        "Sources organized into 6 categories with 24 sources each",
+        "Each source has: id, name, feedUrl, category, active status",
+        "Total of at least 144 unique RSS sources",
+        "Helper function to iterate sources by category",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "data-rss-sources-seed",
+      "title": "Seed RSS sources to database",
+      "description": "Create seed script to populate RSS sources in PostgreSQL.",
+      "acceptance": [
+        "src/db/seed.ts script to insert sources",
+        "Upserts to avoid duplicates on re-run",
+        "bun run db:seed executes seeding",
+        "All 144 sources inserted into sources table",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "data-url-deduplication-logic",
+      "title": "Implement URL deduplication logic",
+      "description": "Create deduplication system that normalizes URLs and tracks multiple sources.",
+      "acceptance": [
+        "src/lib/deduplication.ts with normalizeUrl function",
+        "Removes www, trailing slashes, query params, fragments",
+        "generateHash function creates unique ID from normalized URL",
+        "mergeDesignSources function combines sources for duplicates",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "rss-feed-parser-impl",
+      "title": "Implement RSS feed parser",
+      "description": "Create RSS feed parser that extracts design entries from feeds.",
+      "acceptance": [
+        "bun add rss-parser",
+        "src/lib/rss-parser.ts handles feed parsing",
+        "Extracts title, link, description, image URLs",
+        "Handles different RSS/Atom feed formats",
+        "Error handling for failed feeds",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "rss-feed-aggregation-service",
+      "title": "Create feed aggregation service",
+      "description": "Build service to fetch and process RSS sources with database storage.",
+      "acceptance": [
+        "src/services/feed-aggregator.ts orchestrates feed fetching",
+        "Batch processing to avoid rate limits",
+        "Progress tracking for feed processing",
+        "Deduplication applied during aggregation",
+        "Results saved to PostgreSQL via Drizzle",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "cache-image-download-util",
+      "title": "Implement image download utility",
+      "description": "Create utility to download images from URLs to local filesystem.",
+      "acceptance": [
+        "src/lib/image-cache.ts handles image downloading",
+        "Images saved to public/cache/screenshots/",
+        "Uses hash-based filenames to avoid collisions",
+        "Checks if image already cached before downloading",
+        "Returns local path on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "cache-image-optimization-thumbnails",
+      "title": "Add image optimization and thumbnails",
+      "description": "Optimize cached images and generate thumbnails for gallery grid.",
+      "acceptance": [
+        "bun add sharp",
+        "Full-size images optimized and converted to WebP",
+        "Thumbnails generated at 400px width to public/cache/thumbnails/",
+        "Original aspect ratio preserved",
+        "Both paths stored in designs table",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-cache-status-route",
+      "title": "Create cache status API route",
+      "description": "Build API route to check cache statistics.",
+      "acceptance": [
+        "app/api/cache/status/route.ts returns cache statistics",
+        "Cache directory size tracking",
+        "Image count in cache",
+        "Last refresh timestamp",
+        "Zod validation for response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-cache-refresh-route",
+      "title": "Create cache refresh API route",
+      "description": "Build API route to trigger cache updates.",
+      "acceptance": [
+        "app/api/cache/refresh/route.ts triggers cache update",
+        "POST endpoint to start refresh",
+        "Returns job status",
+        "Zod validation for request/response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-designs-list-route",
+      "title": "Create designs list API route",
+      "description": "Build API route for listing designs with filtering and pagination.",
+      "acceptance": [
+        "app/api/designs/route.ts for listing designs",
+        "Supports query params for filters (industry, contentType, tags)",
+        "Pagination with limit/offset",
+        "Zod validation for query params",
+        "Returns designs with metadata from PostgreSQL",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-designs-single-route",
+      "title": "Create single design API route",
+      "description": "Build API route for fetching a single design by ID.",
+      "acceptance": [
+        "app/api/designs/[id]/route.ts for single design",
+        "Returns design with full metadata and sources",
+        "Includes all tags for the design",
+        "404 response for non-existent designs",
+        "Zod validation for response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-sync-trigger-route",
+      "title": "Create RSS sync API route",
+      "description": "Build API route for triggering RSS feed synchronization.",
+      "acceptance": [
+        "app/api/sync/route.ts triggers full sync",
+        "POST endpoint to start sync",
+        "Returns sync job status",
+        "Error logging for failed feeds",
+        "Zod validation for request/response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-sync-status-route",
+      "title": "Create sync status API route",
+      "description": "Build API route for checking sync status.",
+      "acceptance": [
+        "app/api/sync/status/route.ts returns sync status",
+        "Progress reporting (feeds processed, total feeds)",
+        "Last sync timestamp",
+        "Error count and details",
+        "Zod validation for response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-gallery-grid-component",
+      "title": "Create gallery grid component",
+      "description": "Build the main gallery grid component with responsive breakpoints.",
+      "acceptance": [
+        "src/components/gallery/gallery-grid.tsx component",
+        "CSS Grid with responsive columns (1-4 based on viewport)",
+        "Masonry-style layout for varied image heights",
+        "Tailwind classes for styling",
+        "Accepts designs array as prop",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-design-card-component",
+      "title": "Create design card component",
+      "description": "Build individual design card with thumbnail, metadata, and hover effects.",
+      "acceptance": [
+        "src/components/gallery/design-card.tsx component",
+        "Shows thumbnail image with hover zoom effect",
+        "Displays site name, designer, and primary tags",
+        "Source count badge for deduplicated entries",
+        "Click handler for opening detail view",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-gallery-lazy-loading",
+      "title": "Add lazy loading to gallery",
+      "description": "Implement lazy loading for images below the fold.",
+      "acceptance": [
+        "Images use loading='lazy' attribute",
+        "Placeholder skeleton during load",
+        "IntersectionObserver for triggering loads",
+        "Smooth fade-in on image load",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-design-detail-modal",
+      "title": "Create design detail modal",
+      "description": "Build modal for viewing full design details.",
+      "acceptance": [
+        "src/components/gallery/design-detail.tsx component",
+        "Full-size screenshot display",
+        "All metadata fields visible",
+        "List of all sources that referenced this design",
+        "External link to original website",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-modal-close-behaviors",
+      "title": "Add modal close behaviors",
+      "description": "Implement modal close on escape key and click outside.",
+      "acceptance": [
+        "Close on escape key press",
+        "Close on click outside modal content",
+        "Focus trap within modal when open",
+        "Return focus to trigger element on close",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-filter-sidebar-component",
+      "title": "Create filter sidebar component",
+      "description": "Create sidebar component structure for filter options.",
+      "acceptance": [
+        "src/components/filters/filter-sidebar.tsx component",
+        "Collapsible filter sections",
+        "Responsive: drawer on mobile, sidebar on desktop",
+        "Tailwind styling",
+        "shadcn Accordion for sections",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-filter-checkboxes-multiselect",
+      "title": "Add filter checkboxes",
+      "description": "Implement multi-select checkboxes for each filter category.",
+      "acceptance": [
+        "Filters for: industry, content type, tags, sources",
+        "Multi-select checkboxes using shadcn Checkbox",
+        "Active filter count display per section",
+        "Clear section button",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-search-bar-component",
+      "title": "Create search bar component",
+      "description": "Implement search input for searching designs.",
+      "acceptance": [
+        "src/components/search/search-bar.tsx component",
+        "shadcn Input with search icon",
+        "Clear search button when text present",
+        "Placeholder text",
+        "Controlled input component",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-search-debouncing-impl",
+      "title": "Add search debouncing",
+      "description": "Implement debounced search to prevent excessive API calls.",
+      "acceptance": [
+        "Debounced input (300ms delay)",
+        "Searches: title, description, site, author, designer, tags",
+        "Search result count display",
+        "Loading indicator during search",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "hook-use-filters-state",
+      "title": "Create filter state hook",
+      "description": "Build custom hook for managing filter and search state.",
+      "acceptance": [
+        "src/hooks/use-filters.ts custom hook",
+        "Manages all filter selections",
+        "Manages search query",
+        "Combine search and filters",
+        "Reset to defaults function",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-filter-url-sync",
+      "title": "Add URL sync for filters",
+      "description": "Sync filter state to URL query parameters.",
+      "acceptance": [
+        "Filters sync to URL query params",
+        "Shareable filtered URLs",
+        "Browser back/forward works with filters",
+        "Initialize filters from URL on page load",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-gallery-main-layout",
+      "title": "Create main gallery page layout",
+      "description": "Build the home page structure with search, filters, and gallery areas.",
+      "acceptance": [
+        "app/page.tsx as main gallery view",
+        "Search bar at top",
+        "Filter sidebar area (collapsible on mobile)",
+        "Gallery grid in main content area",
+        "Total results count display",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-gallery-pagination",
+      "title": "Add pagination to gallery",
+      "description": "Implement pagination for gallery results.",
+      "acceptance": [
+        "Pagination component with page numbers",
+        "Previous/Next buttons",
+        "Items per page selector",
+        "Scroll to top on page change",
+        "URL updates with page number",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-admin-layout",
+      "title": "Create admin page layout",
+      "description": "Build admin page structure for managing RSS sources and cache.",
+      "acceptance": [
+        "app/admin/page.tsx for administration",
+        "Tab navigation for Sources and Cache sections",
+        "Tailwind styling consistent with main site",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "page-admin-sources-management",
+      "title": "Add sources management to admin",
+      "description": "Implement sources list and management in admin page.",
+      "acceptance": [
+        "List of all RSS sources with status",
+        "Show last sync time per source",
+        "Toggle active/inactive status",
+        "Trigger manual feed refresh button",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "page-admin-cache-management",
+      "title": "Add cache management to admin",
+      "description": "Implement cache statistics and management in admin page.",
+      "acceptance": [
+        "Cache statistics display (size, image count)",
+        "Last refresh timestamp",
+        "Trigger cache refresh button",
+        "Cache cleanup button",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "script-rss-sync-feeds",
+      "title": "Create RSS sync script",
+      "description": "Build standalone script for syncing RSS feeds.",
+      "acceptance": [
+        "scripts/sync-feeds.ts for CLI sync",
+        "Can run with: bun run scripts/sync-feeds.ts",
+        "Iterates through all sources from database",
+        "Progress output during sync",
+        "Summary report at completion",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "script-cache-cleanup",
+      "title": "Create cache cleanup script",
+      "description": "Build script to clean up old or orphaned cached images.",
+      "acceptance": [
+        "scripts/cleanup-cache.ts for cache management",
+        "Removes images not referenced in database",
+        "Configurable age threshold for cleanup",
+        "Dry-run mode to preview deletions",
+        "Reports space recovered",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "test-vitest-framework-setup",
+      "title": "Set up testing framework",
+      "description": "Configure Vitest for unit testing.",
+      "acceptance": [
+        "bun add -D vitest @testing-library/react",
+        "vitest.config.ts configured",
+        "bun run test script in package.json",
+        "Test files pattern: **/*.test.ts",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "test-deduplication-unit-tests",
+      "title": "Add deduplication tests",
+      "description": "Write unit tests for URL deduplication logic.",
+      "acceptance": [
+        "tests/lib/deduplication.test.ts",
+        "Tests for normalizeUrl edge cases",
+        "Tests for generateHash consistency",
+        "Tests for mergeDesignSources",
+        "All tests pass",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "perf-image-skeleton-loading",
+      "title": "Add image skeleton loading",
+      "description": "Implement skeleton placeholders while images load.",
+      "acceptance": [
+        "Skeleton component for image placeholders",
+        "Matches card dimensions",
+        "Pulse animation during load",
+        "Smooth transition to loaded image",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "perf-gallery-optimizations",
+      "title": "Optimize gallery performance",
+      "description": "Implement performance optimizations for large datasets.",
+      "acceptance": [
+        "Debounced filter updates",
+        "Prefetch adjacent pages",
+        "Optimized re-renders with React.memo",
+        "Lighthouse performance score > 90",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "deploy-vercel-config",
+      "title": "Configure Vercel deployment",
+      "description": "Set up vercel.json configuration for deployment.",
+      "acceptance": [
+        "vercel.json exists with build settings",
+        "Build command: bun run build",
+        "Output directory configured correctly",
+        ".vercelignore excludes cache and node_modules",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "deploy-env-documentation",
+      "title": "Create environment documentation",
+      "description": "Document required environment variables.",
+      "acceptance": [
+        ".env.example with all required variables",
+        "DATABASE_URL for PostgreSQL connection",
+        "Comments explaining each variable",
+        "README section on environment setup",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "deploy-final-verification",
+      "title": "Final verification and deployment",
+      "description": "Complete final checks and deploy to Vercel.",
+      "acceptance": [
+        "All lint checks pass: bunx biome check .",
+        "All type checks pass: bunx tsc --noEmit",
+        "Build succeeds: bun run build",
+        "Preview deployment works on Vercel",
+        "Production deployment successful",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    }
+  ]
+}

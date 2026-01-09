@@ -1,0 +1,157 @@
+{
+  "name": "Three.js Mirror",
+  "description": "A 3D interactive mirror scene built with Next.js, React Three Fiber, and Three.js. Features reflective surfaces, animated geometric shapes, and orbit controls for user interaction.",
+  "stories": [
+    {
+      "id": "LOCAL-SETUP",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "SETUP-001",
+      "title": "Set up Next.js + React + TypeScript + Tailwind",
+      "description": "Bootstrap the project with Next.js, React, TypeScript, Tailwind CSS, and essential tooling for a modern development experience.",
+      "acceptance": [
+        "Created with `bunx create-next-app@latest threejs-mirror --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias`",
+        "Run `bunx shadcn@latest init -y --base-color=neutral` to initialize shadcn/ui",
+        "Run `cursor .` to open in Cursor IDE",
+        "Docker Compose file configured for PostgreSQL database",
+        "Drizzle ORM installed and configured with PostgreSQL",
+        "Zod installed for schema validation",
+        "bun install completed",
+        "bun dev starts on port 3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Add Three.js and React Three Fiber",
+      "description": "Install Three.js ecosystem packages for building 3D scenes in React.",
+      "acceptance": [
+        "bun add three @react-three/fiber @react-three/drei",
+        "bun add -D @types/three",
+        "Basic Canvas renders without errors on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "SCENE-001",
+      "title": "Create basic 3D scene",
+      "description": "Set up the foundational 3D scene with proper lighting and camera positioning.",
+      "acceptance": [
+        "Ambient light and directional light in scene",
+        "Camera positioned to view the scene",
+        "Dark background color set",
+        "Scene renders on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "MIRROR-001",
+      "title": "Add reflective mirror",
+      "description": "Create a reflective plane that acts as a mirror on the floor of the scene.",
+      "acceptance": [
+        "Mirror plane visible in scene",
+        "Mirror shows reflections",
+        "Mirror is positioned on the floor",
+        "Mirror renders correctly on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "OBJECTS-001",
+      "title": "Add floating objects to reflect",
+      "description": "Add colorful geometric shapes above the mirror to create interesting reflections.",
+      "acceptance": [
+        "At least 3 different geometric shapes",
+        "Objects have colorful materials",
+        "Objects positioned above the mirror",
+        "Objects visible on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "CONTROLS-001",
+      "title": "Add orbit controls",
+      "description": "Enable user interaction with the scene through orbit controls.",
+      "acceptance": [
+        "OrbitControls from drei is active",
+        "User can drag to rotate view",
+        "User can scroll to zoom",
+        "Controls work correctly on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ANIM-001",
+      "title": "Animate floating objects",
+      "description": "Add gentle animations to the floating objects for visual interest.",
+      "acceptance": [
+        "Objects rotate slowly",
+        "Objects bob up and down gently",
+        "Animation uses useFrame",
+        "Animations render smoothly on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ENV-001",
+      "title": "Add environment map",
+      "description": "Add an environment map for realistic reflections and ambient lighting.",
+      "acceptance": [
+        "Environment component from drei",
+        "Reflections look realistic",
+        "Scene has ambient environmental lighting",
+        "Environment renders on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

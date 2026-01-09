@@ -1,0 +1,631 @@
+{
+  "name": "Flux - AI-Powered Brand Asset Platform",
+  "description": "A creative collaboration tool that enables design and marketing teams to co-create branded assets with AI integration, template-based creation, and brand consistency enforcement.",
+  "stories": [
+    {
+      "id": "setup-local-dev-environment",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-nextjs-project",
+      "title": "Create Next.js 16 project with Bun",
+      "description": "Bootstrap the Flux application using create-next-app with TypeScript, Tailwind, and Biome.",
+      "acceptance": [
+        "Run: bunx create-next-app@latest flux --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias",
+        "Run: cursor . to open in Cursor",
+        "Verify project starts with bun dev on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-shadcn-ui",
+      "title": "Initialize shadcn/ui component library",
+      "description": "Set up shadcn/ui with neutral base color for consistent UI components.",
+      "acceptance": [
+        "Run: bunx shadcn@latest init -y --base-color=neutral",
+        "Verify components can be added with bunx shadcn@latest add button",
+        "Tailwind v4 CSS-first configuration working",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-docker-postgres",
+      "title": "Set up Docker with PostgreSQL",
+      "description": "Configure Docker Compose for local PostgreSQL database development.",
+      "acceptance": [
+        "docker-compose.yml created with PostgreSQL 16 service",
+        "Database accessible on localhost:5432",
+        "Environment variables configured in .env.local",
+        ".env.local added to .gitignore",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-drizzle-orm",
+      "title": "Configure Drizzle ORM with Zod",
+      "description": "Set up Drizzle ORM for type-safe database access with Zod schema validation.",
+      "acceptance": [
+        "drizzle-orm and drizzle-kit installed",
+        "drizzle.config.ts configured for PostgreSQL",
+        "Database connection utility created in src/lib/db.ts",
+        "Zod installed for runtime validation",
+        "Example schema file created in src/db/schema.ts",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-api-routes",
+      "title": "Create API route structure",
+      "description": "Establish Next.js API routes pattern for all backend functionality.",
+      "acceptance": [
+        "API routes created in src/app/api/ directory",
+        "Health check endpoint at /api/health returns 200",
+        "API routes use only Next.js route handlers (no server components for data)",
+        "Error handling middleware pattern established",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-better-auth-config",
+      "title": "Set up better-auth authentication",
+      "description": "Configure better-auth for secure user authentication.",
+      "acceptance": [
+        "better-auth package installed and configured",
+        "Auth API routes created at /api/auth/*",
+        "Session management working with cookies",
+        "Auth configuration in src/lib/auth.ts",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-email-password",
+      "title": "Implement email/password authentication",
+      "description": "Add email and password sign up and sign in flows.",
+      "acceptance": [
+        "Sign up form with email and password validation",
+        "Sign in form with error handling",
+        "Password hashing configured securely",
+        "User table created in database schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-oauth-providers",
+      "title": "Add OAuth providers",
+      "description": "Enable Google and GitHub OAuth authentication.",
+      "acceptance": [
+        "Google OAuth provider configured",
+        "GitHub OAuth provider configured",
+        "OAuth callback routes working",
+        "Account linking for existing users",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "auth-ui-forms",
+      "title": "Create auth UI components",
+      "description": "Build reusable authentication UI components with react-hook-form.",
+      "acceptance": [
+        "Sign in page at /sign-in with form validation",
+        "Sign up page at /sign-up with form validation",
+        "Loading spinners during form submission",
+        "Error messages displayed for validation failures",
+        "useId used for form field keys",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-protected-routes",
+      "title": "Implement protected routes middleware",
+      "description": "Add middleware to protect authenticated routes.",
+      "acceptance": [
+        "Middleware checks session for protected routes",
+        "Unauthenticated users redirected to /sign-in",
+        "Public routes accessible without auth",
+        "Dashboard route at /dashboard protected",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-workspace-schema",
+      "title": "Create workspace database schema",
+      "description": "Design database tables for workspaces and team membership.",
+      "acceptance": [
+        "Workspace table with id, name, slug, createdAt",
+        "WorkspaceMember table with userId, workspaceId, role",
+        "Roles enum: admin, designer, editor, viewer",
+        "Drizzle migrations generated and applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-workspace-create",
+      "title": "Build workspace creation API",
+      "description": "API endpoint for creating new workspaces.",
+      "acceptance": [
+        "POST /api/workspaces creates new workspace",
+        "Creator automatically added as admin",
+        "Workspace slug generated from name",
+        "Zod validation for request body",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-workspace-switcher",
+      "title": "Implement workspace switcher UI",
+      "description": "UI component for switching between workspaces.",
+      "acceptance": [
+        "Dropdown showing user's workspaces",
+        "Current workspace indicated visually",
+        "Create new workspace option in dropdown",
+        "Workspace context stored in React context",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-workspace-invite",
+      "title": "Add team invite functionality",
+      "description": "Allow workspace admins to invite team members.",
+      "acceptance": [
+        "Invite table with email, workspaceId, role, token",
+        "POST /api/workspaces/[id]/invites sends invite",
+        "Invite acceptance flow at /invite/[token]",
+        "Existing users added directly to workspace",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-brand-kit-schema",
+      "title": "Create brand kit database schema",
+      "description": "Design tables for storing brand assets and configurations.",
+      "acceptance": [
+        "BrandKit table with workspaceId, name, colors, fonts",
+        "Colors stored as JSON with primary, secondary, accent",
+        "Fonts stored as JSON with heading, body, accent",
+        "Drizzle migrations applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-brand-kit-crud",
+      "title": "Build brand kit API endpoints",
+      "description": "CRUD API routes for brand kit management.",
+      "acceptance": [
+        "GET /api/workspaces/[id]/brand-kit returns kit",
+        "PUT /api/workspaces/[id]/brand-kit updates kit",
+        "Color palette validation with Zod",
+        "Font configuration validation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-brand-kit-editor",
+      "title": "Create brand kit editor UI",
+      "description": "Form interface for configuring brand colors and fonts.",
+      "acceptance": [
+        "Color picker for primary, secondary, accent colors",
+        "Font selector with preview text",
+        "Save button with loading state",
+        "react-hook-form for form state management",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-brand-kit-logo-upload",
+      "title": "Add logo upload functionality",
+      "description": "Enable uploading and storing brand logos.",
+      "acceptance": [
+        "File upload component for logo images",
+        "Logo stored in cloud storage (configurable)",
+        "Logo URL saved to brand kit record",
+        "Image preview after upload",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-template-schema",
+      "title": "Create template database schema",
+      "description": "Design tables for storing templates and their editable zones.",
+      "acceptance": [
+        "Template table with workspaceId, name, canvas JSON",
+        "TemplateZone table with templateId, type, constraints",
+        "Zone types: text, image, color",
+        "Constraints stored as JSON (charLimit, aspectRatio)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-template-list",
+      "title": "Build template list API",
+      "description": "API endpoint for listing and filtering templates.",
+      "acceptance": [
+        "GET /api/workspaces/[id]/templates returns list",
+        "Pagination with limit and offset",
+        "Filter by category parameter",
+        "Include template thumbnail URL",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-template-card",
+      "title": "Create template card component",
+      "description": "UI component for displaying template previews.",
+      "acceptance": [
+        "Card shows template thumbnail and name",
+        "Hover state shows quick actions",
+        "Click navigates to editor with template",
+        "Responsive grid layout",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-template-selection-page",
+      "title": "Build template selection page",
+      "description": "Page for browsing and selecting templates.",
+      "acceptance": [
+        "Grid of template cards",
+        "Category filter sidebar",
+        "Search by template name",
+        "Loading skeleton while fetching",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-canvas-renderer",
+      "title": "Create canvas rendering component",
+      "description": "Build the core canvas component for displaying templates.",
+      "acceptance": [
+        "Canvas renders template JSON structure",
+        "Supports text, image, and shape elements",
+        "Responsive canvas sizing",
+        "Zoom and pan controls",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-editor-text-zones",
+      "title": "Implement text editing in zones",
+      "description": "Enable editing text within defined editable zones.",
+      "acceptance": [
+        "Click on text zone enables editing",
+        "Character limit enforced from zone constraints",
+        "Font and color from brand kit applied",
+        "Save text changes to template instance",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-editor-image-zones",
+      "title": "Add image zone functionality",
+      "description": "Enable replacing images within image zones.",
+      "acceptance": [
+        "Click on image zone opens image picker",
+        "Upload new image or select from library",
+        "Image cropped to zone aspect ratio",
+        "Image position adjustable within zone",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-editor-export",
+      "title": "Build export functionality",
+      "description": "Enable exporting edited templates as images.",
+      "acceptance": [
+        "Export button triggers download",
+        "Support PNG and JPG formats",
+        "Export at multiple resolutions",
+        "Loading indicator during export generation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-ai-sdk",
+      "title": "Set up AI SDK integration",
+      "description": "Configure Vercel AI SDK for multi-provider support.",
+      "acceptance": [
+        "ai package installed from Vercel",
+        "OpenAI provider configured",
+        "API keys stored in environment variables",
+        "AI utility functions in src/lib/ai.ts",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-ai-text-generate",
+      "title": "Create text generation API",
+      "description": "API endpoint for AI-powered text suggestions.",
+      "acceptance": [
+        "POST /api/ai/text generates text",
+        "Supports rewrite, shorten, translate actions",
+        "Brand voice guidelines included in prompt",
+        "Streaming response for long generations",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-ai-text-assistant",
+      "title": "Build AI text assistant UI",
+      "description": "UI component for AI text suggestions in editor.",
+      "acceptance": [
+        "AI button appears when text zone selected",
+        "Dropdown with rewrite, shorten, translate options",
+        "Preview suggestion before applying",
+        "Loading state during generation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-ai-image-generate",
+      "title": "Add image generation API",
+      "description": "API endpoint for AI image generation.",
+      "acceptance": [
+        "POST /api/ai/image generates image",
+        "Support for DALL-E provider",
+        "Prompt includes brand style guidelines",
+        "Returns image URL for insertion",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "data-platform-presets",
+      "title": "Create platform presets data",
+      "description": "Define preset dimensions for social media platforms.",
+      "acceptance": [
+        "Presets file with Instagram, Facebook, LinkedIn, X, YouTube dimensions",
+        "Each preset includes width, height, name, category",
+        "Presets exported as TypeScript constants",
+        "Grouped by platform for easy selection",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-platform-selector",
+      "title": "Build platform selector component",
+      "description": "UI for selecting target platform and dimensions.",
+      "acceptance": [
+        "Dropdown grouped by platform",
+        "Shows dimensions next to preset name",
+        "Selecting preset resizes canvas",
+        "Custom dimensions option available",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-bulk-csv-upload",
+      "title": "Create CSV upload component",
+      "description": "Component for uploading spreadsheet data for bulk generation.",
+      "acceptance": [
+        "File input accepts .csv and .xlsx files",
+        "Parse file and display column headers",
+        "Show row count and data preview",
+        "Error handling for invalid files",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-bulk-column-mapping",
+      "title": "Build column mapping interface",
+      "description": "UI for mapping spreadsheet columns to template zones.",
+      "acceptance": [
+        "List of template zones with dropdown selectors",
+        "Each dropdown shows available columns",
+        "Preview first row with mapped data",
+        "Validation that required zones are mapped",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-bulk-generate",
+      "title": "Implement batch generation API",
+      "description": "API endpoint for generating multiple assets from data.",
+      "acceptance": [
+        "POST /api/bulk/generate accepts template and data",
+        "Generates assets for each data row",
+        "Returns array of generated asset URLs",
+        "Progress reporting for long batches",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "ui-collab-presence",
+      "title": "Add real-time presence indicators",
+      "description": "Show who else is viewing or editing a template.",
+      "acceptance": [
+        "User avatars shown in editor header",
+        "Cursor position shared in real-time",
+        "User name tooltip on avatar hover",
+        "Graceful handling of connection loss",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "api-collab-comments",
+      "title": "Implement comments functionality",
+      "description": "Enable threaded comments on template elements.",
+      "acceptance": [
+        "Comment table with templateId, userId, elementId, text",
+        "POST /api/comments creates comment",
+        "Comments displayed as pins on canvas",
+        "Reply threading supported",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "api-export-pdf-print",
+      "title": "Add PDF export with print options",
+      "description": "Enable PDF export with bleed and crop marks for print.",
+      "acceptance": [
+        "Export as PDF option in export menu",
+        "Bleed setting (3mm, 5mm, custom)",
+        "Crop marks toggle",
+        "CMYK color profile option",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

@@ -1,0 +1,800 @@
+{
+  "name": "Prospect",
+  "description": "A solo agency prospect management and lead generation system for UI/UX and front-end development services. Features ideal client profiles, multi-channel outreach sequences, deal pipeline tracking, portfolio showcasing, and daily prospecting routines to help independent consultants systematically find and convert high-value clients.",
+  "stories": [
+    {
+      "id": "setup-local-dev-environment",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-project-init",
+      "title": "Project initialization",
+      "description": "Set up Next.js 16 project with TypeScript, Tailwind v4, shadcn/ui, Biome, Docker with PostgreSQL, Drizzle ORM, and Zod for a solo agency prospect management system",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest prospect --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias",
+        "shadcn/ui initialized with: bunx shadcn@latest init -y --base-color=neutral",
+        "Project opened in Cursor with: cursor .",
+        "Docker Compose configured with PostgreSQL 16 container (port 5432, volume for persistence)",
+        "Drizzle ORM installed and configured with PostgreSQL adapter",
+        "Zod installed for runtime validation",
+        "Database schema defined with Drizzle tables: prospects, outreach_campaigns, touchpoints, deals, services, portfolio_items",
+        "Environment variables configured: DATABASE_URL for PostgreSQL connection",
+        "Global CSS includes prefers-color-scheme media queries for automatic light/dark mode",
+        "Typography scale uses clamp() for fluid sizing with professional, clean sans-serif font",
+        "Base layout is responsive with mobile-first approach",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-icp-schema",
+      "title": "Ideal Client Profile database schema",
+      "description": "Define the database schema and Zod validation for Ideal Client Profiles (ICPs)",
+      "acceptance": [
+        "Drizzle schema for icp table: id, name, industry_vertical, company_size_min, company_size_max, tech_stack_indicators (jsonb), pain_points (jsonb), budget_range_min, budget_range_max, trigger_events (jsonb), service_offering, created_at, updated_at",
+        "Zod schemas for ICP create/update validation",
+        "Database migration created and applied",
+        "TypeScript types exported from Drizzle schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-icp-crud",
+      "title": "Ideal Client Profile API routes",
+      "description": "Create Next.js API routes for ICP CRUD operations",
+      "acceptance": [
+        "GET /api/icp returns all ICPs with pagination",
+        "GET /api/icp/[id] returns single ICP by id",
+        "POST /api/icp creates new ICP with Zod validation",
+        "PUT /api/icp/[id] updates existing ICP",
+        "DELETE /api/icp/[id] soft deletes ICP",
+        "All routes return proper HTTP status codes and error messages",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-icp-management",
+      "title": "Ideal Client Profile UI components",
+      "description": "Build the user interface for managing Ideal Client Profiles",
+      "acceptance": [
+        "ICP list page displays all profiles as cards",
+        "ICP card shows: name, industry, company size range, budget range, service offering",
+        "Create ICP form with all fields and validation feedback",
+        "Edit ICP form pre-populates existing values",
+        "Delete confirmation dialog before removal",
+        "Loading states and error handling with toast notifications",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "feature-icp-prospect-scoring",
+      "title": "ICP scoring and matching",
+      "description": "Implement scoring algorithm that calculates prospect fit based on ICP criteria",
+      "acceptance": [
+        "Scoring function calculates 1-100 fit score based on ICP match",
+        "Score factors: industry match, company size fit, tech stack overlap, budget alignment",
+        "API route: POST /api/prospects/[id]/score accepts ICP id and returns score breakdown",
+        "Score visualization shows which criteria matched/missed",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "seed-icp-templates",
+      "title": "Default ICP templates",
+      "description": "Seed default ICP templates for common front-end agency targets",
+      "acceptance": [
+        "Default ICPs seeded: SaaS startups, e-commerce platforms, fintech companies, healthtech organizations",
+        "Each default includes realistic values for all fields",
+        "Seed script runs on first database setup",
+        "Users can duplicate and customize default templates",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "db-prospects-schema",
+      "title": "Prospect database schema",
+      "description": "Define the database schema and Zod validation for prospects",
+      "acceptance": [
+        "Drizzle schema for prospects table: id, company_name, website, key_contacts (jsonb), tech_stack (jsonb), recent_news (jsonb), icp_score, notes, status (hot/warm/cold/nurture/lost), tags (jsonb), source, created_at, updated_at",
+        "Zod schemas for prospect create/update validation",
+        "Database migration created and applied",
+        "Status enum defined: hot, warm, cold, nurture, lost",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-prospects-crud",
+      "title": "Prospect CRUD API routes",
+      "description": "Create Next.js API routes for prospect management",
+      "acceptance": [
+        "GET /api/prospects returns paginated list with filtering by status and tags",
+        "GET /api/prospects/[id] returns single prospect with full details",
+        "POST /api/prospects creates new prospect with Zod validation",
+        "PUT /api/prospects/[id] updates existing prospect",
+        "DELETE /api/prospects/[id] soft deletes prospect",
+        "Search endpoint supports full-text search on company name and notes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-prospects-list",
+      "title": "Prospect list and filtering UI",
+      "description": "Build the prospect list view with filtering and search capabilities",
+      "acceptance": [
+        "Prospect list displays as cards or table view (toggle)",
+        "Filter sidebar with status checkboxes and tag multi-select",
+        "Search input with debounced API calls",
+        "Sort options: newest, oldest, highest ICP score, alphabetical",
+        "Pagination controls with page size selector",
+        "Empty state with call-to-action to add first prospect",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-prospects-detail",
+      "title": "Prospect detail page",
+      "description": "Build the individual prospect detail page with all information",
+      "acceptance": [
+        "Prospect header: company name, website link, status badge, ICP score",
+        "Key contacts section displays all contacts with roles",
+        "Tech stack displayed as badges",
+        "Notes section with rich text editor",
+        "Recent news section shows funding/hiring signals",
+        "Quick actions: change status, add touchpoint, start sequence",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "feature-prospects-csv-import",
+      "title": "Bulk prospect import from CSV",
+      "description": "Enable bulk import of prospects from CSV files with field mapping",
+      "acceptance": [
+        "CSV upload component with drag-drop support",
+        "Field mapping interface matches CSV columns to prospect fields",
+        "Preview shows first 5 rows before import",
+        "Import progress indicator with success/error counts",
+        "Error report downloadable for failed rows",
+        "API route: POST /api/prospects/import handles multipart form data",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "feature-prospects-tech-analyzer",
+      "title": "Website tech stack analyzer",
+      "description": "Analyze prospect websites to extract technology stack information",
+      "acceptance": [
+        "API route: POST /api/prospects/[id]/analyze triggers website analysis",
+        "Detects front-end frameworks: React, Vue, Angular, Svelte, jQuery",
+        "Detects CSS frameworks: Tailwind, Bootstrap, Material UI",
+        "Detects build tools and hosting: Webpack, Vite, Vercel, Netlify",
+        "Analysis results stored in prospect tech_stack field",
+        "UI shows analysis status and results",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-sequences-schema",
+      "title": "Outreach sequence database schema",
+      "description": "Define database schema for outreach sequences and steps",
+      "acceptance": [
+        "Drizzle schema for sequences table: id, name, description, is_template, created_at, updated_at",
+        "Drizzle schema for sequence_steps table: id, sequence_id, step_order, step_type (email/linkedin_message/linkedin_connection/call/follow_up), delay_days, template_content, subject_line, created_at",
+        "Zod schemas for sequence and step validation",
+        "Database migrations created and applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-sequences-crud",
+      "title": "Outreach sequence API routes",
+      "description": "Create API routes for managing outreach sequences",
+      "acceptance": [
+        "GET /api/sequences returns all sequences with step counts",
+        "GET /api/sequences/[id] returns sequence with all steps",
+        "POST /api/sequences creates new sequence",
+        "PUT /api/sequences/[id] updates sequence metadata",
+        "DELETE /api/sequences/[id] deletes sequence and steps",
+        "POST /api/sequences/[id]/steps adds step to sequence",
+        "PUT /api/sequences/[id]/steps/[stepId] updates step",
+        "DELETE /api/sequences/[id]/steps/[stepId] removes step",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-sequences-builder",
+      "title": "Visual sequence builder interface",
+      "description": "Build drag-and-drop interface for creating outreach sequences",
+      "acceptance": [
+        "Sequence list page with create button",
+        "Sequence builder shows steps as vertical timeline",
+        "Drag-drop reordering of steps",
+        "Step type selector: email, LinkedIn message, LinkedIn connection, call, follow-up",
+        "Delay configuration between steps (1 day, 3 days, 1 week, custom)",
+        "Save and preview sequence functionality",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-sequences-template-editor",
+      "title": "Email template editor with personalization",
+      "description": "Build template editor with personalization tokens for outreach messages",
+      "acceptance": [
+        "Rich text editor for email/message content",
+        "Personalization token picker: {{firstName}}, {{company}}, {{techStack}}, {{painPoint}}, {{recentNews}}",
+        "Token preview shows example substitution",
+        "Subject line editor for email steps",
+        "Template library sidebar with proven frameworks: AIDA, PAS, BAB, value-first",
+        "Save template for reuse across sequences",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "feature-sequences-enrollment",
+      "title": "Prospect sequence enrollment",
+      "description": "Enroll prospects in sequences and track their progress",
+      "acceptance": [
+        "Drizzle schema for sequence_enrollments: id, prospect_id, sequence_id, current_step, status (active/paused/completed/replied), started_at, completed_at",
+        "API route: POST /api/prospects/[id]/enroll enrolls prospect in sequence",
+        "API route: PUT /api/enrollments/[id]/pause pauses enrollment",
+        "API route: PUT /api/enrollments/[id]/resume resumes enrollment",
+        "Prospect detail shows active sequence and current step",
+        "Auto-pause on prospect reply (manual trigger for now)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "seed-sequences-templates",
+      "title": "Pre-built sequence templates",
+      "description": "Create default sequence templates for common outreach scenarios",
+      "acceptance": [
+        "Cold outreach sequence: 5 steps over 2 weeks",
+        "Warm referral follow-up sequence: 3 steps over 1 week",
+        "Inbound lead nurture sequence: 4 steps over 10 days",
+        "Re-engagement sequence: 3 steps over 3 weeks",
+        "Each template includes proven copy frameworks",
+        "Templates marked as is_template in database",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "db-touchpoints-schema",
+      "title": "Touchpoint database schema",
+      "description": "Define database schema for tracking prospect interactions",
+      "acceptance": [
+        "Drizzle schema for touchpoints table: id, prospect_id, type (email_sent/email_opened/reply_received/linkedin_message/call/meeting/referral), notes, metadata (jsonb), occurred_at, created_at",
+        "Zod schemas for touchpoint validation",
+        "Database migration created and applied",
+        "Index on prospect_id and occurred_at for efficient queries",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-touchpoints-crud",
+      "title": "Touchpoint API routes",
+      "description": "Create API routes for logging and retrieving touchpoints",
+      "acceptance": [
+        "GET /api/prospects/[id]/touchpoints returns chronological touchpoint list",
+        "POST /api/prospects/[id]/touchpoints creates new touchpoint",
+        "PUT /api/touchpoints/[id] updates touchpoint",
+        "DELETE /api/touchpoints/[id] removes touchpoint",
+        "Pagination and filtering by type supported",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-touchpoints-timeline",
+      "title": "Touchpoint timeline UI",
+      "description": "Build timeline visualization for prospect interactions",
+      "acceptance": [
+        "Timeline view on prospect detail page shows all touchpoints",
+        "Each touchpoint shows: type icon, date/time, notes preview",
+        "Expandable touchpoint reveals full notes and metadata",
+        "Quick-add touchpoint form inline in timeline",
+        "Filter timeline by touchpoint type",
+        "Relationship strength indicator based on frequency and recency",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "feature-touchpoints-reminders",
+      "title": "Follow-up reminder system",
+      "description": "Create reminder system for scheduled follow-up actions",
+      "acceptance": [
+        "Drizzle schema for reminders: id, prospect_id, touchpoint_id, due_at, completed_at, notes",
+        "API route: POST /api/reminders creates reminder",
+        "API route: PUT /api/reminders/[id]/complete marks complete",
+        "GET /api/reminders/due returns overdue and today's reminders",
+        "Reminder badge count in navigation",
+        "Reminder list with quick-complete actions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-portfolio-schema",
+      "title": "Portfolio case study database schema",
+      "description": "Define database schema for portfolio items and case studies",
+      "acceptance": [
+        "Drizzle schema for portfolio_items: id, client_name, is_nda, industry, challenge, solution, tech_stack_used (jsonb), results_metrics (jsonb), service_tags (jsonb), public_slug, is_published, created_at, updated_at",
+        "Drizzle schema for portfolio_media: id, portfolio_item_id, type (image/video), url, caption, display_order",
+        "Zod schemas for portfolio validation",
+        "Database migrations created and applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-portfolio-crud",
+      "title": "Portfolio CRUD API routes",
+      "description": "Create API routes for managing portfolio case studies",
+      "acceptance": [
+        "GET /api/portfolio returns all portfolio items",
+        "GET /api/portfolio/[id] returns single item with media",
+        "GET /api/portfolio/public/[slug] returns published item for public view",
+        "POST /api/portfolio creates new portfolio item",
+        "PUT /api/portfolio/[id] updates portfolio item",
+        "DELETE /api/portfolio/[id] removes portfolio item",
+        "POST /api/portfolio/[id]/media uploads media file",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-portfolio-builder",
+      "title": "Case study builder interface",
+      "description": "Build the interface for creating and editing case studies",
+      "acceptance": [
+        "Portfolio list page with grid of case study cards",
+        "Case study editor with all fields and rich text for challenge/solution",
+        "Media upload with drag-drop for images and video URL input",
+        "Industry and service tag selectors",
+        "NDA toggle hides client name in public view",
+        "Preview mode shows public view",
+        "Publish/unpublish toggle",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-portfolio-public-page",
+      "title": "Public portfolio page",
+      "description": "Create public-facing case study pages with custom slugs",
+      "acceptance": [
+        "Public route: /portfolio/[slug] displays published case study",
+        "Clean, professional layout showcasing work",
+        "Before/after image comparison component",
+        "Video embed support for testimonials",
+        "Results metrics displayed prominently",
+        "Contact CTA at bottom of page",
+        "SEO meta tags for sharing",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-deals-schema",
+      "title": "Deal pipeline database schema",
+      "description": "Define database schema for deals and pipeline stages",
+      "acceptance": [
+        "Drizzle schema for deals: id, prospect_id, title, value, probability, expected_close_date, stage (lead/qualified/proposal/negotiation/closed_won/closed_lost), days_in_stage, win_loss_reason, notes, created_at, updated_at, stage_changed_at",
+        "Zod schemas for deal validation",
+        "Database migration created and applied",
+        "Stage enum with all pipeline stages",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-deals-crud",
+      "title": "Deal CRUD and pipeline API routes",
+      "description": "Create API routes for deal management and pipeline operations",
+      "acceptance": [
+        "GET /api/deals returns all deals grouped by stage",
+        "GET /api/deals/[id] returns single deal with prospect info",
+        "POST /api/deals creates new deal",
+        "PUT /api/deals/[id] updates deal including stage change",
+        "PUT /api/deals/[id]/stage updates only stage with timestamp",
+        "DELETE /api/deals/[id] removes deal",
+        "GET /api/deals/pipeline-stats returns weighted pipeline value and metrics",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-deals-kanban-board",
+      "title": "Kanban pipeline board",
+      "description": "Build drag-and-drop kanban board for deal pipeline visualization",
+      "acceptance": [
+        "Kanban board with columns: Lead, Qualified, Proposal, Negotiation, Closed-Won, Closed-Lost",
+        "Deal cards show: company name, value, probability, days in stage",
+        "Drag-drop moves deals between stages",
+        "Stage change triggers API update and timestamp",
+        "Column headers show total value and deal count",
+        "Quick-add deal button in each column",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-deals-detail",
+      "title": "Deal detail and win/loss capture",
+      "description": "Build deal detail view with stage-specific fields and close reason capture",
+      "acceptance": [
+        "Deal detail modal/page with all fields",
+        "Stage-specific sections: qualification criteria, proposal link, negotiation notes",
+        "Win/loss dialog prompts for reason on close",
+        "Edit deal value, probability, expected close date inline",
+        "Link to associated prospect detail",
+        "Activity timeline shows deal-related touchpoints",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "feature-deals-stale-alerts",
+      "title": "Stale deal alerts",
+      "description": "Create alerting system for deals with no recent activity",
+      "acceptance": [
+        "API route: GET /api/deals/stale returns deals with no activity for 14+ days",
+        "Stale indicator badge on deal cards",
+        "Stale deals section on dashboard",
+        "Configurable stale threshold in settings",
+        "Quick action to log touchpoint from stale alert",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-proposals-schema",
+      "title": "Proposal database schema",
+      "description": "Define database schema for proposals and service catalog",
+      "acceptance": [
+        "Drizzle schema for services: id, name, description, pricing_model (fixed/hourly/value), base_price, is_addon, created_at",
+        "Drizzle schema for proposals: id, deal_id, version, sections (jsonb), total_value, status (draft/sent/viewed/accepted/rejected), sent_at, viewed_at, accepted_at",
+        "Zod schemas for validation",
+        "Database migrations created and applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-proposals-crud",
+      "title": "Proposal CRUD API routes",
+      "description": "Create API routes for proposal management",
+      "acceptance": [
+        "GET /api/proposals returns all proposals",
+        "GET /api/proposals/[id] returns proposal with deal info",
+        "POST /api/proposals creates new proposal for deal",
+        "PUT /api/proposals/[id] updates proposal",
+        "POST /api/proposals/[id]/send marks as sent",
+        "GET /api/proposals/public/[token] returns proposal for client view",
+        "POST /api/proposals/public/[token]/accept records acceptance",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-proposals-builder",
+      "title": "Proposal builder interface",
+      "description": "Build the proposal creation and editing interface",
+      "acceptance": [
+        "Proposal template with sections: understanding, approach, deliverables, timeline, investment",
+        "Service selector adds items to proposal",
+        "Auto-populate prospect details from deal",
+        "Rich text editor for custom sections",
+        "Interactive pricing table with add-ons",
+        "Preview mode shows client view",
+        "PDF export button",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-dashboard-daily",
+      "title": "Daily prospecting dashboard",
+      "description": "Build the main dashboard with daily goals and priority queue",
+      "acceptance": [
+        "Dashboard shows daily activity goals: prospects researched, outreaches sent, follow-ups",
+        "Progress rings visualize completion percentage",
+        "Today's focus queue: hot leads, stale deals, due reminders",
+        "Quick action buttons: log call, send follow-up, add prospect",
+        "Weekly scorecard summary",
+        "Recent activity feed",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "feature-dashboard-streaks",
+      "title": "Prospecting streak gamification",
+      "description": "Add streak tracking and milestone celebrations",
+      "acceptance": [
+        "Streak counter tracks consecutive prospecting days",
+        "Streak stored in user preferences or local storage",
+        "Milestone celebrations at 7, 30, 100 days",
+        "Streak displayed prominently on dashboard",
+        "Streak freeze option for weekends/holidays",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "ui-analytics-funnel",
+      "title": "Conversion funnel analytics",
+      "description": "Build funnel visualization showing conversion rates between stages",
+      "acceptance": [
+        "API route: GET /api/analytics/funnel returns stage counts and conversion rates",
+        "Funnel visualization: prospects -> qualified -> meeting -> proposal -> won",
+        "Conversion rates calculated between each stage",
+        "Date range filter for funnel analysis",
+        "Compare periods toggle shows trends",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-analytics-channels",
+      "title": "Channel attribution analytics",
+      "description": "Track which discovery sources produce the best clients",
+      "acceptance": [
+        "API route: GET /api/analytics/channels returns source performance",
+        "Chart shows deals by source: LinkedIn, referral, inbound, cold email",
+        "Win rate by channel comparison",
+        "Average deal size by channel",
+        "Time-to-close by channel",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-content-calendar-schema",
+      "title": "Content calendar database schema",
+      "description": "Define database schema for content planning and tracking",
+      "acceptance": [
+        "Drizzle schema for content_items: id, title, content_type (linkedin_post/twitter_thread/blog/case_study/newsletter/video), topic_pillar, status (idea/outline/draft/review/scheduled/published), scheduled_at, published_at, performance_metrics (jsonb), created_at",
+        "Zod schemas for validation",
+        "Database migration created and applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-content-calendar",
+      "title": "Content calendar interface",
+      "description": "Build calendar view for planning and tracking content",
+      "acceptance": [
+        "Week and month calendar views",
+        "Content items displayed on scheduled date",
+        "Drag-drop to reschedule content",
+        "Color coding by content type",
+        "Status indicators on calendar items",
+        "Quick-add content from calendar cell",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "db-referrals-schema",
+      "title": "Referral network database schema",
+      "description": "Define database schema for referral partners and tracking",
+      "acceptance": [
+        "Drizzle schema for partners: id, name, company, services_offered, category (backend_dev/branding/marketing/product), agreement_terms, notes, created_at",
+        "Drizzle schema for referrals: id, partner_id, direction (given/received), prospect_id, outcome, commission_amount, created_at",
+        "Zod schemas for validation",
+        "Database migrations created and applied",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-referrals-management",
+      "title": "Referral partner management UI",
+      "description": "Build interface for managing referral partners and tracking referrals",
+      "acceptance": [
+        "Partner list with category filters",
+        "Partner profile shows: name, company, services, referral history",
+        "Log referral form: direction, prospect, outcome",
+        "Two-way referral history: given and received",
+        "Partner touchpoint reminders for relationship maintenance",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "config-pwa-setup",
+      "title": "PWA configuration for mobile",
+      "description": "Configure Progressive Web App for mobile prospect capture",
+      "acceptance": [
+        "Valid web app manifest with Prospect branding",
+        "Service worker for offline caching",
+        "App installable on iOS and Android home screens",
+        "Splash screen and app icons configured",
+        "Viewport and theme-color meta tags set",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "ui-mobile-quick-add",
+      "title": "Mobile quick-add prospect form",
+      "description": "Build optimized mobile form for rapid prospect capture",
+      "acceptance": [
+        "Minimal form: name, company, email, context note",
+        "Large touch targets for mobile input",
+        "Photo capture for business cards",
+        "Offline queue stores entries for sync",
+        "Success feedback with option to add another",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

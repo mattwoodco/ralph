@@ -1,0 +1,1321 @@
+{
+  "name": "Publish",
+  "description": "A multi-channel publication platform with Monaco editor for creating and publishing content across Twitter, LinkedIn, Medium, Dev.to, and other platforms with customized templates for each.",
+  "stories": [
+    {
+      "id": "setup-local-development",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-nextjs-project",
+      "title": "Project initialization with Next.js 16",
+      "description": "Bootstrap the Next.js 16 project using create-next-app CLI with TypeScript, Tailwind CSS, and Biome for linting/formatting.",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest publish --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias",
+        "Run: cursor . to open in Cursor IDE",
+        "Tailwind v4 configured with CSS-first configuration in globals.css",
+        "Initialize shadcn/ui: bunx shadcn@latest init -y --base-color=neutral",
+        "bun run dev starts on port 3000 without errors",
+        "Only Next.js API routes used for backend logic (no server components for data fetching)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-docker-postgres",
+      "title": "Docker PostgreSQL database setup",
+      "description": "Set up Docker with PostgreSQL for local development database.",
+      "acceptance": [
+        "Create docker-compose.yml with PostgreSQL 16 service",
+        "Database exposed on port 5432 with volume persistence",
+        "Environment variables: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB configured",
+        "Create .env.local with DATABASE_URL connection string",
+        "Add .env.local to .gitignore",
+        "docker compose up -d starts database without errors",
+        "Create npm script: bun run db:start for docker compose up -d",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-drizzle-orm",
+      "title": "Drizzle ORM configuration with PostgreSQL",
+      "description": "Configure Drizzle ORM to connect to PostgreSQL database.",
+      "acceptance": [
+        "Install dependencies: bun add drizzle-orm postgres zod && bun add -d drizzle-kit",
+        "Create src/db/index.ts with PostgreSQL connection using postgres package",
+        "Create drizzle.config.ts pointing to src/db/schema.ts",
+        "Add npm scripts: bun run db:generate, bun run db:migrate, bun run db:push",
+        "Connection uses DATABASE_URL from environment variables",
+        "Export db instance for use in API routes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-posts",
+      "title": "Database schema for posts",
+      "description": "Create Drizzle schema for posts and drafts management.",
+      "acceptance": [
+        "Create src/db/schema.ts with posts table",
+        "Posts table: id (uuid), title (text), content (text), status (enum: draft/scheduled/published), createdAt, updatedAt",
+        "Add Zod validation schema for post creation and updates",
+        "Run migration to create table in PostgreSQL",
+        "Export types for Post from schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-platforms",
+      "title": "Database schema for platforms",
+      "description": "Create Drizzle schema for supported publishing platforms.",
+      "acceptance": [
+        "Platforms table: id (uuid), name, slug, iconUrl, characterLimit, supportsMarkdown, supportsImages",
+        "Create seed script: src/db/seed.ts to populate default platforms",
+        "Default platforms: Twitter, LinkedIn, Medium, Dev.to, Hashnode, Substack",
+        "Add npm script: bun run db:seed",
+        "Export Platform type from schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-post-platforms",
+      "title": "Database schema for post-platform relationships",
+      "description": "Create junction table linking posts to platforms with platform-specific content.",
+      "acceptance": [
+        "PostPlatforms table: id (uuid), postId (fk), platformId (fk), platformContent (text), templateId (fk nullable), publishedAt, publishedUrl, status",
+        "Foreign keys with cascade deletes on post deletion",
+        "Index on postId and platformId for query performance",
+        "Export PostPlatform type from schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-templates",
+      "title": "Database schema for templates",
+      "description": "Create Drizzle schema for platform-specific content templates.",
+      "acceptance": [
+        "Templates table: id (uuid), platformId (fk), name, structure (jsonb), variables (jsonb), isDefault (boolean)",
+        "Foreign key to platforms table",
+        "Unique constraint on platformId + name combination",
+        "Export Template type from schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-credentials",
+      "title": "Database schema for platform credentials",
+      "description": "Create Drizzle schema for storing encrypted platform credentials.",
+      "acceptance": [
+        "Credentials table: id (uuid), platformId (fk), accessToken (text encrypted), refreshToken (text nullable), expiresAt (timestamp nullable), userId (text)",
+        "Foreign key to platforms table",
+        "Note: accessToken should be encrypted at application level before storage",
+        "Export Credential type from schema",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-shadcn-components",
+      "title": "Install core shadcn/ui components",
+      "description": "Add essential UI components from shadcn/ui library.",
+      "acceptance": [
+        "Install components: bunx shadcn@latest add button card input textarea tabs dialog dropdown-menu toast separator badge avatar",
+        "components.json exists with proper configuration",
+        "lib/utils.ts contains cn() helper function",
+        "CSS variables for theming added to globals.css",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "editor-monaco-setup",
+      "title": "Basic Monaco Editor integration",
+      "description": "Add Monaco Editor as the primary text editing component.",
+      "acceptance": [
+        "Install Monaco: bun add @monaco-editor/react",
+        "Create src/components/editor/MonacoEditor.tsx wrapper component",
+        "Editor supports Markdown syntax highlighting",
+        "Editor fills available container height responsively",
+        "Word wrap enabled by default",
+        "Minimap disabled for cleaner writing experience",
+        "Font set to monospace with comfortable line height (1.6)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "editor-monaco-theming",
+      "title": "Monaco Editor theme integration",
+      "description": "Sync Monaco Editor theme with application dark/light mode.",
+      "acceptance": [
+        "Editor uses system dark/light mode automatically",
+        "Custom theme matching app design system colors",
+        "Theme switches without page reload",
+        "Cursor and selection colors match app theme",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "editor-monaco-stats",
+      "title": "Monaco Editor content statistics",
+      "description": "Display writing statistics below the editor.",
+      "acceptance": [
+        "Character count displayed below editor",
+        "Word count displayed below editor",
+        "Reading time estimate displayed (based on 200 WPM)",
+        "Stats update in real-time as content changes (debounced 300ms)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "editor-monaco-autosave",
+      "title": "Monaco Editor auto-save functionality",
+      "description": "Implement automatic saving of editor content.",
+      "acceptance": [
+        "Auto-save triggers on content change (debounced 2s)",
+        "Visual indicator showing save status (saving/saved/error)",
+        "Last saved timestamp displayed",
+        "Undo/redo stack persists across component remounts",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "editor-monaco-shortcuts",
+      "title": "Monaco Editor keyboard shortcuts",
+      "description": "Add productivity keyboard shortcuts to the editor.",
+      "acceptance": [
+        "Cmd/Ctrl+S for manual save",
+        "Cmd/Ctrl+B for bold markdown syntax",
+        "Cmd/Ctrl+I for italic markdown syntax",
+        "Placeholder text when editor is empty",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "editor-monaco-preview",
+      "title": "Monaco Editor markdown preview toggle",
+      "description": "Add markdown preview functionality to the editor.",
+      "acceptance": [
+        "Markdown preview toggle button in editor toolbar",
+        "Preview renders markdown to HTML",
+        "Side-by-side or toggle view options",
+        "Preview updates in real-time with content changes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-layout-shell",
+      "title": "Application shell and navigation",
+      "description": "Create the main application layout with sidebar navigation and responsive design.",
+      "acceptance": [
+        "Sidebar navigation on left (280px width, collapsible on mobile)",
+        "Main content area with max-width constraint for readability",
+        "Top header with app logo and user menu",
+        "Navigation items: New Post, Drafts, Published, Templates, Platforms, Settings",
+        "Active route highlighted in navigation",
+        "Mobile hamburger menu for sidebar toggle",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-dark-mode-toggle",
+      "title": "Dark mode and theming",
+      "description": "Implement dark mode with system preference detection and manual toggle.",
+      "acceptance": [
+        "bun add next-themes for theme management",
+        "System preference detection (prefers-color-scheme)",
+        "Manual toggle in header persists to localStorage",
+        "All components properly styled for both modes",
+        "No flash of incorrect theme on page load",
+        "CSS variables for consistent color palette",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "api-posts-create",
+      "title": "API route for creating posts",
+      "description": "Create API endpoint for new post creation.",
+      "acceptance": [
+        "POST /api/posts creates new post record",
+        "Request body validated with Zod schema",
+        "Returns created post with id",
+        "Handles validation errors with 400 response",
+        "Handles database errors with 500 response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-posts-read",
+      "title": "API route for reading posts",
+      "description": "Create API endpoints for fetching posts.",
+      "acceptance": [
+        "GET /api/posts returns paginated list of posts",
+        "GET /api/posts/[id] returns single post by id",
+        "Support query params: status, limit, offset, sort",
+        "Returns 404 for non-existent post",
+        "Include platform associations in response",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-posts-update",
+      "title": "API route for updating posts",
+      "description": "Create API endpoint for post updates.",
+      "acceptance": [
+        "PATCH /api/posts/[id] updates post fields",
+        "Request body validated with Zod schema",
+        "Updates updatedAt timestamp automatically",
+        "Returns 404 for non-existent post",
+        "Partial updates supported",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-posts-delete",
+      "title": "API route for deleting posts",
+      "description": "Create API endpoint for post deletion.",
+      "acceptance": [
+        "DELETE /api/posts/[id] removes post",
+        "Cascade deletes post-platform associations",
+        "Returns 404 for non-existent post",
+        "Returns 204 on successful deletion",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-post-create",
+      "title": "Create new post page",
+      "description": "Build the post creation page with editor and title input.",
+      "acceptance": [
+        "Route: /posts/new renders post creation view",
+        "Title input field at top (large, minimal styling)",
+        "Monaco editor as main content area",
+        "Save as Draft button calls POST /api/posts",
+        "Redirect to /posts/[id]/edit after creation",
+        "Unsaved changes warning when navigating away",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-post-create-platforms",
+      "title": "Platform selector for post creation",
+      "description": "Add platform selection sidebar to post creation.",
+      "acceptance": [
+        "Platform selector sidebar showing available platforms with checkboxes",
+        "Each platform shows character limit",
+        "Platform icons displayed next to names",
+        "Selected platforms persisted with post",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-post-edit",
+      "title": "Edit existing post page",
+      "description": "Build the post editing page with content loading.",
+      "acceptance": [
+        "Route: /posts/[id]/edit loads post from database",
+        "Pre-populate title and content in editor",
+        "Show last saved timestamp",
+        "Platform selection persists from draft",
+        "Save button calls PATCH /api/posts/[id]",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-post-delete-dialog",
+      "title": "Post deletion confirmation dialog",
+      "description": "Add delete functionality with confirmation.",
+      "acceptance": [
+        "Delete button opens confirmation dialog",
+        "Dialog shows post title for confirmation",
+        "Confirm button calls DELETE /api/posts/[id]",
+        "Redirect to /drafts after deletion",
+        "Cancel button closes dialog without action",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "feature-post-version-history",
+      "title": "Post version history",
+      "description": "Track and restore previous versions of posts.",
+      "acceptance": [
+        "Version history sidebar showing auto-saves (last 10)",
+        "Each version shows timestamp and preview snippet",
+        "Restore from version history with single click",
+        "Current version highlighted in list",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "template-twitter-format",
+      "title": "Twitter template implementation",
+      "description": "Create template for Twitter/X content transformation.",
+      "acceptance": [
+        "Thread splitter at 280 characters",
+        "Auto-numbering format (1/n)",
+        "Intelligent splitting at sentence boundaries",
+        "Hashtag suggestions based on content",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "template-linkedin-format",
+      "title": "LinkedIn template implementation",
+      "description": "Create template for LinkedIn content transformation.",
+      "acceptance": [
+        "Professional tone wrapper",
+        "Call-to-action footer insertion",
+        "Emoji bullet points conversion",
+        "3000 character limit handling",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "template-medium-format",
+      "title": "Medium template implementation",
+      "description": "Create template for Medium content transformation.",
+      "acceptance": [
+        "Full markdown support preserved",
+        "Title case headers conversion",
+        "Code block formatting",
+        "Metadata generation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "template-devto-format",
+      "title": "Dev.to template implementation",
+      "description": "Create template for Dev.to content transformation.",
+      "acceptance": [
+        "Frontmatter generation (title, tags, canonical_url)",
+        "Series support for multi-part articles",
+        "Tag validation against Dev.to allowed tags",
+        "Slug generation from title",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "template-hashnode-format",
+      "title": "Hashnode template implementation",
+      "description": "Create template for Hashnode content transformation.",
+      "acceptance": [
+        "Cover image placeholder",
+        "Tags array formatting",
+        "Slug generation",
+        "Publication metadata",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "template-substack-format",
+      "title": "Substack template implementation",
+      "description": "Create template for Substack content transformation.",
+      "acceptance": [
+        "Newsletter format layout",
+        "Subscribe CTA insertion",
+        "Section headers styling",
+        "Email-compatible HTML output",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "page-template-editor",
+      "title": "Template editor page",
+      "description": "Create interface for viewing and managing templates.",
+      "acceptance": [
+        "Route: /templates lists all templates grouped by platform",
+        "Create new template button opens dialog",
+        "Template name and platform selection",
+        "Save template to database",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-template-editor-monaco",
+      "title": "Template editing with Monaco",
+      "description": "Add Monaco editor for template customization.",
+      "acceptance": [
+        "Monaco editor for template structure editing",
+        "Variable insertion dropdown: {{title}}, {{content}}, {{author}}, {{date}}, {{tags}}",
+        "Live preview panel showing template applied to sample content",
+        "Syntax highlighting for template DSL",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-template-management",
+      "title": "Template management actions",
+      "description": "Add CRUD operations for templates.",
+      "acceptance": [
+        "Set template as default for platform",
+        "Duplicate existing template functionality",
+        "Delete template with confirmation",
+        "Edit existing template",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "transform-engine-core",
+      "title": "Content transformation engine",
+      "description": "Build core system for transforming content to platform-specific formats.",
+      "acceptance": [
+        "Create src/lib/transform.ts with transformContent(content, platform, template) function",
+        "Truncation respects word boundaries (no mid-word cuts)",
+        "Character count validation per platform limits",
+        "Returns transformed content string",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "transform-twitter-content",
+      "title": "Twitter content transformation",
+      "description": "Implement Twitter-specific content transformation.",
+      "acceptance": [
+        "Intelligent thread splitting at sentence boundaries",
+        "Link detection and handling",
+        "Hashtag extraction from content",
+        "Character count per tweet tracked",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "transform-linkedin-content",
+      "title": "LinkedIn content transformation",
+      "description": "Implement LinkedIn-specific content transformation.",
+      "acceptance": [
+        "Markdown to plain text conversion",
+        "Line breaks preserved",
+        "Link handling",
+        "3000 character limit enforcement",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "transform-markdown-content",
+      "title": "Markdown platforms transformation",
+      "description": "Implement transformation for markdown-supporting platforms.",
+      "acceptance": [
+        "Preserve full markdown for Medium, Dev.to, Hashnode",
+        "Add platform-specific metadata",
+        "Code block formatting preserved",
+        "Image references handled",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "preview-panel-core",
+      "title": "Basic preview panel",
+      "description": "Create preview panel showing platform-specific content.",
+      "acceptance": [
+        "Preview panel as right sidebar (collapsible)",
+        "Tab for each selected platform",
+        "Preview updates in real-time as content changes (debounced 500ms)",
+        "Copy platform-specific content to clipboard button",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "preview-panel-twitter",
+      "title": "Twitter preview styling",
+      "description": "Create Twitter-style preview for content.",
+      "acceptance": [
+        "Twitter preview shows thread cards with accurate styling",
+        "Tweet card with profile placeholder",
+        "Thread numbering displayed",
+        "Character counter with color coding",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "preview-panel-linkedin",
+      "title": "LinkedIn preview styling",
+      "description": "Create LinkedIn-style preview for content.",
+      "acceptance": [
+        "LinkedIn preview shows post card with profile placeholder",
+        "Post formatting matches LinkedIn style",
+        "Character counter with color coding (green/yellow/red)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "preview-panel-article",
+      "title": "Article preview styling",
+      "description": "Create article-style preview for Medium/Dev.to/Hashnode.",
+      "acceptance": [
+        "Article layout with title and content",
+        "Markdown rendered to HTML",
+        "Code blocks with syntax highlighting",
+        "Platform badge indicating target",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "auth-twitter-oauth",
+      "title": "Twitter OAuth integration",
+      "description": "Implement Twitter OAuth authentication flow.",
+      "acceptance": [
+        "bun add twitter-api-v2 for API client",
+        "OAuth 2.0 PKCE flow for authentication",
+        "Route: /api/auth/twitter/connect initiates OAuth",
+        "Route: /api/auth/twitter/callback handles OAuth response",
+        "Store tokens securely in Credentials table",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "publish-twitter-api",
+      "title": "Twitter publishing API",
+      "description": "Implement Twitter posting functionality.",
+      "acceptance": [
+        "POST /api/publish/twitter posts single tweet or thread",
+        "Thread posting with reply chain for long content",
+        "Media upload support for images (up to 4 per tweet)",
+        "Rate limiting handling with retry logic",
+        "Return published tweet URL on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-linkedin-oauth",
+      "title": "LinkedIn OAuth integration",
+      "description": "Implement LinkedIn OAuth authentication flow.",
+      "acceptance": [
+        "OAuth 2.0 flow for LinkedIn authentication",
+        "Route: /api/auth/linkedin/connect initiates OAuth",
+        "Route: /api/auth/linkedin/callback handles OAuth response",
+        "Store tokens in Credentials table with expiration tracking",
+        "Handle token refresh automatically",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "publish-linkedin-api",
+      "title": "LinkedIn publishing API",
+      "description": "Implement LinkedIn posting functionality.",
+      "acceptance": [
+        "POST /api/publish/linkedin creates LinkedIn post",
+        "Support for text posts up to 3000 characters",
+        "Image attachment support via LinkedIn media API",
+        "Article sharing with custom preview support",
+        "Return published post URL on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-medium-token",
+      "title": "Medium API authentication",
+      "description": "Implement Medium token-based authentication.",
+      "acceptance": [
+        "Medium API integration token input in settings",
+        "Route: /api/auth/medium/connect for token validation and storage",
+        "Store token securely in Credentials table",
+        "Validate token by fetching user profile",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "publish-medium-api",
+      "title": "Medium publishing API",
+      "description": "Implement Medium article publishing.",
+      "acceptance": [
+        "POST /api/publish/medium creates Medium story",
+        "Support for draft or public publish status",
+        "Tags array support (up to 5 tags)",
+        "Canonical URL setting for cross-posting",
+        "Markdown content preserved properly",
+        "Return published URL on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "auth-devto-apikey",
+      "title": "Dev.to API authentication",
+      "description": "Implement Dev.to API key authentication.",
+      "acceptance": [
+        "Dev.to API key input in platform settings",
+        "Route: /api/auth/devto/connect validates and stores API key",
+        "Store key securely in Credentials table",
+        "Validate key by fetching user profile",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "publish-devto-api",
+      "title": "Dev.to publishing API",
+      "description": "Implement Dev.to article publishing.",
+      "acceptance": [
+        "POST /api/publish/devto creates Dev.to article",
+        "Frontmatter auto-generation from post metadata",
+        "Tags support with validation",
+        "Series support for multi-part articles",
+        "Canonical URL for cross-posting",
+        "Return published URL on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "auth-hashnode-token",
+      "title": "Hashnode API authentication",
+      "description": "Implement Hashnode personal access token authentication.",
+      "acceptance": [
+        "bun add graphql-request for GraphQL client",
+        "Hashnode PAT input in platform settings",
+        "Route: /api/auth/hashnode/connect validates token",
+        "Store token securely in Credentials table",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "publish-hashnode-api",
+      "title": "Hashnode publishing API",
+      "description": "Implement Hashnode article publishing via GraphQL.",
+      "acceptance": [
+        "POST /api/publish/hashnode creates article via GraphQL mutation",
+        "Publication selection for users with multiple blogs",
+        "Tags array support",
+        "Cover image URL support",
+        "Slug customization option",
+        "Return published URL on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "publish-substack-clipboard",
+      "title": "Substack integration",
+      "description": "Implement Substack publishing workflow.",
+      "acceptance": [
+        "Email template formatting for Substack-compatible HTML",
+        "Newsletter-style layout with header/footer",
+        "Subscribe CTA block insertion",
+        "Draft preview in Substack email format",
+        "Copy-to-clipboard for Substack editor paste",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "page-settings-platforms",
+      "title": "Platform connection settings page",
+      "description": "Create settings page for managing platform connections.",
+      "acceptance": [
+        "Route: /settings/platforms shows all available platforms",
+        "Each platform card shows connection status (connected/disconnected)",
+        "Connect button initiates OAuth flow or shows API key input",
+        "Show connected account username/handle",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-settings-credentials",
+      "title": "Platform credential management",
+      "description": "Add credential management actions to platform settings.",
+      "acceptance": [
+        "Disconnect button revokes access and removes credentials",
+        "Token expiration warning for platforms with expiring tokens",
+        "Re-authenticate button for expired connections",
+        "Test connection button to verify credentials",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "publish-confirmation-dialog",
+      "title": "Publish confirmation dialog",
+      "description": "Create dialog for reviewing and confirming publication.",
+      "acceptance": [
+        "Publish button opens confirmation dialog showing selected platforms",
+        "Each platform shows preview snippet and character count",
+        "Warning badges when content exceeds platform limits",
+        "Cancel button closes dialog",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "publish-multi-platform-execute",
+      "title": "Multi-platform publish execution",
+      "description": "Implement sequential publishing to multiple platforms.",
+      "acceptance": [
+        "Publish Now button triggers sequential publishing",
+        "Progress indicator showing current platform being published",
+        "Success/failure status per platform with error messages",
+        "Published URLs displayed on success with copy buttons",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "publish-retry-partial-success",
+      "title": "Publish retry and partial success",
+      "description": "Handle failed publications and partial success states.",
+      "acceptance": [
+        "Failed platforms can be retried individually",
+        "Post status updated to 'published' on full success",
+        "Partial success state supported (some platforms succeed, others fail)",
+        "Error messages displayed for failed platforms",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-drafts-list",
+      "title": "Drafts list page",
+      "description": "Create page for viewing all draft posts.",
+      "acceptance": [
+        "Route: /drafts shows all posts with status='draft'",
+        "List view with title, excerpt, platforms, last edited date",
+        "Empty state with CTA to create first post",
+        "Click to navigate to edit page",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-drafts-list-filtering",
+      "title": "Drafts list filtering and sorting",
+      "description": "Add filtering and sorting to drafts list.",
+      "acceptance": [
+        "Sort by: last edited, created date, title",
+        "Search by title or content",
+        "Pagination or infinite scroll for large draft lists",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-drafts-list-bulk-actions",
+      "title": "Drafts list bulk actions",
+      "description": "Add quick actions to drafts list.",
+      "acceptance": [
+        "Bulk selection for delete",
+        "Quick action menu: edit, duplicate, delete",
+        "Duplicate creates copy with '(Copy)' suffix",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "page-published-list",
+      "title": "Published posts list page",
+      "description": "Create page for viewing published post history.",
+      "acceptance": [
+        "Route: /published shows all posts with status='published'",
+        "Each post shows platforms published to with links",
+        "Platform badges with direct links to published content",
+        "Publish date and time displayed",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-published-list-filtering",
+      "title": "Published list filtering",
+      "description": "Add filtering to published posts list.",
+      "acceptance": [
+        "Filter by platform",
+        "Search by title or content",
+        "Re-publish to additional platforms option",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "db-schema-scheduled-posts",
+      "title": "Scheduling database schema",
+      "description": "Create database schema for scheduled posts.",
+      "acceptance": [
+        "ScheduledPosts table: id, postId, scheduledAt, timezone, status",
+        "Foreign key to posts table with cascade delete",
+        "Index on scheduledAt for efficient polling",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-scheduling-ui",
+      "title": "Scheduling user interface",
+      "description": "Add scheduling option to publish dialog.",
+      "acceptance": [
+        "Schedule option in publish dialog with date/time picker",
+        "Timezone selector defaulting to user's browser timezone",
+        "Scheduled posts shown in dedicated /scheduled route",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-scheduling-execution",
+      "title": "Scheduled post execution",
+      "description": "Implement background job for publishing scheduled posts.",
+      "acceptance": [
+        "Cron job or edge function for scheduled publish execution",
+        "Edit scheduled post before publish time",
+        "Cancel scheduled post with confirmation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-image-upload",
+      "title": "Basic image upload",
+      "description": "Implement image upload functionality in editor.",
+      "acceptance": [
+        "Drag-and-drop image upload in editor",
+        "Paste image from clipboard support",
+        "Images stored locally in public/uploads",
+        "Images table: id, postId, filename, url, altText, width, height",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "feature-image-optimization",
+      "title": "Image optimization",
+      "description": "Add image processing on upload.",
+      "acceptance": [
+        "Image optimization on upload (resize, compress)",
+        "Alt text input for accessibility",
+        "Platform-specific image requirements shown (dimensions, file size)",
+        "Delete unused images option",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-image-gallery",
+      "title": "Image gallery for posts",
+      "description": "Create image management interface.",
+      "acceptance": [
+        "Image gallery showing all uploaded images for current post",
+        "Click to insert image markdown into editor",
+        "Delete image from gallery",
+        "Edit alt text inline",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "ui-command-palette",
+      "title": "Command palette",
+      "description": "Implement searchable command palette for quick actions.",
+      "acceptance": [
+        "Cmd/Ctrl+K opens command palette dialog",
+        "Search input filters available commands",
+        "Commands: new post, open drafts, open published, connect platform, toggle theme",
+        "Keyboard navigation with arrow keys",
+        "Enter executes selected command",
+        "Escape closes palette",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "ui-responsive-mobile",
+      "title": "Mobile responsive design",
+      "description": "Ensure application works on mobile devices.",
+      "acceptance": [
+        "Mobile-first CSS using Tailwind breakpoints",
+        "Sidebar collapses to hamburger menu on mobile",
+        "Editor takes full width on mobile",
+        "Touch-friendly button sizes (min 44px tap targets)",
+        "No horizontal scroll on any viewport size",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-responsive-dialogs",
+      "title": "Mobile responsive dialogs",
+      "description": "Optimize dialogs and panels for mobile.",
+      "acceptance": [
+        "Preview panel moves to separate tab on mobile",
+        "Platform selector as bottom sheet on mobile",
+        "Publish dialog as full-screen modal on mobile",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "ui-toast-notifications",
+      "title": "Toast notification system",
+      "description": "Implement toast notifications for user feedback.",
+      "acceptance": [
+        "Toast notifications for success/error/warning states",
+        "API errors display user-friendly messages",
+        "Toasts auto-dismiss after 5 seconds",
+        "Manual dismiss option",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-error-handling",
+      "title": "Comprehensive error handling",
+      "description": "Add error handling throughout the application.",
+      "acceptance": [
+        "Form validation with inline error messages",
+        "Network error detection with retry option",
+        "Rate limit errors show cooldown timer",
+        "OAuth failure handling with re-auth prompt",
+        "Error boundary components for section isolation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "feature-keyboard-shortcuts",
+      "title": "Global keyboard shortcuts",
+      "description": "Implement application-wide keyboard shortcuts.",
+      "acceptance": [
+        "Cmd/Ctrl+N: New post",
+        "Cmd/Ctrl+S: Save draft (when in edit view)",
+        "Cmd/Ctrl+Enter: Publish (when in edit view)",
+        "Cmd/Ctrl+/: Toggle preview panel",
+        "Escape: Close dialogs/modals",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-keyboard-shortcuts-help",
+      "title": "Keyboard shortcuts documentation",
+      "description": "Add shortcuts help and discovery.",
+      "acceptance": [
+        "Shortcuts displayed in tooltips on buttons",
+        "Shortcuts help modal accessible from settings",
+        "Cmd/Ctrl+? opens shortcuts help",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-analytics-fetch",
+      "title": "Platform analytics fetching",
+      "description": "Fetch engagement metrics from connected platforms.",
+      "acceptance": [
+        "Fetch view/impression counts from platforms that support it",
+        "Twitter: impressions, likes, retweets, replies",
+        "LinkedIn: impressions, reactions, comments",
+        "Dev.to: views, reactions, comments",
+        "Cache analytics data locally with TTL",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "feature-analytics-display",
+      "title": "Analytics display",
+      "description": "Display analytics on published post detail view.",
+      "acceptance": [
+        "Analytics displayed on published post detail view",
+        "Refresh button to update metrics",
+        "Empty state when analytics unavailable",
+        "Per-platform metrics breakdown",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

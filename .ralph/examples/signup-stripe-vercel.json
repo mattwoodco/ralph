@@ -1,0 +1,757 @@
+{
+  "name": "Signup Stripe Vercel Deploy",
+  "description": "A Next.js 16 application enabling user signup, Stripe payments, and programmatic Vercel project deployments with AI-powered features",
+  "stories": [
+    {
+      "id": "setup-local-dev-environment",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-nextjs-docker-postgres",
+      "title": "Initialize Next.js 16 Project with Docker PostgreSQL",
+      "description": "Bootstrap a new Next.js 16 project with TypeScript, Tailwind CSS v4, Biome, shadcn/ui, Docker PostgreSQL, Drizzle ORM, and Zod. Use only Next.js API routes for all server-side logic.",
+      "acceptance": [
+        "Created with `bunx create-next-app@latest signup-app --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias`",
+        "Initialized shadcn/ui with `bunx shadcn@latest init -y --base-color=neutral`",
+        "Opened in Cursor with `cursor .`",
+        "Next.js version 16.x confirmed in package.json",
+        "TypeScript strict mode enabled in tsconfig.json",
+        "App Router structure with src/app directory",
+        "Docker Compose file with PostgreSQL container configured",
+        "Drizzle ORM installed and configured with PostgreSQL connection",
+        "Zod installed for runtime validation",
+        "DATABASE_URL environment variable defined in .env.local",
+        "`bun run dev` starts development server on port 3000",
+        "`docker compose up -d` starts PostgreSQL database",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-users",
+      "title": "Create Users Schema",
+      "description": "Define the users table schema with essential fields for authentication and profile management.",
+      "acceptance": [
+        "db/schema/users.ts exports users table definition",
+        "Schema includes: id (uuid), email (unique), name, password_hash, email_verified, created_at, updated_at",
+        "Schema includes: stripe_customer_id (nullable), subscription_status (enum: free, active, canceled, past_due)",
+        "Drizzle relations defined for user -> projects relationship",
+        "Migration generated via `bunx drizzle-kit generate`",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-projects",
+      "title": "Create Projects Schema",
+      "description": "Define the projects table schema for storing user projects and their Vercel deployment status.",
+      "acceptance": [
+        "db/schema/projects.ts exports projects table definition",
+        "Schema includes: id (uuid), user_id (foreign key), name, description, repository_url",
+        "Schema includes: vercel_project_id (nullable), vercel_deployment_url (nullable), deployment_status (enum: pending, building, ready, error)",
+        "Schema includes: framework (enum: nextjs, react, vue, etc), created_at, updated_at",
+        "Index on user_id for efficient queries",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-subscriptions",
+      "title": "Create Subscriptions Schema",
+      "description": "Define the subscriptions table for tracking Stripe subscription details and billing history.",
+      "acceptance": [
+        "db/schema/subscriptions.ts exports subscriptions table",
+        "Schema includes: id, user_id (foreign key), stripe_subscription_id (unique), stripe_price_id",
+        "Schema includes: status (enum matching Stripe statuses), current_period_start, current_period_end",
+        "Schema includes: cancel_at_period_end (boolean), canceled_at (nullable timestamp)",
+        "Migration generated and applied successfully",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema-usage-records",
+      "title": "Create Usage Records Schema",
+      "description": "Define the usage_records table for tracking metered billing features.",
+      "acceptance": [
+        "db/schema/usage.ts exports usage_records table",
+        "Schema includes: id, user_id, type (deployment, ai_generation), count, period_start, period_end",
+        "Index on user_id and period for efficient queries",
+        "Migration generated and applied successfully",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "auth-config-better-auth",
+      "title": "Install and Configure better-auth",
+      "description": "Set up better-auth for modern authentication with credential and OAuth support.",
+      "acceptance": [
+        "better-auth installed via `bun add better-auth`",
+        "auth.ts created in lib/ with better-auth configuration",
+        "AUTH_SECRET environment variable generated and set",
+        "Drizzle adapter configured for better-auth",
+        "Session strategy set to JWT for serverless compatibility",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-auth-signup",
+      "title": "Create Signup API Route",
+      "description": "Create a secure signup API endpoint with email/password registration.",
+      "acceptance": [
+        "POST /api/auth/signup endpoint accepts email, password, name",
+        "Password hashed using bcrypt with salt rounds >= 12",
+        "Email uniqueness validated before account creation",
+        "Password strength validation: min 8 chars, 1 uppercase, 1 number",
+        "Zod schema validates request body",
+        "Returns appropriate error messages for validation failures",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-form-signup",
+      "title": "Create Signup Form Component",
+      "description": "Build a responsive signup form with react-hook-form and client-side validation.",
+      "acceptance": [
+        "src/components/auth/signup-form.tsx created",
+        "Form uses react-hook-form with zod validation",
+        "Fields: name, email, password, confirm password",
+        "Real-time validation feedback on each field",
+        "Loading spinner during form submission",
+        "Error toast on failure, redirect to dashboard on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-form-login",
+      "title": "Create Login Form Component",
+      "description": "Build a login form with credentials provider integration.",
+      "acceptance": [
+        "src/components/auth/login-form.tsx created",
+        "Form uses react-hook-form with zod validation",
+        "Fields: email, password, remember me checkbox",
+        "Loading spinner during form submission",
+        "Error handling for invalid credentials",
+        "Redirect to callback URL or dashboard on success",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-layout-auth",
+      "title": "Create Auth Pages Layout",
+      "description": "Build a consistent layout for authentication pages with branding.",
+      "acceptance": [
+        "src/app/(auth)/layout.tsx created for auth pages",
+        "Centered card layout with logo at top",
+        "Link to toggle between login and signup",
+        "Responsive design works on mobile",
+        "Dark mode support via CSS variables",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "auth-middleware-protected-routes",
+      "title": "Create Protected Route Middleware",
+      "description": "Implement middleware to protect authenticated routes and handle redirects.",
+      "acceptance": [
+        "middleware.ts created in project root",
+        "Unauthenticated users redirected to /login for protected routes",
+        "Authenticated users redirected from /login to /dashboard",
+        "matcher config excludes public routes and static assets",
+        "Session token validated using better-auth middleware helper",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "stripe-config-sdk",
+      "title": "Install and Configure Stripe SDK",
+      "description": "Set up Stripe SDK with proper initialization and type safety.",
+      "acceptance": [
+        "Stripe SDK installed via `bun add stripe`",
+        "lib/stripe.ts exports configured Stripe instance",
+        "STRIPE_SECRET_KEY environment variable set",
+        "STRIPE_PUBLISHABLE_KEY environment variable set",
+        "STRIPE_WEBHOOK_SECRET environment variable set",
+        "TypeScript types for Stripe objects available",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "stripe-config-pricing-plans",
+      "title": "Define Subscription Plans Configuration",
+      "description": "Create pricing configuration for subscription tiers.",
+      "acceptance": [
+        "lib/pricing.ts exports plans array with tier details",
+        "Plans defined: Free (0), Pro ($19/mo), Team ($49/mo)",
+        "Each plan includes: name, description, price, stripe_price_id, features array, limits object",
+        "Limits include: max_projects, max_deployments_per_month, ai_generations_per_month",
+        "Zod schema validates plan configuration",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "stripe-customer-on-signup",
+      "title": "Create Stripe Customer on Signup",
+      "description": "Automatically create a Stripe customer when a new user signs up.",
+      "acceptance": [
+        "stripe.customers.create() called during user registration",
+        "Customer created with user email and name metadata",
+        "stripe_customer_id stored in users table",
+        "Error handling if Stripe customer creation fails",
+        "Transaction rolls back user creation on Stripe failure",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-stripe-checkout-session",
+      "title": "Create Checkout Session API Route",
+      "description": "Build API endpoint to create Stripe Checkout sessions for subscription upgrades.",
+      "acceptance": [
+        "POST /api/stripe/checkout creates checkout session",
+        "Accepts price_id in request body (validated with Zod)",
+        "Session configured with subscription mode",
+        "success_url and cancel_url set correctly",
+        "customer_id from authenticated user used",
+        "Returns session URL for client redirect",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-page-pricing",
+      "title": "Build Pricing Page Component",
+      "description": "Create a pricing page displaying subscription tiers with upgrade CTAs.",
+      "acceptance": [
+        "src/app/(marketing)/pricing/page.tsx created",
+        "Three pricing cards displayed in responsive grid",
+        "Current plan highlighted for authenticated users",
+        "Feature comparison list with checkmarks",
+        "CTA buttons trigger checkout session creation",
+        "Loading spinner during checkout redirect",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-stripe-webhook",
+      "title": "Implement Stripe Webhook Handler",
+      "description": "Create webhook endpoint to handle Stripe subscription events.",
+      "acceptance": [
+        "POST /api/stripe/webhook endpoint created",
+        "Webhook signature verified using stripe.webhooks.constructEvent()",
+        "Handles: checkout.session.completed, customer.subscription.updated, customer.subscription.deleted",
+        "Updates user subscription_status on relevant events",
+        "Creates/updates subscription record in database",
+        "Returns 200 status for successful processing",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-stripe-customer-portal",
+      "title": "Create Customer Portal Session API Route",
+      "description": "Enable users to manage their subscription via Stripe Customer Portal.",
+      "acceptance": [
+        "POST /api/stripe/portal creates portal session",
+        "Return URL set to /dashboard/settings",
+        "Returns portal session URL for client redirect",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "lib-usage-tracking",
+      "title": "Create Usage Tracking Library",
+      "description": "Build utility functions for tracking and enforcing usage limits.",
+      "acceptance": [
+        "lib/usage.ts exports incrementUsage() function",
+        "lib/usage.ts exports getUsage() function",
+        "lib/usage.ts exports checkLimit() function",
+        "Usage checked before allowing rate-limited actions",
+        "Usage reset at billing period boundaries",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "vercel-config-api-client",
+      "title": "Set Up Vercel API Client",
+      "description": "Configure authenticated client for Vercel REST API interactions.",
+      "acceptance": [
+        "lib/vercel.ts exports configured API client",
+        "VERCEL_ACCESS_TOKEN environment variable set",
+        "VERCEL_TEAM_ID environment variable set (optional)",
+        "Zod schemas for Vercel API responses",
+        "Error handling wrapper for API calls",
+        "Rate limiting awareness and retry logic",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-projects-create",
+      "title": "Create Project API Route",
+      "description": "Implement endpoint to programmatically create new Vercel projects.",
+      "acceptance": [
+        "POST /api/projects creates local and Vercel project",
+        "Calls POST /v10/projects Vercel API endpoint",
+        "Accepts: name, framework, git_repository (optional) - validated with Zod",
+        "Stores vercel_project_id in projects table",
+        "Returns created project with Vercel details",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-projects-deploy",
+      "title": "Create Deployment Trigger API Route",
+      "description": "Enable users to trigger deployments programmatically via Vercel API.",
+      "acceptance": [
+        "POST /api/projects/[id]/deploy triggers deployment",
+        "Calls POST /v13/deployments Vercel API",
+        "Supports deployment from git ref",
+        "Returns deployment ID and status",
+        "Updates project deployment_status in database",
+        "Enforces deployment limit based on subscription",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-deployments-status",
+      "title": "Create Deployment Status API Route",
+      "description": "Implement deployment status tracking endpoint.",
+      "acceptance": [
+        "GET /api/deployments/[id]/status returns current status",
+        "Calls GET /v13/deployments/[id] Vercel API",
+        "Status mapped: QUEUED, BUILDING, READY, ERROR, CANCELED",
+        "Build logs URL returned for detailed view",
+        "Final status persisted to database",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-projects-env-vars",
+      "title": "Create Environment Variables API Routes",
+      "description": "Allow users to manage environment variables for their Vercel projects.",
+      "acceptance": [
+        "GET /api/projects/[id]/env lists environment variables",
+        "POST /api/projects/[id]/env creates new variable",
+        "DELETE /api/projects/[id]/env/[key] removes variable",
+        "Variables scoped to: production, preview, development",
+        "Calls Vercel API to sync changes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ai-config-vercel-sdk",
+      "title": "Install and Configure Vercel AI SDK",
+      "description": "Set up Vercel AI SDK for streaming AI responses.",
+      "acceptance": [
+        "AI SDK installed via `bun add ai @ai-sdk/openai`",
+        "OPENAI_API_KEY environment variable set",
+        "lib/ai.ts exports configured AI client",
+        "Error handling for rate limits and API failures",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-ai-chat",
+      "title": "Create AI Chat API Route",
+      "description": "Build streaming API endpoint for AI-powered chat interactions.",
+      "acceptance": [
+        "POST /api/ai/chat accepts messages array (validated with Zod)",
+        "Uses streamText() from Vercel AI SDK",
+        "System prompt defines assistant behavior",
+        "Returns streaming response using toDataStreamResponse()",
+        "Rate limiting based on user subscription tier",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-component-ai-chat",
+      "title": "Build AI Chat Component",
+      "description": "Create a chat interface component using Vercel AI SDK hooks.",
+      "acceptance": [
+        "src/components/ai/chat.tsx created",
+        "Uses useChat() hook from 'ai/react'",
+        "Message list with user/assistant distinction",
+        "Input field with send button",
+        "Loading indicator during streaming",
+        "Auto-scroll to latest message",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-ai-generate-project",
+      "title": "Create AI Project Generator API Route",
+      "description": "Use AI to generate project configuration based on user description.",
+      "acceptance": [
+        "POST /api/ai/generate-project endpoint created",
+        "Accepts: description, framework preference (validated with Zod)",
+        "AI generates: project name, recommended tech stack, initial structure",
+        "Uses structured output with Zod schema validation",
+        "Returns JSON response with generation results",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-page-project-generator",
+      "title": "Build Project Generator UI",
+      "description": "Create interface for AI-assisted project generation.",
+      "acceptance": [
+        "src/app/(dashboard)/projects/new/page.tsx created",
+        "Textarea for project description input",
+        "AI generates suggestions displayed in preview",
+        "User can edit/refine before creating",
+        "Framework selection dropdown",
+        "Create project button initiates Vercel project creation",
+        "Loading spinner during generation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-ai-deployment-helper",
+      "title": "Create AI Deployment Helper API Route",
+      "description": "AI-powered endpoint to help troubleshoot deployment errors.",
+      "acceptance": [
+        "POST /api/ai/deployment-help analyzes deployment logs",
+        "Fetches failed deployment logs from Vercel API",
+        "Sends logs to AI with troubleshooting prompt",
+        "Returns structured suggestions for fixes (Zod validated)",
+        "Caches analysis to avoid duplicate API calls",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-layout-dashboard",
+      "title": "Create Dashboard Layout",
+      "description": "Build the main dashboard layout with sidebar navigation.",
+      "acceptance": [
+        "src/app/(dashboard)/layout.tsx created",
+        "Sidebar with navigation links: Dashboard, Projects, Settings, Billing",
+        "Header with user avatar and dropdown menu",
+        "Responsive: sidebar collapses to hamburger on mobile",
+        "Active route highlighted in navigation",
+        "Sign out option in user menu",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-page-projects-list",
+      "title": "Build Projects Dashboard Page",
+      "description": "Build dashboard page listing all user projects with status indicators.",
+      "acceptance": [
+        "src/app/(dashboard)/dashboard/page.tsx shows projects list",
+        "Card for each project with: name, framework, deployment status, last deployed",
+        "Status badges: green (ready), yellow (building), red (error), gray (pending)",
+        "Quick actions: deploy, view logs, open production URL",
+        "Empty state with CTA to create first project",
+        "Pagination for users with many projects",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-page-project-detail",
+      "title": "Build Project Detail Page",
+      "description": "Create detailed project view with deployments history.",
+      "acceptance": [
+        "src/app/(dashboard)/projects/[id]/page.tsx created",
+        "Shows project name, description, connected repo",
+        "Deployments history table with: commit, status, created_at, duration",
+        "Deploy button triggers new deployment",
+        "Delete project with confirmation dialog",
+        "Loading spinner during data fetch",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ui-page-settings",
+      "title": "Build Settings Page",
+      "description": "Create user settings page for profile management.",
+      "acceptance": [
+        "src/app/(dashboard)/settings/page.tsx created",
+        "Profile section: update name, email with react-hook-form",
+        "Password change section with current password validation",
+        "Danger zone: delete account with confirmation",
+        "Toast notifications on successful updates",
+        "Loading spinners during form submission",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-page-billing",
+      "title": "Build Billing Page",
+      "description": "Build billing page showing subscription status and usage.",
+      "acceptance": [
+        "src/app/(dashboard)/billing/page.tsx created",
+        "Current plan displayed with features",
+        "Usage meters: projects used, deployments this month, AI generations",
+        "Upgrade button linking to pricing page",
+        "Manage subscription button opening Stripe portal",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-page-landing",
+      "title": "Build Marketing Landing Page",
+      "description": "Create public landing page showcasing the product.",
+      "acceptance": [
+        "src/app/(marketing)/page.tsx created",
+        "Hero section with headline, subtext, CTA buttons",
+        "Features section highlighting key capabilities",
+        "Pricing preview with link to full pricing page",
+        "Footer with links",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ui-component-toast-notifications",
+      "title": "Add Toast Notifications System",
+      "description": "Implement global toast notifications for user feedback.",
+      "acceptance": [
+        "shadcn/ui Sonner component installed via `bunx shadcn@latest add sonner`",
+        "Toaster component added to root layout",
+        "Success, error, warning, info variants available",
+        "Auto-dismiss after configurable duration",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "test-config-vitest",
+      "title": "Set Up Vitest Testing Framework",
+      "description": "Configure Vitest for unit and integration testing.",
+      "acceptance": [
+        "Vitest installed via `bun add -d vitest @vitejs/plugin-react`",
+        "vitest.config.ts created with proper configuration",
+        "Testing utilities installed: @testing-library/react, @testing-library/jest-dom",
+        "Test script added: `bun run test`",
+        "Example test file passes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "test-api-auth",
+      "title": "Write Auth API Tests",
+      "description": "Create tests for authentication API endpoints.",
+      "acceptance": [
+        "Integration test for signup API endpoint",
+        "Integration test for login API endpoint",
+        "Mock Stripe customer creation in tests",
+        "All auth tests pass",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "test-api-stripe",
+      "title": "Write Stripe API Tests",
+      "description": "Create tests for Stripe payment API endpoints.",
+      "acceptance": [
+        "Unit tests for checkout session creation",
+        "Unit tests for webhook event handling",
+        "Mock Stripe API calls in tests",
+        "Test webhook signature verification",
+        "All Stripe tests pass",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "deploy-config-production",
+      "title": "Configure Production Environment",
+      "description": "Set up environment variables and configuration for production deployment.",
+      "acceptance": [
+        "All required env vars documented in .env.example",
+        "Production database URL configured",
+        "Stripe live mode keys ready (not committed)",
+        "Vercel project created for the app itself",
+        "Domain configured in Vercel",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "deploy-github-actions-cicd",
+      "title": "Set Up GitHub Actions CI/CD",
+      "description": "Configure GitHub Actions for testing and deployment.",
+      "acceptance": [
+        ".github/workflows/ci.yml created",
+        "Runs on push to main and pull requests",
+        "Steps: install, lint, typecheck, test",
+        "Vercel deployment triggered on main branch",
+        "Preview deployments for pull requests",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    }
+  ]
+}

@@ -1,0 +1,546 @@
+{
+  "name": "Vertex Studio",
+  "description": "A marketing website for a technologically advanced design agency that creates artwork, websites, motion graphics, and brand collateral for enterprise businesses. Features industry-specific landing pages with customized problem-solution-CTA messaging.",
+  "stories": [
+    {
+      "id": "docs-local-setup",
+      "title": "Local development environment setup",
+      "description": "Clear instructions to get the project running locally with all dependencies",
+      "acceptance": [
+        "README.md contains complete setup instructions",
+        "Clone repository and run `bun install`",
+        "Copy `.env.example` to `.env.local` and configure variables",
+        "Run `docker compose up -d` to start PostgreSQL",
+        "Run `bunx drizzle-kit push` to apply database schema",
+        "Run `bun dev` to start development server on localhost:3000",
+        "Visit http://localhost:3000 to verify app loads",
+        "All environment variables documented in .env.example with descriptions",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "setup-nextjs-init",
+      "title": "Initialize Next.js project with Biome and Tailwind",
+      "description": "Bootstrap the marketing website using create-next-app CLI with TypeScript, Tailwind CSS v4, and Biome for linting. Set up Docker with PostgreSQL and Drizzle ORM.",
+      "acceptance": [
+        "Project created using: bunx create-next-app@latest vertex-studio --ts --tailwind --biome --app --src-dir --use-bun --no-turbopack --no-import-alias",
+        "Navigate to project: cd vertex-studio",
+        "Initialize shadcn/ui: bunx shadcn@latest init -y --base-color=neutral",
+        "Open in Cursor: cursor .",
+        "Next.js 16 configured with App Router",
+        "Docker Compose file created with PostgreSQL container",
+        "Drizzle ORM installed and configured: bun add drizzle-orm postgres && bun add -D drizzle-kit",
+        "Zod installed for validation: bun add zod",
+        "Database schema directory created at src/db with connection and schema files",
+        "Drizzle config file (drizzle.config.ts) configured for PostgreSQL",
+        "Environment variables template (.env.example) created with DATABASE_URL",
+        "TypeScript strict mode enabled in tsconfig.json",
+        "Base layout component created at src/app/layout.tsx with metadata and viewport configuration",
+        "Global CSS imports Tailwind v4 directives and custom CSS variables for brand colors",
+        "API routes only - no server actions or direct database calls in components",
+        "Project runs successfully with bun dev on localhost:3000",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "design-colors-typography",
+      "title": "Define color palette and typography system",
+      "description": "Establish the brand color palette and typography scale using Tailwind v4 CSS variables.",
+      "acceptance": [
+        "Brand color palette defined in CSS variables: primary (electric blue #0066FF), secondary (deep purple #6B21A8), accent (vibrant cyan #00D4FF), neutrals (slate scale)",
+        "Typography scale using Inter for headings and system-ui for body, with fluid sizing using clamp()",
+        "Spacing system follows 4px base unit (4, 8, 12, 16, 24, 32, 48, 64, 96, 128)",
+        "Dark mode support using Tailwind's dark: modifier with system preference detection",
+        "Colors accessible as Tailwind utility classes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "design-components-core",
+      "title": "Create core UI components",
+      "description": "Build reusable Button, Card, and Section components with the agency's technologically advanced aesthetic.",
+      "acceptance": [
+        "Button component with variants: primary, secondary, outline, ghost - all with hover/focus states",
+        "Card component with glass morphism effect option and subtle border gradients",
+        "Section component with max-width container and responsive padding",
+        "Animated gradient backgrounds using CSS animations for hero sections",
+        "Icon system using Lucide React for consistent iconography",
+        "Motion utilities using CSS transitions and transforms (no heavy animation libraries)",
+        "All components follow accessibility best practices (WCAG 2.1 AA compliance)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "layout-header-nav",
+      "title": "Create global navigation header",
+      "description": "Build the site-wide navigation header with logo, links, and industries dropdown.",
+      "acceptance": [
+        "Fixed header with logo, main navigation links, and CTA button",
+        "Navigation items: Work, Services, Industries (dropdown), About, Contact",
+        "Industries dropdown displays all 15 industry pages in organized grid layout",
+        "Header background transitions from transparent to solid on scroll",
+        "Mobile navigation with slide-out drawer or full-screen overlay",
+        "Accessibility: skip-to-content link, keyboard navigation support, ARIA labels",
+        "Navigation highlights current page/section",
+        "Smooth transitions between navigation states",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "layout-footer",
+      "title": "Create global footer component",
+      "description": "Build the site-wide footer with company info, links, and newsletter signup.",
+      "acceptance": [
+        "Footer with company info, navigation links, social media icons, and newsletter signup",
+        "Footer includes industry page links organized by category",
+        "Legal links: Privacy Policy, Terms of Service, Cookie Policy",
+        "Newsletter signup form with email validation",
+        "Social media icon links (LinkedIn, Twitter, Instagram, Dribbble)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-home-hero",
+      "title": "Build homepage hero section",
+      "description": "Create the main homepage hero with animated headline and CTAs.",
+      "acceptance": [
+        "Hero section with animated headline, subheadline, and dual CTA buttons (View Work, Get in Touch)",
+        "Hero background features subtle animated gradient mesh or particle effect",
+        "Smooth scroll behavior and intersection observer animations on scroll",
+        "Mobile-responsive layout",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-home-services",
+      "title": "Build homepage services grid",
+      "description": "Create the services overview section on the homepage.",
+      "acceptance": [
+        "Services grid displaying: Brand Identity, Web Design, Motion Graphics, UI/UX, Print & Collateral, Digital Campaigns",
+        "Each service card links to detailed service page with hover animation",
+        "Responsive grid layout (3 columns on desktop, 2 on tablet, 1 on mobile)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-home-social-proof",
+      "title": "Build homepage social proof sections",
+      "description": "Add featured work, client logos, statistics, and testimonials to homepage.",
+      "acceptance": [
+        "Featured work carousel showing 4-6 enterprise client projects with category tags",
+        "Social proof section with enterprise client logos (placeholder logos acceptable)",
+        "Statistics banner: Years in Business, Projects Delivered, Enterprise Clients, Team Members",
+        "Testimonial section with rotating quotes from enterprise clients",
+        "CTA section before footer with headline and contact button",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-industry-template",
+      "title": "Create reusable industry landing page template",
+      "description": "Build a flexible page template for industry-specific landing pages that accepts dynamic content.",
+      "acceptance": [
+        "Dynamic route at src/app/industries/[industry]/page.tsx using Next.js App Router",
+        "Page template sections: Hero, Problem Statement, Solution Overview, Benefits Grid, Case Study Preview, CTA",
+        "Hero section accepts: industry name, headline, subheadline, hero image/illustration",
+        "Problem section displays 3 industry-specific pain points with icons",
+        "Solution section shows how agency services address each pain point",
+        "Benefits grid with 4-6 key benefits specific to the industry",
+        "Case study preview card linking to relevant portfolio piece",
+        "CTA section with industry-specific messaging and contact form trigger",
+        "SEO metadata generated dynamically: title, description, OpenGraph tags",
+        "Breadcrumb navigation showing Home > Industries > [Industry Name]",
+        "Related industries section at bottom linking to similar verticals",
+        "generateStaticParams exports all industry slugs for static generation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "content-industry-tier1",
+      "title": "Add content data for high-priority industries",
+      "description": "Create content data files for Healthcare, Financial Services, Technology, and Legal industries.",
+      "acceptance": [
+        "Healthcare (/industries/healthcare): 'Design That Builds Trust in Healthcare' - problems around medical communication, regulatory compliance, patient trust",
+        "Financial Services (/industries/financial-services): 'Elevate Your Financial Brand' - problems around legacy brand, complex products, fintech competition",
+        "Technology (/industries/technology): 'Design for Tech Companies That Ship' - problems around rapid product evolution, technical translation, market differentiation",
+        "Legal (/industries/legal): 'Commanding Presence for Legal Leaders' - problems around traditional branding, digital presence, client acquisition",
+        "Each industry includes: headline, 3 problems, 3 solutions, 6 benefits, CTA text, visual style notes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "content-industry-tier2-batch1",
+      "title": "Add content data for medium-priority industries (batch 1)",
+      "description": "Create content data files for Manufacturing, Real Estate, Retail, and Energy industries.",
+      "acceptance": [
+        "Manufacturing (/industries/manufacturing): 'Industrial Strength Brand Design' - B2B buyer expectations, product catalogs, brand perception",
+        "Real Estate (/industries/real-estate): 'Design That Moves Properties' - emotional connection, digital listings, brand consistency",
+        "Retail (/industries/retail): 'Design That Drives Commerce' - omnichannel presence, e-commerce conversion, seasonal campaigns",
+        "Energy (/industries/energy): 'Powering the Future of Energy Brands' - sustainability messaging, stakeholder communication, energy transition",
+        "Each industry includes: headline, 3 problems, 3 solutions, 6 benefits, CTA text, visual style notes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "content-industry-tier2-batch2",
+      "title": "Add content data for medium-priority industries (batch 2)",
+      "description": "Create content data files for Education, Hospitality, Automotive, and Telecom industries.",
+      "acceptance": [
+        "Education (/industries/education): 'Design That Inspires Learning' - digital-native students, engagement vs rigor, program communication",
+        "Hospitality (/industries/hospitality): 'Design That Creates Unforgettable Experiences' - digital touchpoints, multi-property brands, booking experiences",
+        "Automotive (/industries/automotive): 'Design That Drives Desire' - EV/autonomous transitions, dealership experiences, vehicle configurators",
+        "Telecommunications (/industries/telecommunications): 'Connecting Brands to Customers' - commoditized services, complex plans, 5G communication",
+        "Each industry includes: headline, 3 problems, 3 solutions, 6 benefits, CTA text, visual style notes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "content-industry-tier2-batch3",
+      "title": "Add content data for medium-priority industries (batch 3)",
+      "description": "Create content data files for Insurance, Logistics, and Consulting industries.",
+      "acceptance": [
+        "Insurance (/industries/insurance): 'Design That Builds Confidence' - intangible products, policy complexity, insurtech competition",
+        "Logistics (/industries/logistics): 'Design That Moves Business Forward' - complex operations, tracking interfaces, brand differentiation",
+        "Consulting (/industries/consulting): 'Design for Thought Leaders' - expertise visualization, partner consistency, thought leadership content",
+        "Each industry includes: headline, 3 problems, 3 solutions, 6 benefits, CTA text, visual style notes",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-contact-form",
+      "title": "Build contact page with consultation form",
+      "description": "Create the contact page with a comprehensive consultation request form.",
+      "acceptance": [
+        "URL: /contact",
+        "Page headline: 'Let's Create Something Exceptional'",
+        "Contact form fields: Name, Email, Company, Phone (optional), Industry dropdown, Project Type multi-select, Budget Range, Timeline, Project Description",
+        "Industry dropdown pre-populated if visitor came from industry page",
+        "Project types: Brand Identity, Website Design, Motion Graphics, UI/UX, Print & Collateral, Digital Campaign, Other",
+        "Form validation using Zod with react-hook-form and clear error messages",
+        "Loading spinner during form submission",
+        "Success confirmation message on submit",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "api-contact-submit",
+      "title": "Create contact form API route and database storage",
+      "description": "Build the API route to handle contact form submissions and store in PostgreSQL via Drizzle.",
+      "acceptance": [
+        "API route at /api/contact handles POST requests",
+        "Request body validated with Zod schema",
+        "Contact submissions stored in PostgreSQL via Drizzle ORM",
+        "Database table: contact_submissions with all form fields plus created_at timestamp",
+        "Email notification sent on submission (use environment variable for recipient)",
+        "API returns appropriate success/error responses",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-contact-extras",
+      "title": "Add contact page supplementary content",
+      "description": "Add alternative contact methods, FAQ, and thank you page.",
+      "acceptance": [
+        "Alternative contact methods: Email address, Phone number, Office address with map embed",
+        "FAQ section addressing common questions about process, timeline, pricing",
+        "Social media links and LinkedIn company page",
+        "Thank you page at /contact/thank-you with next steps and expected response time",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "page-work-grid",
+      "title": "Build portfolio grid page",
+      "description": "Create the work/portfolio section with filterable project grid.",
+      "acceptance": [
+        "URL: /work displays filterable grid of project thumbnails",
+        "Filter options: All, by Industry, by Service Type",
+        "Each project links to detailed case study page at /work/[project-slug]",
+        "Responsive grid layout with hover effects on thumbnails",
+        "Minimum 6 placeholder projects with realistic thumbnails",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-work-case-study",
+      "title": "Create case study page template",
+      "description": "Build the detailed case study page template for portfolio pieces.",
+      "acceptance": [
+        "Dynamic route at /work/[project-slug]",
+        "Case study template includes: Hero image, Client name, Industry tag, Challenge section, Approach section, Solution section, Results/Impact, Image gallery",
+        "Results shown with metrics where available (e.g., '47% increase in engagement')",
+        "Image gallery with lightbox for full-resolution viewing",
+        "Related projects section at bottom of each case study",
+        "CTA section encouraging contact after viewing work",
+        "Case studies span multiple industries to demonstrate versatility",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-services-overview",
+      "title": "Build services overview page",
+      "description": "Create the main services page with all service offerings.",
+      "acceptance": [
+        "URL: /services displays all services in grid layout",
+        "Services: Brand Identity, Web Design, Motion Graphics, UI/UX, Print & Collateral, Digital Campaigns",
+        "Each service card shows icon, name, brief description, and links to detail page",
+        "Hero section with services headline and intro text",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-services-detail",
+      "title": "Create individual service detail pages",
+      "description": "Build detailed pages for each service offering with process and deliverables.",
+      "acceptance": [
+        "Service pages: /services/brand-identity, /services/web-design, /services/motion-graphics, /services/ui-ux, /services/print-collateral, /services/digital-campaigns",
+        "Each page includes: Hero with service name, Service description, Process steps, Deliverables list, Related case studies, CTA",
+        "Process steps shown as numbered timeline or step diagram",
+        "Deliverables presented as clear checklist of what clients receive",
+        "FAQ section specific to each service addressing common questions",
+        "Pricing indication (e.g., 'Starting from $X' or 'Custom quote')",
+        "Related case studies filtered to show work in that service category",
+        "Cross-links to complementary services",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "page-about",
+      "title": "Build about page with team and company story",
+      "description": "Create the about page showcasing the agency's story, values, and team.",
+      "acceptance": [
+        "URL: /about",
+        "Company story section with founding narrative and mission",
+        "Values section highlighting: Innovation, Craft, Partnership, Results",
+        "Team grid showing key team members with photos, names, titles, and brief bios",
+        "Team member photos use consistent treatment (same background, lighting style)",
+        "Awards and recognition section if applicable",
+        "Client logos section (expanded from homepage)",
+        "Technology and tools section showing capabilities (Figma, After Effects, etc.)",
+        "Career section or link to careers page for job opportunities",
+        "Office photos or virtual tour element",
+        "CTA encouraging partnership conversation",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "infra-seo-metadata",
+      "title": "Implement SEO optimization and metadata",
+      "description": "Add comprehensive SEO with metadata, structured data, and technical optimization.",
+      "acceptance": [
+        "Unique title and meta description for every page",
+        "OpenGraph tags for social sharing with custom images per page",
+        "Twitter Card metadata configured",
+        "JSON-LD structured data for Organization, LocalBusiness, and Service schemas",
+        "XML sitemap generated at /sitemap.xml",
+        "robots.txt configured appropriately",
+        "Canonical URLs set on all pages",
+        "Image alt texts on all images",
+        "Heading hierarchy (h1, h2, h3) properly structured on all pages",
+        "Internal linking strategy implemented between related pages",
+        "Industry pages include relevant keywords naturally in content",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "infra-performance-cwv",
+      "title": "Optimize performance and Core Web Vitals",
+      "description": "Ensure fast loading and meet Core Web Vitals thresholds.",
+      "acceptance": [
+        "Largest Contentful Paint (LCP) under 2.5 seconds",
+        "First Input Delay (FID) under 100 milliseconds",
+        "Cumulative Layout Shift (CLS) under 0.1",
+        "Images optimized using Next.js Image component with appropriate sizes",
+        "Fonts preloaded and display:swap configured",
+        "JavaScript bundle analyzed and optimized (dynamic imports where beneficial)",
+        "Static pages generated at build time using generateStaticParams",
+        "Lighthouse performance score above 90 on mobile and desktop",
+        "No layout shifts during page load",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "infra-accessibility-wcag",
+      "title": "Ensure accessibility compliance",
+      "description": "Meet WCAG 2.1 AA accessibility standards across the site.",
+      "acceptance": [
+        "All interactive elements keyboard accessible with visible focus indicators",
+        "Color contrast ratios meet WCAG AA standards (4.5:1 for text, 3:1 for large text)",
+        "All images have descriptive alt text",
+        "Form inputs have associated labels",
+        "Error messages are clearly communicated to screen readers",
+        "Skip to main content link available",
+        "ARIA landmarks used appropriately (main, nav, footer, etc.)",
+        "Heading levels used in logical order without skipping",
+        "Video/motion content has reduced motion alternative",
+        "Tested with screen reader (VoiceOver or NVDA)",
+        "Automated accessibility testing passes (axe or similar)",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "infra-analytics-tracking",
+      "title": "Implement analytics and conversion tracking",
+      "description": "Add analytics to track visitor behavior and form conversions.",
+      "acceptance": [
+        "Privacy-focused analytics integrated (Plausible or Fathom preferred, or GA4)",
+        "Page view tracking on all pages",
+        "Form submission events tracked as conversions",
+        "Industry page visits tracked to understand popular verticals",
+        "CTA button click tracking",
+        "Cookie consent banner compliant with GDPR/CCPA",
+        "Analytics data excludes internal team traffic",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "infra-testing-qa",
+      "title": "Implement testing and QA",
+      "description": "Add tests and conduct thorough QA across browsers and devices.",
+      "acceptance": [
+        "Unit tests for utility functions and data processing",
+        "Component tests for key UI components using Testing Library",
+        "End-to-end tests for critical user flows (contact form, navigation)",
+        "Cross-browser testing: Chrome, Firefox, Safari, Edge",
+        "Mobile testing on iOS Safari and Android Chrome",
+        "Responsive testing at key breakpoints (375px, 768px, 1024px, 1440px)",
+        "Form validation tested with various inputs including edge cases",
+        "404 page displays correctly for invalid routes",
+        "All links verified (no broken links)",
+        "All industry pages render correctly with their content",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "infra-deploy-vercel",
+      "title": "Configure deployment and hosting",
+      "description": "Set up deployment pipeline and hosting infrastructure for production.",
+      "acceptance": [
+        "Deployment to Vercel configured",
+        "Production environment variables configured securely",
+        "Custom domain configured with SSL certificate",
+        "Preview deployments enabled for pull requests",
+        "Build optimizations enabled",
+        "Environment-specific configurations (development, staging, production)",
+        "Error monitoring integrated (Sentry or similar)",
+        "Uptime monitoring configured with alerting",
+        "Security headers configured (CSP, X-Frame-Options, etc.)",
+        "PostgreSQL database hosted (Neon, Supabase, or similar)",
+        "Launch checklist completed and verified",
+        "`bunx biome check .` passes with no errors",
+        "`bunx tsc --noEmit` passes with no type errors",
+        "`bun run build` completes successfully"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}
