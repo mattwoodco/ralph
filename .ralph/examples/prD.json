@@ -1,0 +1,363 @@
+{
+  "name": "Flux - AI-Powered Brand Asset Platform",
+  "description": "A competitive analysis-informed PRD for a creative collaboration tool that combines the best features of Figma Buzz, Weavy.ai, Canva, and Adobe Express to create resilient, market-ready creative software.",
+  "competitive_analysis": {
+    "figma_buzz": {
+      "overview": "Launched May 2025 at Config, Figma Buzz enables design and marketing teams to co-create branded assets within the Figma ecosystem.",
+      "key_features": [
+        "Template-based creation with locked/editable zones for brand consistency",
+        "Bulk asset generation from spreadsheet data (CSV/Excel mapping)",
+        "AI integration with gpt-image-1 and Gemini for image generation",
+        "Multiple canvas views (Asset View for detail, Grid View for overview)",
+        "Pre-built social platform formats (Instagram, Facebook, LinkedIn, YouTube, etc.)",
+        "Copy-paste integration from Figma Design files",
+        "Background removal, image combination, resolution boost",
+        "Text rewriting, shortening, and translation via AI"
+      ],
+      "strengths": [
+        "Deep ecosystem integration with Figma Design",
+        "Brand consistency through design system enforcement",
+        "Free during beta, included in paid Figma plans",
+        "73% faster stakeholder approvals reported",
+        "40% reduction in redundant asset requests (Affirm case study)"
+      ],
+      "weaknesses": [
+        "No CMYK color profiles for print",
+        "No PDF export with bleed and cutlines",
+        "Smaller template library compared to Canva",
+        "Requires Figma ecosystem buy-in"
+      ],
+      "pricing": "Free (included in Full, Dev, and Content seats)"
+    },
+    "weavy_ai": {
+      "overview": "Node-based AI design platform aggregating multiple AI models for creative professionals.",
+      "key_features": [
+        "Node-based visual workflow architecture",
+        "Multi-model AI integration (Black Forest Labs, Runway, Google, Stability AI)",
+        "Professional editing tools (layers, masking, inpainting, upscaling)",
+        "Color grading and parametric fine-tuning",
+        "Reusable workflow templates (design machines)",
+        "App Mode for simplified team UIs from complex workflows",
+        "Text, image, video, and 3D generation capabilities"
+      ],
+      "strengths": [
+        "Model flexibility and aggregation",
+        "Professional-grade editing capabilities",
+        "Workflow automation and reusability",
+        "Credit rollover on paid plans",
+        "Educational resources (office hours, VOD library)"
+      ],
+      "weaknesses": [
+        "Steeper learning curve for node-based interface",
+        "Credit-based system can be unpredictable for budgeting",
+        "Less brand-management focus"
+      ],
+      "pricing": {
+        "starter": "$19/month",
+        "professional": "$36/month",
+        "team": "$48/user/month",
+        "additional_credits": "$10 per 1,000-1,200 credits"
+      }
+    },
+    "canva": {
+      "overview": "Market-leading design tool for quick content creation, known for massive template library and ease of use.",
+      "key_features": [
+        "Millions of templates across categories",
+        "Stock photo/video/audio library",
+        "Magic Studio AI tools",
+        "Brand Kit for consistency",
+        "Real-time collaboration",
+        "Print-ready exports with CMYK and bleed"
+      ],
+      "strengths": [
+        "Lowest barrier to entry for non-designers",
+        "Superior print capabilities",
+        "Massive asset and template library",
+        "Established market presence",
+        "Affordable pricing ($12.99/month Pro)"
+      ],
+      "weaknesses": [
+        "Not integrated with professional design systems",
+        "Limited advanced editing capabilities",
+        "Template-dependent workflow"
+      ]
+    },
+    "adobe_express": {
+      "overview": "Adobe's simplified creative tool integrated with Creative Cloud ecosystem.",
+      "key_features": [
+        "AI Assistants with agentic capabilities",
+        "Firefly Boards for ideation",
+        "Creative Cloud Libraries integration",
+        "Real-time collaboration and commenting",
+        "InDesign to Express template workflow",
+        "Multi-model AI (Firefly, partner models)"
+      ],
+      "strengths": [
+        "Deep Creative Cloud integration",
+        "Professional AI models (Firefly)",
+        "Enterprise-ready with Teams features",
+        "InDesign power with Express simplicity"
+      ],
+      "weaknesses": [
+        "Complex pricing structure",
+        "Heavy ecosystem lock-in",
+        "Fragmented across multiple apps"
+      ]
+    }
+  },
+  "resilience_factors": {
+    "ecosystem_integration": {
+      "importance": "critical",
+      "description": "Tools that integrate deeply with existing workflows (Figma Design, Adobe CC) create switching costs and become essential infrastructure.",
+      "implementation": "Build bidirectional sync with design systems, import/export with major tools, API-first architecture"
+    },
+    "brand_consistency_enforcement": {
+      "importance": "high",
+      "description": "Locked editable zones, design tokens, and brand guidelines prevent off-brand content while enabling team velocity.",
+      "implementation": "Template builder with locked/editable regions, automatic brand asset injection, style guide enforcement"
+    },
+    "ai_first_architecture": {
+      "importance": "critical",
+      "description": "Generative AI for images, text, and video is table stakes. Multi-model support provides flexibility and future-proofing.",
+      "implementation": "Aggregate top models (Flux, Runway, Gemini, GPT), provide model selection per task, support fine-tuned brand models"
+    },
+    "collaboration_primitives": {
+      "importance": "high",
+      "description": "Real-time editing, commenting, approval workflows, and team libraries reduce friction in content production.",
+      "implementation": "Real-time cursors, threaded comments, approval states, shared asset libraries, notification integrations"
+    },
+    "bulk_operations": {
+      "importance": "high",
+      "description": "Data-driven asset generation from spreadsheets enables marketing campaigns at scale.",
+      "implementation": "CSV/Excel import, column-to-template mapping, batch generation, variant management"
+    },
+    "platform_presets": {
+      "importance": "medium",
+      "description": "Pre-configured dimensions for social platforms eliminate manual resizing and format research.",
+      "implementation": "One-click resize, intelligent content reflow, platform-specific export optimizations"
+    },
+    "non_designer_accessibility": {
+      "importance": "critical",
+      "description": "Marketing teams need to self-serve without design bottlenecks while staying on-brand.",
+      "implementation": "Simplified editing modes, guardrailed templates, AI assistance for non-designers"
+    },
+    "offline_capability": {
+      "importance": "medium",
+      "description": "Work without connectivity, sync when online. Critical for reliability and trust.",
+      "implementation": "Local-first architecture, optimistic UI, background sync, conflict resolution"
+    }
+  },
+  "stories": [
+    {
+      "id": "INIT-001",
+      "title": "Project initialization with Next.js 16",
+      "description": "Bootstrap the Flux application with modern web stack optimized for real-time collaboration and AI integration.",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes",
+        "Biome configured: cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+        "Tailwind v4 with CSS-first configuration and design tokens",
+        "shadcn/ui initialized with New York style",
+        "PostgreSQL with Drizzle ORM for multi-tenant data",
+        "Real-time infrastructure (Socket.io or Liveblocks) configured",
+        "AI SDK installed (Vercel AI SDK with multi-provider support)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AUTH-001",
+      "title": "Team authentication and workspace management",
+      "description": "Implement secure authentication with team/workspace support for brand isolation.",
+      "acceptance": [
+        "OAuth providers (Google, Microsoft, GitHub) via NextAuth.js",
+        "Workspace creation with team invites",
+        "Role-based access (Admin, Designer, Editor, Viewer)",
+        "Workspace isolation for brand assets and templates",
+        "SSO support for enterprise customers"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "BRAND-001",
+      "title": "Brand Kit configuration",
+      "description": "Enable teams to configure brand assets, colors, fonts, and guidelines that enforce consistency across all generated content.",
+      "acceptance": [
+        "Logo upload with automatic background removal",
+        "Primary, secondary, and accent color palette definition",
+        "Font family upload and configuration (heading, body, accent)",
+        "Brand voice guidelines for AI text generation",
+        "Asset library for approved images and icons",
+        "Export brand kit as shareable design tokens"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "TEMPLATE-001",
+      "title": "Template builder with editable zones",
+      "description": "Create the core template authoring experience where designers define locked and editable regions, inspired by Figma Buzz's approach to brand consistency.",
+      "acceptance": [
+        "Canvas-based template editor with drag-and-drop",
+        "Define editable zones (text, image, color) vs locked zones",
+        "Set constraints per zone (character limits, image aspect ratios)",
+        "Preview template in Editor mode to test experience",
+        "Version history for template iterations",
+        "Import designs from Figma via copy-paste or API"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "EDITOR-001",
+      "title": "Simplified editor for marketing teams",
+      "description": "Build the guardrailed editing experience for non-designers to create on-brand content within template constraints.",
+      "acceptance": [
+        "Template selection from workspace library",
+        "Edit only within defined editable zones",
+        "AI-powered text suggestions (rewrite, shorten, translate)",
+        "AI image generation within image zones",
+        "Real-time brand guideline validation",
+        "Preview across different platform sizes",
+        "One-click export to multiple formats"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AI-001",
+      "title": "Multi-model AI integration",
+      "description": "Integrate multiple AI providers for image, text, and video generation with model selection per task.",
+      "acceptance": [
+        "Image generation via Flux, DALL-E, Stable Diffusion",
+        "Text generation via GPT-4, Claude for copy suggestions",
+        "Background removal and image enhancement",
+        "Style transfer to match brand aesthetics",
+        "Model selection dropdown per generation task",
+        "Usage tracking and credit management"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "BULK-001",
+      "title": "Bulk asset generation from data",
+      "description": "Enable spreadsheet-driven asset generation for marketing campaigns at scale, matching Figma Buzz's data mapping capability.",
+      "acceptance": [
+        "CSV/Excel file upload with column detection",
+        "Visual column-to-template-zone mapping interface",
+        "Preview generated assets before batch creation",
+        "Generate hundreds of variants from single template",
+        "Export all variants as ZIP with naming convention",
+        "Save data source for re-generation with updates"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "PLATFORM-001",
+      "title": "Platform preset library",
+      "description": "Pre-configured dimensions and export settings for major social and advertising platforms.",
+      "acceptance": [
+        "Presets for Instagram (Feed, Story, Reels), Facebook, LinkedIn, X, YouTube, TikTok",
+        "Google Ads and Meta Ads format presets",
+        "One-click intelligent resize with content reflow",
+        "Platform-specific export optimization (compression, format)",
+        "Custom preset creation for unique use cases"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "COLLAB-001",
+      "title": "Real-time collaboration features",
+      "description": "Enable teams to work together on assets with presence, comments, and approval workflows.",
+      "acceptance": [
+        "Real-time cursor presence showing active editors",
+        "Threaded comments anchored to specific elements",
+        "Approval workflow states (Draft, In Review, Approved)",
+        "Version comparison side-by-side",
+        "Activity feed showing recent changes",
+        "Slack/Teams notifications for approvals and comments"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "WORKFLOW-001",
+      "title": "Node-based workflow builder",
+      "description": "Advanced mode for power users to create reusable AI workflows, inspired by Weavy.ai's node architecture.",
+      "acceptance": [
+        "Visual node canvas for workflow construction",
+        "AI model nodes (image gen, text gen, style transfer)",
+        "Transform nodes (resize, crop, color adjust)",
+        "Conditional logic nodes for dynamic outputs",
+        "Save workflows as reusable templates",
+        "App Mode to expose simplified UI from complex workflow"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "EXPORT-001",
+      "title": "Export and publishing",
+      "description": "Export assets in various formats with print-ready support addressing Figma Buzz's limitation.",
+      "acceptance": [
+        "Export as PNG, JPG, WebP, SVG, PDF",
+        "CMYK color profile support for print",
+        "PDF export with bleed and crop marks",
+        "Direct publish to social platforms via API",
+        "Asset CDN for hosted image URLs",
+        "Batch export with custom naming conventions"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ANALYTICS-001",
+      "title": "Asset performance analytics",
+      "description": "Track how generated assets perform when published to understand what content resonates.",
+      "acceptance": [
+        "Track asset exports and publishes",
+        "Integration with social platform analytics",
+        "A/B variant performance comparison",
+        "Most-used templates dashboard",
+        "Team productivity metrics",
+        "Export analytics as CSV for reporting"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ],
+  "market_positioning": {
+    "target_segments": [
+      "Marketing teams at companies using Figma who need self-serve asset creation",
+      "Agencies managing multiple brand accounts",
+      "E-commerce companies with high-volume asset needs",
+      "Enterprise teams requiring brand governance at scale"
+    ],
+    "differentiation": [
+      "Unlike Figma Buzz: Full print-ready export capabilities (CMYK, bleed)",
+      "Unlike Weavy.ai: Brand-first architecture with governance built-in",
+      "Unlike Canva: Design system integration and professional workflows",
+      "Unlike Adobe Express: Simpler pricing, faster onboarding, multi-model AI"
+    ],
+    "pricing_strategy": {
+      "free": "5 exports/month, 1 brand kit, basic AI",
+      "pro": "$15/user/month - Unlimited exports, 3 brand kits, full AI",
+      "team": "$25/user/month - Collaboration, approvals, bulk generation",
+      "enterprise": "Custom - SSO, audit logs, custom AI models, SLA"
+    }
+  },
+  "sources": [
+    "https://www.figma.com/blog/introducing-figma-buzz/",
+    "https://www.figma.com/buzz/",
+    "https://help.figma.com/hc/en-us/articles/31194937548951-Explore-Figma-Buzz",
+    "https://www.weavy.ai/",
+    "https://www.weavy.ai/pricing",
+    "https://attentioninsight.com/figma-buzz-vs-canva-vs-adobe-express/",
+    "https://www.temlis.com/blogs/figma-vs-canva-in-2025-the-ultimate-comparison",
+    "https://news.adobe.com/news/2025/10/adobe-max-2025-creative-cloud",
+    "https://blog.adobe.com/en/publish/2025/09/24/firefly-boards-launches-globally"
+  ]
+}
