@@ -1,0 +1,100 @@
+{
+  "name": "Three.js Mirror",
+  "stories": [
+    {
+      "id": "SETUP-001",
+      "title": "Set up Vite + React + TypeScript",
+      "description": "Bootstrap the project with Vite, React, and TypeScript for a fast development experience.",
+      "acceptance": [
+        "Created with bunx create-vite --template react-ts",
+        "bun install completed",
+        "bun run dev starts on port 5173"
+      ],
+      "priority": "high",
+      "passes": true
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Add Three.js and React Three Fiber",
+      "description": "Install Three.js ecosystem packages for building 3D scenes in React.",
+      "acceptance": [
+        "bun add three @react-three/fiber @react-three/drei",
+        "Basic Canvas renders without errors"
+      ],
+      "priority": "high",
+      "passes": true
+    },
+    {
+      "id": "SCENE-001",
+      "title": "Create basic 3D scene",
+      "description": "Set up the foundational 3D scene with proper lighting and camera positioning.",
+      "acceptance": [
+        "Ambient light and directional light in scene",
+        "Camera positioned to view the scene",
+        "Dark background color set"
+      ],
+      "priority": "high",
+      "passes": true
+    },
+    {
+      "id": "MIRROR-001",
+      "title": "Add reflective mirror",
+      "description": "Create a reflective plane that acts as a mirror on the floor of the scene.",
+      "acceptance": [
+        "Mirror plane visible in scene",
+        "Mirror shows reflections",
+        "Mirror is positioned on the floor"
+      ],
+      "priority": "high",
+      "passes": true
+    },
+    {
+      "id": "OBJECTS-001",
+      "title": "Add floating objects to reflect",
+      "description": "Add colorful geometric shapes above the mirror to create interesting reflections.",
+      "acceptance": [
+        "At least 3 different geometric shapes",
+        "Objects have colorful materials",
+        "Objects positioned above the mirror"
+      ],
+      "priority": "medium",
+      "passes": true
+    },
+    {
+      "id": "CONTROLS-001",
+      "title": "Add orbit controls",
+      "description": "Enable user interaction with the scene through orbit controls.",
+      "acceptance": [
+        "OrbitControls from drei is active",
+        "User can drag to rotate view",
+        "User can scroll to zoom"
+      ],
+      "priority": "medium",
+      "passes": true
+    },
+    {
+      "id": "ANIM-001",
+      "title": "Animate floating objects",
+      "description": "Add gentle animations to the floating objects for visual interest.",
+      "acceptance": [
+        "Objects rotate slowly",
+        "Objects bob up and down gently",
+        "Animation uses useFrame"
+      ],
+      "priority": "medium",
+      "passes": true
+    },
+    {
+      "id": "ENV-001",
+      "title": "Add environment map",
+      "description": "Add an environment map for realistic reflections and ambient lighting.",
+      "acceptance": [
+        "Environment component from drei",
+        "Reflections look realistic",
+        "Scene has ambient environmental lighting"
+      ],
+      "priority": "low",
+      "passes": true
+    }
+  ]
+}

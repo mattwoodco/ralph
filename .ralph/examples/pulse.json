@@ -1,0 +1,157 @@
+{
+  "name": "Pulse",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Pulse project with Next.js 16 and core dependencies",
+      "description": "Bootstrap the habit tracking app with Next.js 16, TypeScript, Tailwind v4, shadcn/ui, Biome, and SQLite database. Establish the foundational architecture with mobile-first responsive design and automatic light/dark mode support.",
+      "acceptance": [
+        "Next.js 16 app created via `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured via `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init` (replaces ESLint for linting)",
+        "Tailwind v4 configured with CSS-first configuration and custom design tokens",
+        "shadcn/ui initialized via `bunx shadcn@latest init` with components: button, card, dialog, input, label",
+        "SQLite database configured with better-sqlite3 and drizzle ORM",
+        "Database schema created with habits table (id, name, emoji, color, createdAt) and completions table (id, habitId, completedAt)",
+        "Automatic light/dark mode using prefers-color-scheme media query",
+        "Custom font scale using clamp() for responsive typography (--text-xs through --text-5xl)",
+        "Base layout with viewport-relative sizing (min-h-[100dvh]) and safe area insets for mobile",
+        "API route structure established at /api/habits and /api/completions"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "habit-crud",
+      "title": "Create, edit, and delete habits with emoji and color selection",
+      "description": "Build the habit management interface allowing users to create new habits with custom names, emoji icons, and accent colors. Include inline editing and swipe-to-delete gestures for mobile-friendly interaction.",
+      "acceptance": [
+        "Floating action button (+) in bottom-right corner opens habit creation dialog",
+        "Habit creation form with name input, emoji picker grid, and color palette selection",
+        "Form validation requires name (2-50 chars) and auto-generates default emoji/color if not selected",
+        "POST /api/habits creates habit and returns created record with id",
+        "Long-press on habit card reveals edit/delete options with haptic feedback trigger",
+        "Swipe-left gesture on habit card reveals delete action with red background",
+        "DELETE /api/habits/[id] removes habit and all associated completions",
+        "PUT /api/habits/[id] updates habit name, emoji, or color",
+        "Dialog animations use scale and opacity transitions (200ms ease-out)",
+        "Empty state displays centered message with pulsing animation encouraging first habit creation"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "daily-checkin",
+      "title": "Tap-to-complete daily habit check-ins with instant feedback",
+      "description": "Implement the core daily interaction where users tap habit cards to mark them complete for today. Provide immediate visual feedback with state changes and micro-interactions.",
+      "acceptance": [
+        "Main view displays all habits as tappable cards in a vertical scroll list",
+        "Each habit card shows emoji, name, current streak count, and completion state for today",
+        "Tapping incomplete habit triggers POST /api/completions with habitId and today's date",
+        "Completed habits show filled state with checkmark overlay and muted color treatment",
+        "Tapping completed habit prompts confirmation before DELETE /api/completions/[id] to undo",
+        "Cards use touch-action: manipulation for responsive 44px minimum tap targets",
+        "Visual state transitions animate over 150ms with spring easing",
+        "Optimistic UI updates immediately while API calls resolve in background",
+        "Pull-to-refresh gesture reloads today's completion status from database",
+        "Today's date displayed at top with dynamic greeting based on time of day"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "streak-logic",
+      "title": "Calculate and persist habit streaks with rollover handling",
+      "description": "Implement streak calculation logic that tracks consecutive days of habit completion. Handle timezone considerations, streak freezes for missed days, and accurate persistence of streak data.",
+      "acceptance": [
+        "Streak calculated as consecutive days with completions ending today or yesterday",
+        "GET /api/habits returns each habit with computed currentStreak and longestStreak values",
+        "Streak breaks when more than one calendar day passes without completion",
+        "Completing a habit today after missing yesterday starts new streak at 1",
+        "Completing a habit today when yesterday was completed continues streak (increment by 1)",
+        "longestStreak field persisted in habits table and updated when currentStreak exceeds it",
+        "Streak calculation uses user's local timezone via client-sent offset header",
+        "API response includes streakStatus: 'active' | 'at-risk' | 'broken' for UI treatment",
+        "Habits completed today show green 'active' indicator, yesterday-only shows amber 'at-risk'",
+        "Database query efficiently calculates streaks using window functions on completions table"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "completion-animations",
+      "title": "Satisfying completion animations with particle effects and haptics",
+      "description": "Create delightful micro-interactions when users complete habits. Include confetti bursts, streak milestone celebrations, and coordinated haptic feedback for a rewarding tactile experience.",
+      "acceptance": [
+        "Habit completion triggers circular ripple animation expanding from tap point",
+        "Checkmark icon animates in with elastic overshoot effect (scale 0 -> 1.2 -> 1)",
+        "Confetti particle burst (12-20 particles) in habit's accent color on completion",
+        "Particles use CSS animations with randomized trajectories and gravity simulation",
+        "Streak milestone celebrations (7, 30, 100 days) trigger larger confetti explosion",
+        "Milestone achievements display toast notification with streak count and encouragement",
+        "navigator.vibrate() called on completion for haptic feedback (pattern: [10] for tap, [10, 50, 20] for milestone)",
+        "Undo action plays reverse animation with particles imploding back to center",
+        "All animations respect prefers-reduced-motion media query with instant state changes",
+        "Animation performance optimized using CSS transforms and will-change hints"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "history-calendar",
+      "title": "Calendar history view with completion heatmap visualization",
+      "description": "Build a calendar view showing habit completion history over time. Display GitHub-style contribution heatmap with color intensity indicating completion rates, and allow navigation through past months.",
+      "acceptance": [
+        "History tab accessible via bottom navigation showing calendar grid view",
+        "Calendar displays current month with navigation arrows to browse past months",
+        "Each day cell colored by completion percentage: 0% gray, 25% light, 50% medium, 75% dark, 100% full accent",
+        "GET /api/completions?month=YYYY-MM returns all completions for calendar rendering",
+        "Tapping a day cell expands to show list of habits completed that day",
+        "Current day highlighted with ring border, today's completion count shown",
+        "Week starts on Monday with day labels (M T W T F S S) at top",
+        "Monthly summary shows total completions, best day, and completion rate percentage",
+        "Swipe gestures navigate between months with horizontal slide transition",
+        "Empty months display placeholder encouraging habit creation or past data"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "streak-visualization",
+      "title": "Animated streak counter with progress ring and flame icon",
+      "description": "Design an expressive streak visualization component showing current streak as an animated counter with circular progress ring and dynamic flame icon that grows with streak length.",
+      "acceptance": [
+        "Streak counter component displays large numeric value with flame emoji prefix",
+        "Circular SVG progress ring surrounds counter, filling based on streak-to-goal ratio",
+        "Progress ring animates on load with stroke-dashoffset transition (600ms ease-out)",
+        "Flame icon scales dynamically: small (1-6 days), medium (7-29), large (30+), inferno (100+)",
+        "Flame uses CSS animation with subtle flicker effect (translateY oscillation)",
+        "Counter number animates using counting-up effect when streak increases",
+        "Ring color transitions through gradient: blue (1-6) -> green (7-29) -> gold (30+) -> rainbow (100+)",
+        "Component accepts habit color prop to tint the visualization",
+        "Tap on streak visualization shows modal with streak history timeline",
+        "Zero-streak state shows empty ring with motivational 'Start your streak!' message"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "data-persistence",
+      "title": "Offline-first data layer with sync and conflict resolution",
+      "description": "Implement robust data persistence ensuring the app works offline and syncs when connectivity returns. Handle conflict resolution for completions made while offline.",
+      "acceptance": [
+        "IndexedDB cache stores habits and completions for offline access",
+        "App loads cached data immediately while fetching fresh data in background",
+        "Completions made offline queued in localStorage with timestamp",
+        "Network reconnection triggers sync of queued completions via POST /api/completions/batch",
+        "Conflict resolution uses last-write-wins strategy based on client timestamp",
+        "Sync status indicator shows cloud icon: synced (checkmark), pending (arrows), offline (slash)",
+        "Failed sync attempts retry with exponential backoff (1s, 2s, 4s, max 30s)",
+        "Service worker caches static assets for full offline app shell functionality",
+        "Database migrations handled via drizzle-kit with version tracking",
+        "Data export available as JSON download from settings for user data portability"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

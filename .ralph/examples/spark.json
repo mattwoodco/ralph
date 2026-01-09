@@ -1,0 +1,142 @@
+{
+  "name": "Spark",
+  "stories": [
+    {
+      "id": "init",
+      "title": "Project initialization",
+      "description": "Set up Next.js 16 project with TypeScript, Tailwind v4, shadcn/ui, Biome, and SQLite database foundation",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes",
+        "Biome setup: cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+        "Tailwind v4 configured with CSS-first configuration",
+        "shadcn/ui initialized with bunx shadcn@latest init using New York style and neutral base color",
+        "better-sqlite3 installed and database connection utility created",
+        "Database schema defined with tables: ideas, saved_ideas, completed_dates",
+        "Global CSS includes prefers-color-scheme media queries for automatic light/dark mode",
+        "Typography scale uses clamp() for fluid sizing (e.g., clamp(2rem, 10vw, 6rem) for headlines)",
+        "Base layout is mobile-first with no horizontal overflow",
+        "Whimsical sans-serif font loaded (e.g., DM Sans or Plus Jakarta Sans)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "seed-ideas",
+      "title": "Date idea database seeding",
+      "description": "Populate the database with curated date night ideas across all categories",
+      "acceptance": [
+        "Minimum 40 date ideas seeded across 4 categories: romantic, adventure, cozy, free",
+        "Each idea has: id, title, description, category, estimated_cost, duration_minutes",
+        "Ideas are diverse and inclusive of different relationship types and budgets",
+        "Seed script is idempotent (can run multiple times without duplicates)",
+        "API route GET /api/ideas/random returns a random unseeded idea",
+        "API route respects optional category query parameter for filtering"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "swipe-ui",
+      "title": "Swipe card interface",
+      "description": "Build the core swipe interaction for browsing date ideas",
+      "acceptance": [
+        "Single card displayed centered on screen with idea title and description",
+        "Card uses 80vh height on mobile for immersive feel",
+        "Swipe right gesture saves idea (visual feedback: card exits right with green tint)",
+        "Swipe left gesture skips idea (visual feedback: card exits left with subtle fade)",
+        "Touch gestures work smoothly on iOS and Android browsers",
+        "Fallback buttons for save/skip visible below card for accessibility",
+        "Card stack shows subtle preview of next card behind current",
+        "Typography: title uses clamp(1.5rem, 8vw, 3rem), description uses clamp(1rem, 4vw, 1.25rem)",
+        "Borderless card design with generous whitespace, no visible card borders or shadows in light mode"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "saved-ideas",
+      "title": "Saved ideas collection",
+      "description": "View and manage saved date ideas for future use",
+      "acceptance": [
+        "Bottom navigation tab or swipe-up gesture reveals saved ideas list",
+        "Saved ideas displayed as minimal list with title and category tag",
+        "Tap on saved idea expands to show full description",
+        "Swipe left on saved idea removes it from collection (with undo toast)",
+        "Long press or tap action to mark idea as 'completed' moves it to history",
+        "Empty state shows encouraging message with spark emoji",
+        "List uses virtualization if more than 20 items for performance",
+        "API routes: GET /api/saved, POST /api/saved, DELETE /api/saved/:id"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "category-filters",
+      "title": "Category filtering",
+      "description": "Allow users to filter date ideas by category preference",
+      "acceptance": [
+        "Horizontal pill toggles at top of swipe screen for: All, Romantic, Adventure, Cozy, Free",
+        "Pills use subtle background color coding per category",
+        "Multiple categories can be selected simultaneously",
+        "Filter state persists in localStorage across sessions",
+        "Swipe cards only show ideas matching active filters",
+        "If no ideas match filters, show friendly empty state with suggestion to expand filters",
+        "Filter changes trigger smooth card transition animation",
+        "Pills are scrollable horizontally if screen is narrow"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "date-history",
+      "title": "Completed dates history",
+      "description": "Track and celebrate completed date nights",
+      "acceptance": [
+        "Separate tab/view for completed dates with completion timestamp",
+        "Each completed date shows: idea title, category, date completed",
+        "Optional: add personal note or rating (1-5 sparks) when marking complete",
+        "History sorted by most recent first",
+        "Simple stats at top: total dates completed, streak counter for weekly dates",
+        "Ability to 'redo' a completed date (adds back to saved without removing from history)",
+        "API routes: GET /api/history, POST /api/history, PATCH /api/history/:id",
+        "Empty history state encourages user to complete their first date"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "animations",
+      "title": "Micro-interactions and polish",
+      "description": "Add delightful animations that enhance the whimsical feel",
+      "acceptance": [
+        "Card swipe uses spring physics for natural feel (not linear easing)",
+        "Spark/confetti burst animation when saving an idea",
+        "Subtle pulse animation on empty card stack prompting refresh",
+        "Tab transitions use shared element transitions where supported",
+        "Button presses have gentle scale feedback (0.97 transform)",
+        "Loading states use skeleton with subtle shimmer, no spinners",
+        "All animations respect prefers-reduced-motion media query",
+        "Page transitions feel native app-like (no full page reloads visible)"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "pwa-offline",
+      "title": "Progressive web app and offline support",
+      "description": "Enable installation and basic offline functionality",
+      "acceptance": [
+        "Valid web app manifest with Spark branding and theme colors",
+        "App is installable on iOS (Add to Home Screen) and Android",
+        "Service worker caches app shell and last 10 viewed ideas",
+        "Offline banner appears when connection lost, saved ideas still accessible",
+        "Saved ideas and history are stored in SQLite, synced when online",
+        "App icon is simple spark/flame symbol that works at all sizes",
+        "Splash screen matches app theme (no white flash on dark mode)",
+        "Standalone display mode hides browser chrome for immersive feel"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

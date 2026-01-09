@@ -1,0 +1,143 @@
+{
+  "name": "Invoice",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Invoice App",
+      "description": "Set up the foundational Next.js 16 project with all required dependencies and configurations for a minimal invoicing tool.",
+      "acceptance": [
+        "Next.js 16 app created with `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured with `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init` (replaces ESLint for linting)",
+        "SQLite database configured with better-sqlite3 and Drizzle ORM",
+        "Schema includes invoices table (id, number, client_name, client_email, created_at, due_date, status, share_token) and line_items table (id, invoice_id, description, quantity, unit_price)",
+        "shadcn/ui initialized with Button, Input, Label, Card components via bunx shadcn@latest add",
+        "CSS variables configured for light/dark mode using prefers-color-scheme",
+        "Typographic scale established using clamp() with viewport units (e.g., clamp(1rem, 2vw + 0.5rem, 2rem))",
+        "Mobile-first base styles with borderless, Apple-like minimal aesthetic",
+        "Single page layout component ready at app/page.tsx"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "invoice-form",
+      "title": "Invoice Header Form",
+      "description": "Build the top section of the invoice with client details and invoice metadata using a clean, typographic-driven UI.",
+      "acceptance": [
+        "Form fields for client name, client email, invoice number (auto-generated), due date",
+        "React Hook Form integration with validation and loading states",
+        "Inputs styled borderless with subtle underlines, large touch targets (min 44px)",
+        "Invoice number displayed prominently using whimsical large typography (clamp(2rem, 8vw, 4rem))",
+        "Due date picker using native date input styled to match minimal aesthetic",
+        "Form auto-saves to SQLite on blur/change with debounce",
+        "Light/dark mode styling adapts automatically",
+        "Responsive layout stacks vertically on mobile, horizontal on tablet+"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "line-items",
+      "title": "Line Items Management",
+      "description": "Implement swipe-friendly line item rows with add/edit/delete functionality and running total calculation.",
+      "acceptance": [
+        "Line items displayed as minimal cards with description, quantity, unit price, line total",
+        "Swipe-left gesture reveals delete action on mobile (touch-action: pan-y)",
+        "Tap to edit inline with borderless inputs",
+        "Add line item button fixed at bottom of items list with + icon",
+        "Running subtotal updates in real-time as items change",
+        "Empty state shows gentle prompt: 'Add your first item'",
+        "Items persist to SQLite line_items table linked to invoice",
+        "useId() used for React list keys, never array index",
+        "Smooth animations on add/remove using CSS transitions"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "totals-summary",
+      "title": "Invoice Totals & Summary",
+      "description": "Display calculated totals section with optional tax and final amount in bold typographic style.",
+      "acceptance": [
+        "Subtotal calculated from all line items (quantity × unit_price)",
+        "Optional tax percentage input (default 0%) with calculated tax amount",
+        "Grand total displayed prominently using large clamp() typography",
+        "Currency formatting with Intl.NumberFormat, defaulting to USD",
+        "Totals section visually separated with whitespace, no borders",
+        "All calculations update reactively as line items or tax changes",
+        "Numbers right-aligned with tabular-nums font feature",
+        "Responsive sizing maintains readability across viewports"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "pdf-preview",
+      "title": "PDF Generation & Preview",
+      "description": "Generate a professional PDF version of the invoice and show an in-app preview modal.",
+      "acceptance": [
+        "Generate PDF button in footer area of invoice",
+        "PDF generated server-side using @react-pdf/renderer or similar",
+        "PDF matches on-screen invoice layout with clean typography",
+        "Preview modal shows PDF inline using iframe or react-pdf viewer",
+        "Download button allows saving PDF to device",
+        "PDF includes invoice number, client details, line items, totals, due date",
+        "Loading spinner shown during PDF generation",
+        "Modal dismissible via swipe-down gesture or tap outside"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "shareable-link",
+      "title": "Shareable Client Link",
+      "description": "Generate a unique shareable URL that allows clients to view the invoice without authentication.",
+      "acceptance": [
+        "Share button generates unique token stored in invoice.share_token",
+        "Public route /invoice/[token] renders read-only invoice view",
+        "Client view shows all invoice details, no edit capabilities",
+        "Copy link button with haptic feedback on mobile (if supported)",
+        "Share sheet integration on mobile using Web Share API",
+        "Token is URL-safe random string (nanoid or crypto.randomUUID)",
+        "Invalid tokens show friendly 'Invoice not found' message",
+        "Link remains active until manually revoked or invoice deleted"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "payment-status",
+      "title": "Payment Status Tracking",
+      "description": "Allow invoice creator to mark payment status and display status badge to clients.",
+      "acceptance": [
+        "Status field with options: draft, sent, viewed, paid, overdue",
+        "Status displayed as minimal pill/badge with semantic colors",
+        "Creator can change status via tap/click cycling or dropdown",
+        "Client view shows current status (read-only)",
+        "Overdue status auto-calculated if past due_date and not paid",
+        "Status changes persist to SQLite immediately",
+        "Visual celebration animation when marked as paid (subtle confetti or checkmark)",
+        "Status history not tracked (simple current-state only)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "invoice-list",
+      "title": "Invoice History List",
+      "description": "Minimal drawer or section showing previously created invoices for quick access.",
+      "acceptance": [
+        "Slide-out drawer from left edge or collapsible section at top",
+        "List shows invoice number, client name, total, status, date",
+        "Tap to load invoice into main editor view",
+        "Swipe-left to delete with confirmation",
+        "New invoice button creates fresh invoice with auto-incremented number",
+        "Empty state: 'No invoices yet. Create your first one.'",
+        "List sorted by created_at descending (newest first)",
+        "Drawer closes on invoice selection with smooth animation"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

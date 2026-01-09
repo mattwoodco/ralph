@@ -1,0 +1,137 @@
+{
+  "name": "Tempo",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Next.js 16 project with core dependencies",
+      "description": "Bootstrap the Tempo focus timer app with Next.js 16, TypeScript, Tailwind v4, shadcn/ui, and SQLite database setup using better-sqlite3.",
+      "acceptance": [
+        "Next.js 16 app created with App Router and TypeScript using `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured for linting and formatting using `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init` (replaces ESLint)",
+        "Tailwind CSS v4 configured with CSS-first configuration",
+        "shadcn/ui initialized with bunx shadcn@latest init using neutral base color",
+        "better-sqlite3 installed and database connection utility created at lib/db.ts",
+        "SQLite schema created with sessions table (id, duration, completed_at, type)",
+        "Project runs successfully with bun dev on localhost:3000",
+        "Light/dark mode configured via next-themes respecting prefers-color-scheme"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "timer-display",
+      "title": "Create typographic timer display component",
+      "description": "Build the central timer display with dynamic viewport-sized typography that scales beautifully across all screen sizes.",
+      "acceptance": [
+        "Timer component renders mm:ss format centered on screen",
+        "Typography uses clamp() with viewport units (e.g., clamp(4rem, 20vw, 12rem))",
+        "Font uses system UI stack with tabular-nums for stable digit widths",
+        "Timer digits animate smoothly on change with subtle scale/opacity transition",
+        "Minimal borderless design with generous whitespace (10vh+ padding)",
+        "Fully responsive from 320px mobile to desktop without breakpoints",
+        "Dark mode inverts colors elegantly with smooth transition"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "timer-logic",
+      "title": "Implement pomodoro timer logic with state management",
+      "description": "Build the core timer engine supporting pomodoro technique with work/break intervals and pause/resume functionality.",
+      "acceptance": [
+        "Timer counts down from configurable duration (default 25 min work, 5 min break)",
+        "Start/pause toggle via tap anywhere on timer or spacebar",
+        "Timer state persists across page refreshes using localStorage",
+        "Visual indicator distinguishes work vs break sessions (subtle color shift)",
+        "Timer automatically transitions from work to break and vice versa",
+        "Skip button allows jumping to next session type",
+        "useReducer or zustand manages timer state cleanly"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "completion-animation",
+      "title": "Add satisfying session completion animations",
+      "description": "Create delightful micro-interactions when timer completes including haptic feedback, visual celebration, and audio cue.",
+      "acceptance": [
+        "Completion triggers subtle confetti or particle burst animation",
+        "Screen gently pulses or flashes on completion",
+        "Browser notification fires if permission granted",
+        "Optional haptic feedback on mobile via navigator.vibrate",
+        "Soft chime sound plays (can be muted in settings)",
+        "Animation respects prefers-reduced-motion media query",
+        "Completion state shows brief success message before auto-transitioning"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "session-history",
+      "title": "Build session history with SQLite persistence",
+      "description": "Track completed focus sessions in SQLite database and display a minimal history view with daily/weekly statistics.",
+      "acceptance": [
+        "Completed sessions saved to SQLite via API route POST /api/sessions",
+        "History view accessible via swipe-up gesture or bottom drawer",
+        "Displays today's completed sessions with timestamps",
+        "Shows streak counter (consecutive days with 1+ session)",
+        "Weekly summary shows total focus time in hours/minutes",
+        "History items use whimsical hierarchy (large time, small date)",
+        "Swipe-to-dismiss individual history items with delete confirmation"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "ambient-sounds",
+      "title": "Implement ambient sound mixer for focus enhancement",
+      "description": "Add a selection of ambient sounds (rain, coffee shop, white noise) that users can mix and play during focus sessions.",
+      "acceptance": [
+        "Sound picker accessible via subtle icon tap in corner",
+        "Minimum 4 ambient options: rain, cafe, fire crackling, white noise",
+        "Audio loops seamlessly using Web Audio API or HTMLAudioElement",
+        "Individual volume sliders for each active sound",
+        "Sounds auto-pause when timer pauses, resume when timer resumes",
+        "Sound preferences persist in localStorage",
+        "Master volume control with elegant slider design"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "settings-panel",
+      "title": "Create settings panel with gesture navigation",
+      "description": "Build a slide-in settings panel for customizing timer durations, sounds, and appearance preferences.",
+      "acceptance": [
+        "Settings accessible via swipe-left or gear icon tap",
+        "Work duration configurable: 15, 20, 25, 30, 45, 60 minutes",
+        "Break duration configurable: 5, 10, 15, 20 minutes",
+        "Long break option after 4 pomodoros (configurable)",
+        "Sound toggle on/off for completion chime",
+        "Settings persist to localStorage",
+        "Panel slides in from right with backdrop blur effect",
+        "Close via swipe-right, backdrop tap, or X button"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "gesture-controls",
+      "title": "Implement touch gestures and keyboard shortcuts",
+      "description": "Add intuitive swipe gestures for mobile and keyboard shortcuts for desktop power users.",
+      "acceptance": [
+        "Tap anywhere on timer toggles play/pause",
+        "Swipe up reveals session history drawer",
+        "Swipe left opens settings panel",
+        "Swipe right from edge goes back/closes panels",
+        "Spacebar toggles play/pause on desktop",
+        "R key resets current timer",
+        "S key skips to next session",
+        "Escape closes any open panel",
+        "Gestures use touch-action CSS for smooth 60fps interactions"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

@@ -1,0 +1,174 @@
+{
+  "branchName": "ralph/notion-clone",
+  "userStories": [
+    {
+      "id": "SETUP-001",
+      "title": "Initialize Next.js project",
+      "acceptanceCriteria": [
+        "Created with bunx create-next-app@latest --ts --tailwind --eslint --app --use-bun",
+        "next.config.ts exists",
+        "Tailwind 4 configured (CSS-based config)",
+        "bun run dev starts on port 3000"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Install shadcn/ui",
+      "acceptanceCriteria": [
+        "Installed with bunx shadcn@latest init",
+        "components.json exists with shadcn config",
+        "lib/utils.ts has cn helper function",
+        "globals.css has CSS variables for theming"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "DB-001",
+      "title": "Set up SQLite database",
+      "acceptanceCriteria": [
+        "bun add better-sqlite3 drizzle-orm",
+        "db/schema.ts defines pages and blocks tables",
+        "db/index.ts exports database connection",
+        "Database file created in data/ folder"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "DB-002",
+      "title": "Define database schema",
+      "acceptanceCriteria": [
+        "Pages table with id, title, icon, parentId, createdAt, updatedAt",
+        "Blocks table with id, pageId, type, content, order, createdAt",
+        "Foreign key from blocks to pages",
+        "Self-referencing foreign key for nested pages"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "LAYOUT-001",
+      "title": "Create sidebar layout",
+      "acceptanceCriteria": [
+        "Sidebar visible on left side (250px width)",
+        "Main content area on right",
+        "Layout spans full viewport height",
+        "Sidebar is collapsible"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "NAV-001",
+      "title": "Display page tree in sidebar",
+      "acceptanceCriteria": [
+        "Pages fetched from SQLite database",
+        "Nested pages shown with indentation",
+        "Each page shows icon and title",
+        "Clicking page navigates to it"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PAGE-001",
+      "title": "Create new pages",
+      "acceptanceCriteria": [
+        "New page button in sidebar",
+        "Clicking creates page in database",
+        "New page appears in sidebar immediately",
+        "Can create nested pages under existing pages"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "EDIT-001",
+      "title": "Page editor view",
+      "acceptanceCriteria": [
+        "Page title is editable inline",
+        "Title changes saved to database",
+        "Page icon displayed and changeable",
+        "Empty state shows placeholder"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "EDIT-002",
+      "title": "Block-based content editor",
+      "acceptanceCriteria": [
+        "Can add text blocks to page",
+        "Blocks saved to database",
+        "Blocks load when viewing page",
+        "Pressing Enter creates new block"
+      ],
+      "priority": 9,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "EDIT-003",
+      "title": "Support multiple block types",
+      "acceptanceCriteria": [
+        "Paragraph blocks (default)",
+        "Heading 1, 2, 3 blocks",
+        "Bulleted list blocks",
+        "Type / to see block type menu"
+      ],
+      "priority": 10,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PAGE-002",
+      "title": "Delete pages",
+      "acceptanceCriteria": [
+        "Delete option in page context menu",
+        "Deleting page removes from database",
+        "Child pages also deleted (cascade)",
+        "Associated blocks deleted"
+      ],
+      "priority": 11,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "EDIT-004",
+      "title": "Reorder blocks",
+      "acceptanceCriteria": [
+        "Drag handle visible on hover",
+        "Can drag blocks to reorder",
+        "New order persisted to database",
+        "Smooth drag animation"
+      ],
+      "priority": 12,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "THEME-001",
+      "title": "Add dark mode toggle",
+      "acceptanceCriteria": [
+        "bun add next-themes",
+        "Theme toggle button in sidebar",
+        "Clicking switches between light/dark",
+        "Notion-like color scheme"
+      ],
+      "priority": 13,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

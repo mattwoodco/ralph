@@ -1,0 +1,78 @@
+{
+  "branchName": "ralph/nextjs-dashboard",
+  "userStories": [
+    {
+      "id": "SETUP-001",
+      "title": "Initialize Next.js project",
+      "acceptanceCriteria": [
+        "Created with bunx create-next-app@latest --ts --tailwind --eslint --app --use-bun",
+        "next.config.ts exists",
+        "Tailwind 4 configured (CSS-based config)",
+        "bun run dev starts on port 3000"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Install shadcn/ui",
+      "acceptanceCriteria": [
+        "components.json exists with shadcn config",
+        "lib/utils.ts has cn helper function",
+        "globals.css has CSS variables for theming"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "LAYOUT-001",
+      "title": "Create sidebar layout",
+      "acceptanceCriteria": [
+        "Sidebar visible on left side",
+        "Main content area on right",
+        "Layout spans full viewport height"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "NAV-001",
+      "title": "Add sidebar navigation items",
+      "acceptanceCriteria": [
+        "Dashboard link in sidebar",
+        "Settings link in sidebar",
+        "Active link is visually highlighted"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "DASH-001",
+      "title": "Add dashboard stat cards",
+      "acceptanceCriteria": [
+        "At least 4 stat cards displayed",
+        "Cards use shadcn Card component",
+        "Cards show title, value, and icon"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "THEME-001",
+      "title": "Add dark mode toggle",
+      "acceptanceCriteria": [
+        "bun add next-themes",
+        "Theme toggle button in header or sidebar",
+        "Clicking switches between light/dark"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

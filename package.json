@@ -1,0 +1,15 @@
+{
+  "name": "ralph-bun-template",
+  "version": "0.1.0",
+  "description": "A minimal Ralph‑style autonomous coding loop scaffold for Bun and TypeScript",
+  "license": "MIT",
+  "scripts": {
+    "start": "bun run .ralph/ralph.ts",
+    "ralph": "bun run .ralph/ralph.ts",
+    "lint": "bunx biome lint --apply .",
+    "typecheck": "bun --bun x tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}

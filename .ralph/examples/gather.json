@@ -1,0 +1,147 @@
+{
+  "name": "Gather",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Gather project",
+      "description": "Set up the foundational Next.js 16 project with all required dependencies and base configuration for a mobile-first meal planning app. Initialize with: bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes, then cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+      "acceptance": [
+        "Next.js 16 project initialized with TypeScript and Tailwind v4",
+        "SQLite database configured with better-sqlite3 and Drizzle ORM",
+        "Base schema created for meals, recipes, ingredients, and weekly_plans tables",
+        "shadcn/ui installed via bunx shadcn@latest with base components (button, card, dialog, drawer, input)",
+        "Global CSS includes prefers-color-scheme media queries for automatic light/dark mode",
+        "Typography scale configured with clamp() for responsive sizing (headings: clamp(2rem, 8vw, 4rem), body: clamp(1rem, 3vw, 1.25rem))",
+        "Whimsical display font paired with clean sans-serif body font",
+        "Mobile viewport meta tags and touch-action CSS applied",
+        "Biome configured for linting and formatting"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "weekly-calendar",
+      "title": "Weekly calendar swipe view",
+      "description": "Create the main weekly calendar interface where users can swipe through days and see their planned meals at a glance.",
+      "acceptance": [
+        "Full-screen swipeable carousel showing 7 days (Mon-Sun)",
+        "Each day card displays date, day name, and meal slots (breakfast, lunch, dinner)",
+        "Horizontal swipe gestures navigate between days with momentum scrolling",
+        "Current day is highlighted and auto-focused on load",
+        "Empty meal slots show subtle '+' tap target with 'Add meal' hint",
+        "Day cards use 90vh height with dynamic padding (5vw)",
+        "Smooth spring animations on swipe transitions",
+        "Minimal header showing current week range (e.g., 'Jan 6 - 12')",
+        "Week navigation arrows to jump to previous/next week"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "meal-crud",
+      "title": "Meal and recipe management",
+      "description": "Allow users to create, view, edit, and delete meals/recipes with their associated ingredients.",
+      "acceptance": [
+        "Bottom sheet drawer opens when tapping '+' or existing meal slot",
+        "Quick-add mode: type meal name only for fast entry",
+        "Full recipe mode: name, ingredients list, prep time, servings, notes",
+        "Ingredient input with autocomplete from existing ingredients",
+        "Quantity and unit selector for each ingredient (cups, tbsp, oz, items)",
+        "Swipe-to-delete on meal cards with haptic-style visual feedback",
+        "Recipe library accessible via subtle icon in header",
+        "Search/filter recipes by name or ingredient",
+        "Tap meal in calendar to view details or reassign to different slot",
+        "All CRUD operations persist to SQLite immediately"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ingredient-management",
+      "title": "Ingredient library and pantry",
+      "description": "Maintain a reusable ingredient library and track pantry items to optimize grocery list generation.",
+      "acceptance": [
+        "Ingredient library stores name, default unit, and category (produce, dairy, protein, etc.)",
+        "Categories displayed as horizontal pill filters",
+        "Pantry toggle marks ingredients as 'in stock' to exclude from grocery list",
+        "Bulk pantry update via checklist interface after shopping",
+        "New ingredients auto-added to library when used in recipes",
+        "Ingredient merge/alias support for duplicates (e.g., 'tomato' and 'tomatoes')",
+        "Minimal list view with large touch targets (min 48px height)",
+        "Pull-to-refresh pattern for data sync"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "grocery-list",
+      "title": "Auto-generated grocery list",
+      "description": "Automatically compile a smart grocery list from the week's planned meals, combining quantities and excluding pantry items.",
+      "acceptance": [
+        "Grocery list generated from all meals in selected week",
+        "Duplicate ingredients combined with summed quantities",
+        "Items grouped by category (produce, dairy, etc.) for efficient shopping",
+        "Pantry items automatically excluded with option to include",
+        "Tap item to mark as 'got it' with strikethrough animation",
+        "Running count shows 'X of Y items' progress",
+        "Clear completed items with single action",
+        "Manual add button for non-recipe items",
+        "List persists between sessions until manually cleared",
+        "Floating action button to regenerate list from current week"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "share-list",
+      "title": "Share grocery list",
+      "description": "Enable users to share their grocery list with family members or roommates via native share or copy-to-clipboard.",
+      "acceptance": [
+        "Share button in grocery list header",
+        "Native Web Share API used when available (mobile)",
+        "Fallback to copy-to-clipboard with toast confirmation",
+        "Shared format is clean plain text grouped by category",
+        "Option to include or exclude checked-off items",
+        "Share includes week date range in header",
+        "Deep link option to open list in Gather (if recipient has app)",
+        "Minimal share sheet with icon options (Messages, Email, Copy)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "meal-suggestions",
+      "title": "Quick meal suggestions",
+      "description": "Surface intelligent meal suggestions based on user history and unused ingredients approaching expiry.",
+      "acceptance": [
+        "Suggestion chips appear when adding meal to empty slot",
+        "Recently used meals shown first (last 2 weeks)",
+        "Favorite meals (>3 uses) tagged with subtle heart icon",
+        "Random 'Try something new' suggestion from recipe library",
+        "Suggestions respect meal type context (breakfast vs dinner)",
+        "Single tap assigns suggested meal to slot",
+        "Long-press opens full recipe details",
+        "Empty state suggests popular starter recipes for new users"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "data-persistence",
+      "title": "Offline-first data sync",
+      "description": "Ensure app works fully offline with local SQLite and syncs gracefully when connection returns.",
+      "acceptance": [
+        "All data stored locally in SQLite via better-sqlite3",
+        "App functions completely offline after initial load",
+        "Service worker caches app shell and assets",
+        "Optimistic UI updates with background persistence",
+        "Subtle sync indicator shows pending changes",
+        "Conflict resolution favors most recent timestamp",
+        "Export data as JSON backup from settings",
+        "Import data from JSON backup with merge option"
+      ],
+      "priority": "medium",
+      "passes": false
+    }
+  ]
+}

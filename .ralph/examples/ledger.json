@@ -1,0 +1,152 @@
+{
+  "name": "Ledger",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Ledger project with Next.js 16 and SQLite",
+      "description": "Bootstrap the expense tracking app with all foundational dependencies and database schema",
+      "acceptance": [
+        "Next.js 16 app created using `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured for linting and formatting using `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init`",
+        "SQLite database configured with better-sqlite3",
+        "Database schema includes expenses table (id, amount, description, category_id, created_at) and categories table (id, name, color, icon)",
+        "shadcn/ui initialized with base components using `bunx shadcn@latest add button card input`",
+        "Global styles set up with prefers-color-scheme for automatic light/dark mode",
+        "Whimsical font scale hierarchy using clamp() for responsive typography",
+        "Mobile-first viewport meta configured",
+        "Bun as package manager with lockfile committed"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "quick-expense-entry",
+      "title": "Quick expense entry with amount and optional description",
+      "description": "Enable rapid expense logging with minimal friction - amount first, details optional",
+      "acceptance": [
+        "Large numeric keypad optimized for thumb reach on mobile",
+        "Amount input uses dynamic viewport sizing (min 10vh height)",
+        "Currency formatting applied as user types",
+        "Optional description field appears after amount confirmed",
+        "Single tap to save expense with default 'Uncategorized' category",
+        "Haptic feedback on save (where supported)",
+        "Expense saved to SQLite immediately",
+        "Borderless, Apple-like minimal input UI with no visible borders or boxes",
+        "No onboarding or splash screen - straight to entry"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "category-management",
+      "title": "Create and manage expense categories",
+      "description": "Allow users to define custom categories with colors and icons for organizing expenses",
+      "acceptance": [
+        "Default categories seeded: Food, Transport, Entertainment, Bills, Shopping, Health",
+        "Each category has name, color (hex), and emoji icon",
+        "Add new category with color picker and emoji selector",
+        "Edit existing category name, color, and icon",
+        "Delete category with confirmation (expenses reassigned to Uncategorized)",
+        "Categories displayed as color-coded pills with emoji",
+        "Category list uses typographic hierarchy - large names, subtle metadata",
+        "Swipe-to-delete gesture on category items",
+        "Changes persisted to SQLite categories table"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "swipe-categorize",
+      "title": "Swipe gestures to categorize uncategorized expenses",
+      "description": "Enable quick categorization of expenses through intuitive swipe interactions",
+      "acceptance": [
+        "Uncategorized expenses shown in a swipeable card stack",
+        "Swipe left/right reveals category options",
+        "Quick swipe assigns most-used category automatically",
+        "Long swipe opens full category picker",
+        "Visual feedback shows category color on swipe direction",
+        "Card animates out on successful categorization",
+        "Undo toast appears for 3 seconds after categorization",
+        "Empty state when no uncategorized expenses remain",
+        "Touch-friendly hit targets (min 44px)",
+        "Smooth 60fps animations using CSS transforms"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "expense-list-crud",
+      "title": "View, edit, and delete expenses",
+      "description": "Full expense management with list view and individual expense editing",
+      "acceptance": [
+        "Chronological expense list grouped by day",
+        "Each expense shows amount (large), category pill, description, time",
+        "Tap expense to edit amount, description, or category",
+        "Swipe left to reveal delete action",
+        "Delete requires confirmation tap (no modal)",
+        "Pull-to-refresh updates list from database",
+        "Infinite scroll for historical expenses",
+        "Search/filter by category or description",
+        "Empty state with friendly illustration when no expenses",
+        "Dynamic typography scales with viewport width"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "monthly-summary",
+      "title": "Monthly spending summary with category breakdown",
+      "description": "Provide clear monthly overview of spending habits and category distribution",
+      "acceptance": [
+        "Current month summary shown by default",
+        "Total spent displayed prominently using large viewport-relative type (8vh)",
+        "Category breakdown as horizontal stacked bar",
+        "Each category shows amount and percentage of total",
+        "Tap category to see expenses in that category for the month",
+        "Swipe horizontally to navigate between months",
+        "Comparison to previous month (up/down indicator with percentage)",
+        "Daily average calculated and displayed",
+        "Summary persists correctly across app restarts"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "spending-charts",
+      "title": "Visual spending trends and analytics",
+      "description": "Display spending patterns over time with interactive charts",
+      "acceptance": [
+        "Line chart showing daily spending for current month",
+        "Area chart showing cumulative spending through the month",
+        "Donut chart for category distribution",
+        "Charts support light/dark mode with appropriate colors",
+        "Touch to see exact values on data points",
+        "Smooth animations on chart load and data changes",
+        "6-month trend view available via tab",
+        "Charts use minimal, borderless aesthetic matching app style",
+        "Responsive sizing using vw/vh units",
+        "Loading skeleton while charts render"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "data-persistence",
+      "title": "Reliable data persistence and sync",
+      "description": "Ensure all expense data is reliably stored and survives app restarts",
+      "acceptance": [
+        "All expenses persisted to SQLite via better-sqlite3",
+        "Database file stored in app data directory",
+        "Transactions used for multi-step operations",
+        "Optimistic UI updates with rollback on failure",
+        "Error toast displayed if save fails",
+        "Database migrations versioned and automated",
+        "Export data as JSON functionality",
+        "Import data from JSON backup",
+        "Data integrity validated on app start"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

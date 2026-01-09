@@ -1,0 +1,145 @@
+{
+  "name": "Worth",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Worth App Foundation",
+      "description": "Set up the Next.js 16 project with TypeScript, Tailwind v4, shadcn/ui, and SQLite database using `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`, then set up Biome with `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init`. Establish the minimal, Apple-like design system with dynamic typography and automatic light/dark mode support.",
+      "acceptance": [
+        "Next.js 16 app initialized with TypeScript and Bun using `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured for linting and formatting using `bun add -d @biomejs/biome && bunx @biomejs/biome init` (ESLint removed)",
+        "Tailwind v4 configured with CSS-first approach",
+        "shadcn/ui installed with `bunx shadcn@latest init` and borderless, minimal theme customization",
+        "SQLite database initialized with better-sqlite3 and Drizzle ORM",
+        "Database schema created for assets, debts, snapshots, and categories tables",
+        "Global CSS establishes typographic scale using clamp() for fluid sizing (e.g., clamp(1.5rem, 5vw, 3rem))",
+        "Automatic light/dark mode via prefers-color-scheme media query",
+        "Base layout is mobile-first with safe-area-inset padding for notched devices",
+        "Inter or SF Pro-like system font stack configured with whimsical weight variations"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "asset-crud",
+      "title": "Asset Management",
+      "description": "Users can add, edit, and delete assets with swipe gestures. Assets have a name, value, and optional category. The interface uses large typographic values and minimal chrome.",
+      "acceptance": [
+        "Asset list displays with large monetary values as the visual anchor (using 10vh+ sizing)",
+        "Tap anywhere on an asset row opens inline edit mode with auto-focused input",
+        "Swipe left on asset reveals delete action with haptic-style visual feedback",
+        "Add asset via floating + button that expands into a minimal form",
+        "Form includes: name (text), value (currency input with formatting), category (optional select)",
+        "Currency input auto-formats with commas and handles decimal entry naturally",
+        "Empty state shows encouraging typography: 'Add your first asset'",
+        "All changes persist immediately to SQLite via API routes",
+        "Assets sorted by value descending by default"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "debt-crud",
+      "title": "Debt Management",
+      "description": "Users can add, edit, and delete debts with the same swipe-friendly interface as assets. Debts display with distinct visual treatment to differentiate from assets.",
+      "acceptance": [
+        "Debt list mirrors asset list UX patterns for consistency",
+        "Debts display with subtle visual differentiation (muted color or minus prefix)",
+        "Swipe left reveals delete, swipe right could reveal 'paid off' quick action",
+        "Add debt form includes: name, balance, category, optional interest rate field",
+        "Debts sorted by balance descending by default",
+        "Empty state: 'No debts? Nice.'",
+        "All CRUD operations persist to SQLite via API routes",
+        "Interest rate stored but displayed subtly (not calculated, just informational)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "net-worth-display",
+      "title": "Net Worth Calculation & Display",
+      "description": "The hero of the app: a giant, beautiful net worth number that updates in real-time as assets and debts change. This is the first thing users see.",
+      "acceptance": [
+        "Net worth displayed as hero element using dramatic typography (clamp(3rem, 15vw, 8rem))",
+        "Calculation: sum of all asset values minus sum of all debt balances",
+        "Positive values display in default text color, negative in a subtle warning tone",
+        "Number animates smoothly when values change (count-up/down effect)",
+        "Below the number: subtle breakdown showing 'Assets: $X · Debts: $Y'",
+        "Pull-to-refresh gesture recalculates from database",
+        "Home screen shows net worth prominently with assets/debts accessible via tab or swipe navigation",
+        "Net worth updates optimistically in UI before API confirms persistence"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "monthly-snapshots",
+      "title": "Monthly Snapshot Capture",
+      "description": "Automatically or manually capture monthly snapshots of net worth to enable historical tracking. Snapshots are immutable records of a point in time.",
+      "acceptance": [
+        "Manual 'Take Snapshot' action available (minimal button, not prominent)",
+        "Snapshot stores: date, total assets, total debts, net worth, and individual item values as JSON",
+        "Snapshots are immutable once created (no edit, only delete)",
+        "Auto-snapshot triggers on first app open of each month if no snapshot exists for that month",
+        "Snapshot list view shows month/year with net worth value",
+        "Tapping a snapshot shows detailed breakdown of what was captured",
+        "Delete snapshot via swipe gesture with confirmation",
+        "Snapshots stored in dedicated SQLite table with foreign key relationships"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "trend-chart",
+      "title": "Net Worth Trend Visualization",
+      "description": "A beautiful, minimal line chart showing net worth over time based on monthly snapshots. The chart is swipe-navigable and uses the app's typographic-first design language.",
+      "acceptance": [
+        "Line chart displays net worth trend from all available snapshots",
+        "Chart uses minimal styling: thin line, no gridlines, subtle axis labels",
+        "Y-axis shows currency values with smart abbreviations ($10K, $1.2M)",
+        "X-axis shows months, scrollable horizontally if more than 6 months of data",
+        "Tap on any point shows tooltip with exact value and date",
+        "Chart handles negative net worth gracefully (line goes below zero line)",
+        "Empty state (< 2 snapshots): 'Keep tracking to see your trend'",
+        "Chart renders with lightweight library (e.g., recharts or custom SVG)",
+        "Smooth animations on data load and point selection"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "category-breakdown",
+      "title": "Category-Based Breakdown",
+      "description": "See assets and debts grouped by category with visual proportions. Default categories provided, custom categories supported.",
+      "acceptance": [
+        "Default categories seeded: Cash, Investments, Property, Vehicles, Other (assets); Credit Cards, Loans, Mortgage, Other (debts)",
+        "Users can create custom categories inline when adding/editing items",
+        "Breakdown view shows horizontal bar or donut visualization of category proportions",
+        "Tap on category filters the list to show only items in that category",
+        "Categories can be renamed or deleted (items reassign to 'Other')",
+        "Color coding is subtle and accessible (works in both light/dark modes)",
+        "Percentages shown alongside absolute values",
+        "Uncategorized items grouped under 'Other' automatically"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "data-export",
+      "title": "Data Export & Portability",
+      "description": "Users can export their complete financial data as JSON or CSV for backup or use in other tools. No lock-in.",
+      "acceptance": [
+        "Export button in settings/menu area (not prominent, but discoverable)",
+        "Export formats: JSON (complete data structure) and CSV (flattened for spreadsheets)",
+        "JSON export includes: assets, debts, categories, snapshots with all metadata",
+        "CSV export creates separate sheets/files for assets, debts, snapshots",
+        "Export triggers native share sheet on mobile for saving/sending",
+        "Export filename includes date: worth-export-2024-01-15.json",
+        "No import feature in v1 (export only for simplicity)",
+        "Export completes quickly with subtle success feedback"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

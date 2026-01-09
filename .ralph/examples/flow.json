@@ -1,0 +1,103 @@
+{
+  "branchName": "ralph/ai-workflow",
+  "userStories": [
+    {
+      "id": "SETUP-001",
+      "title": "Initialize Next.js project",
+      "acceptanceCriteria": [
+        "Created with bunx create-next-app@latest --ts --tailwind --eslint --app --use-bun",
+        "next.config.ts exists",
+        "Tailwind configured",
+        "bun run dev starts on port 3000"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Install AI Elements",
+      "acceptanceCriteria": [
+        "components/ai-elements directory exists",
+        "Canvas, Node, Edge components available",
+        "shadcn/ui configured automatically"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "SETUP-003",
+      "title": "Install React Flow",
+      "acceptanceCriteria": [
+        "bun add @xyflow/react",
+        "Package in dependencies"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "PAGE-001",
+      "title": "Create workflow page",
+      "acceptanceCriteria": [
+        "app/page.tsx uses 'use client'",
+        "Imports Canvas, Node, Edge, Controls components",
+        "Page renders without errors"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "DATA-001",
+      "title": "Define workflow nodes",
+      "acceptanceCriteria": [
+        "At least 6 nodes defined (Start, Process, Decision, Success, Error, Complete)",
+        "Each node has id, type, position, data",
+        "Node data includes label, description, content, footer"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "DATA-002",
+      "title": "Define workflow edges",
+      "acceptanceCriteria": [
+        "Edges connect all nodes in workflow",
+        "Uses animated type for main flow",
+        "Uses temporary type for error paths"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "NODE-001",
+      "title": "Create custom node type",
+      "acceptanceCriteria": [
+        "nodeTypes object defined",
+        "Uses NodeHeader, NodeTitle, NodeDescription",
+        "Uses NodeContent and NodeFooter",
+        "Includes Toolbar with Edit/Delete buttons"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "CANVAS-001",
+      "title": "Render workflow canvas",
+      "acceptanceCriteria": [
+        "Canvas component renders with nodes and edges",
+        "Controls component shows zoom buttons",
+        "fitView enabled for auto-layout",
+        "Connection lines work when dragging"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

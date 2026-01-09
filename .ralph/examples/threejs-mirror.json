@@ -1,0 +1,100 @@
+{
+  "branchName": "ralph/threejs-mirror",
+  "userStories": [
+    {
+      "id": "SETUP-001",
+      "title": "Set up Vite + React + TypeScript",
+      "acceptanceCriteria": [
+        "Created with bunx create-vite --template react-ts",
+        "bun install completed",
+        "bun run dev starts on port 5173"
+      ],
+      "priority": 1,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Add Three.js and React Three Fiber",
+      "acceptanceCriteria": [
+        "bun add three @react-three/fiber @react-three/drei",
+        "Basic Canvas renders without errors"
+      ],
+      "priority": 2,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "SCENE-001",
+      "title": "Create basic 3D scene",
+      "acceptanceCriteria": [
+        "Ambient light and directional light in scene",
+        "Camera positioned to view the scene",
+        "Dark background color set"
+      ],
+      "priority": 3,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "MIRROR-001",
+      "title": "Add reflective mirror",
+      "acceptanceCriteria": [
+        "Mirror plane visible in scene",
+        "Mirror shows reflections",
+        "Mirror is positioned on the floor"
+      ],
+      "priority": 4,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "OBJECTS-001",
+      "title": "Add floating objects to reflect",
+      "acceptanceCriteria": [
+        "At least 3 different geometric shapes",
+        "Objects have colorful materials",
+        "Objects positioned above the mirror"
+      ],
+      "priority": 5,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "CONTROLS-001",
+      "title": "Add orbit controls",
+      "acceptanceCriteria": [
+        "OrbitControls from drei is active",
+        "User can drag to rotate view",
+        "User can scroll to zoom"
+      ],
+      "priority": 6,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "ANIM-001",
+      "title": "Animate floating objects",
+      "acceptanceCriteria": [
+        "Objects rotate slowly",
+        "Objects bob up and down gently",
+        "Animation uses useFrame"
+      ],
+      "priority": 7,
+      "passes": false,
+      "notes": ""
+    },
+    {
+      "id": "ENV-001",
+      "title": "Add environment map",
+      "acceptanceCriteria": [
+        "Environment component from drei",
+        "Reflections look realistic",
+        "Scene has ambient environmental lighting"
+      ],
+      "priority": 8,
+      "passes": false,
+      "notes": ""
+    }
+  ]
+}

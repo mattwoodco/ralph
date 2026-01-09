@@ -1,0 +1,141 @@
+{
+  "name": "Vault",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Vault project with Next.js 16 and SQLite",
+      "description": "Set up the foundational project structure with all required dependencies and database schema for savings goals.",
+      "acceptance": [
+        "Next.js 16 app initialized with: `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured for linting/formatting: `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init` (replaces ESLint)",
+        "SQLite database configured with better-sqlite3 and Drizzle ORM",
+        "Database schema includes goals table (id, name, targetAmount, currentAmount, color, icon, createdAt, completedAt) and contributions table (id, goalId, amount, note, createdAt)",
+        "shadcn/ui initialized with card, button, input, dialog, progress components via bunx shadcn@latest add",
+        "Global CSS with prefers-color-scheme for automatic light/dark mode",
+        "Typographic scale using clamp() for fluid responsive text (--text-xs through --text-5xl)",
+        "Mobile-first viewport units (dvh, svh) for full-height layouts",
+        "Base layout with borderless, Apple-like minimal aesthetic"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "goal-create",
+      "title": "Create new savings goal with visual customization",
+      "description": "Allow users to create a new savings goal with a name, target amount, and optional color/icon selection.",
+      "acceptance": [
+        "Bottom sheet modal triggered by floating + button with spring animation",
+        "Form fields: goal name (text), target amount (currency input with formatting), color picker (6 preset palette), emoji icon selector",
+        "Form validation with react-hook-form, inline error states",
+        "Submit creates goal in SQLite, closes modal with haptic-style micro-animation",
+        "New goal appears in list with entrance animation (fade-up + scale)",
+        "Empty state with encouraging typography when no goals exist",
+        "All inputs use 10vh/20vw dynamic sizing for touch-friendly targets"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "goal-list",
+      "title": "Display goals with progress ring cards",
+      "description": "Show all active savings goals as swipeable cards with circular progress indicators.",
+      "acceptance": [
+        "Vertical scrolling list of goal cards with snap-to-card behavior",
+        "Each card displays: goal name, emoji icon, current/target amount, percentage complete",
+        "SVG progress ring with gradient stroke matching goal color, animated on mount",
+        "Ring uses stroke-dasharray animation for smooth progress visualization",
+        "Cards are borderless with subtle shadow in light mode, elevated surface in dark mode",
+        "Typography hierarchy: name in --text-2xl, amounts in --text-lg, percentage in --text-4xl inside ring",
+        "Pull-to-refresh gesture reloads data from SQLite",
+        "Skeleton loading states while fetching"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "contribution-add",
+      "title": "Add contributions to goals with swipe gesture",
+      "description": "Enable quick contribution entry via swipe action or tap, with amount input and optional note.",
+      "acceptance": [
+        "Swipe right on goal card reveals 'Add' action button with spring physics",
+        "Tap goal card opens contribution bottom sheet",
+        "Contribution form: amount input (currency formatted), optional note field",
+        "Quick-add preset buttons (10%, 25%, 50% of remaining amount)",
+        "Submit updates goal currentAmount in SQLite, creates contribution record",
+        "Progress ring animates from old to new percentage with easing",
+        "Success feedback: subtle scale pulse on card, amount counter animates up",
+        "Contribution history accessible via expanding accordion on card"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "goal-edit-delete",
+      "title": "Edit and delete goals with confirmation",
+      "description": "Allow users to modify goal details or remove goals entirely with appropriate safeguards.",
+      "acceptance": [
+        "Long-press or swipe left on goal card reveals edit/delete actions",
+        "Edit opens pre-filled form in bottom sheet, same fields as create",
+        "Delete triggers confirmation dialog with goal name and current progress",
+        "Delete confirmation uses destructive button styling, requires explicit tap",
+        "Deleting goal removes all associated contributions from SQLite",
+        "Deleted card animates out with shrink + fade effect",
+        "Edit changes reflect immediately with optimistic UI update",
+        "Cancel gestures and backdrop tap dismiss modals"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "milestone-celebrations",
+      "title": "Celebrate milestone achievements with animations",
+      "description": "Trigger delightful visual celebrations when users reach savings milestones.",
+      "acceptance": [
+        "Milestones trigger at 25%, 50%, 75%, and 100% of goal target",
+        "Milestone reached: full-screen confetti burst animation (CSS or canvas)",
+        "100% completion: special celebration with trophy icon, vibrant gradient background pulse",
+        "Completion moves goal to 'Achieved' state with completedAt timestamp",
+        "Achievement toast notification with milestone percentage and encouraging message",
+        "Confetti colors match goal's selected color palette",
+        "Animations respect prefers-reduced-motion media query",
+        "Sound effects disabled by default, toggle in settings"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "goal-history",
+      "title": "View completed goals and contribution history",
+      "description": "Access archive of achieved goals and detailed contribution timeline for any goal.",
+      "acceptance": [
+        "Tab or segment control to switch between Active and Achieved goals",
+        "Achieved goals display with muted styling, completion date, total saved",
+        "Tap any goal (active or achieved) opens detail view",
+        "Detail view shows: full progress ring, all contributions as timeline",
+        "Timeline entries: amount, note, date with relative time formatting",
+        "Contribution timeline supports infinite scroll pagination",
+        "Export goal history as shareable image (optional stretch goal)",
+        "Achieved goals can be archived/hidden but not deleted"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "settings-preferences",
+      "title": "App settings and currency preferences",
+      "description": "Provide minimal settings for currency display and app preferences.",
+      "acceptance": [
+        "Settings accessible via subtle gear icon in header",
+        "Currency selector with common options (USD, EUR, GBP, JPY, etc.)",
+        "Currency preference persists in localStorage, applies globally",
+        "Manual dark/light mode override option (auto/light/dark)",
+        "Haptic feedback toggle for milestone celebrations",
+        "About section with app version, borderless minimal presentation",
+        "Settings use same bottom sheet pattern as other modals",
+        "All preferences persist across sessions"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

@@ -1,0 +1,151 @@
+{
+  "name": "Album",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Album project with core dependencies",
+      "description": "Bootstrap the Next.js 16 application with TypeScript, Tailwind v4, shadcn/ui, and SQLite database. Set up the foundational architecture for a mobile-first memory timeline app. Initialize with: `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes` then set up Biome: `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init`",
+      "acceptance": [
+        "Next.js 16 app created with App Router and TypeScript strict mode",
+        "Biome configured for linting and formatting (replaces ESLint)",
+        "Tailwind v4 configured with CSS-first configuration",
+        "shadcn/ui initialized with `bunx shadcn@latest init` using New York style, zinc base color",
+        "SQLite database configured with better-sqlite3 and drizzle ORM",
+        "Database schema created for memories table (id, photo_url, caption, memory_date, created_at)",
+        "Global CSS includes prefers-color-scheme media queries for automatic light/dark mode",
+        "Typography scale defined using clamp() for fluid responsive sizing (--text-xs through --text-6xl)",
+        "Base layout is borderless with full viewport height (100dvh) and safe-area-inset padding"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "photo-upload",
+      "title": "Photo upload with drag-drop and mobile camera access",
+      "description": "Enable users to add photos to their timeline via drag-drop on desktop or camera/gallery access on mobile. Photos are stored locally with optimized thumbnails.",
+      "acceptance": [
+        "Floating action button (bottom-right, 20vw max size) triggers upload modal",
+        "Upload accepts camera capture on mobile (accept='image/*' capture='environment')",
+        "Drag-and-drop zone spans full viewport with subtle visual feedback",
+        "Photos are resized client-side to max 2048px before storage",
+        "Thumbnail generated at 400px for timeline previews",
+        "Upload progress shown with minimal circular indicator",
+        "Photos stored in /public/uploads with unique UUID filenames",
+        "Database record created with photo_url pointing to stored file",
+        "Error states handled gracefully with toast notifications (shadcn/ui sonner)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "memory-crud",
+      "title": "Create, read, update, and delete memories",
+      "description": "Full CRUD operations for memories with caption editing and date adjustment. Swipe-friendly interactions for mobile users.",
+      "acceptance": [
+        "Create: After photo upload, sheet slides up for caption (textarea) and date picker",
+        "Date picker defaults to photo EXIF date if available, otherwise today",
+        "Caption supports multi-line text with 500 character limit",
+        "Read: Tapping a memory opens full-screen detail view with photo, caption, and formatted date",
+        "Update: Long-press or edit icon reveals inline caption editing",
+        "Date can be changed via date picker in edit mode",
+        "Delete: Swipe-left gesture reveals delete action with confirmation",
+        "Delete confirmation uses AlertDialog from shadcn/ui",
+        "All mutations use optimistic updates with rollback on error",
+        "API routes at /api/memories for GET, POST, PUT, DELETE operations"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "timeline-view",
+      "title": "Chronological timeline with infinite scroll",
+      "description": "Display memories in a vertically scrolling timeline grouped by month/year. Smooth scroll with momentum and snap points.",
+      "acceptance": [
+        "Timeline displays memories sorted by memory_date descending (newest first)",
+        "Month/year headers use large typography (clamp(2rem, 8vw, 4rem)) and sticky positioning",
+        "Photos displayed in masonry-style grid (2 columns on mobile, 3 on tablet+)",
+        "Infinite scroll loads 20 memories per batch with intersection observer",
+        "Pull-to-refresh gesture reloads timeline from top",
+        "Scroll position persisted in sessionStorage for back-navigation",
+        "Empty state shows centered illustration with 'Add your first memory' prompt",
+        "Timeline has subtle scroll snap on month boundaries (scroll-snap-type: y proximity)",
+        "Loading skeleton uses shimmer animation matching photo aspect ratios"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "memory-detail",
+      "title": "Full-screen memory detail with gestures",
+      "description": "Immersive full-screen view for individual memories with pinch-zoom, swipe navigation, and ambient background.",
+      "acceptance": [
+        "Detail view opens with shared element transition from timeline thumbnail",
+        "Photo fills viewport with object-fit: contain and ambient blur background",
+        "Caption overlays bottom with gradient fade, typography at clamp(1rem, 4vw, 1.5rem)",
+        "Date displayed in human-friendly format ('March 15, 2024' or '2 years ago')",
+        "Pinch-to-zoom enabled with smooth gesture handling (use-gesture or native)",
+        "Swipe left/right navigates to adjacent memories with spring animation",
+        "Swipe down dismisses detail view back to timeline",
+        "Double-tap toggles zoom between fit and 2x",
+        "UI chrome (close button, edit) fades out after 3s of inactivity, tap to reveal"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "on-this-day",
+      "title": "On This Day nostalgic memories feature",
+      "description": "Surface memories from the same date in previous years. Delightful discovery moment when opening the app.",
+      "acceptance": [
+        "On This Day card appears at top of timeline when memories exist from today's date in past years",
+        "Card uses distinctive styling: frosted glass background, playful typography",
+        "Shows count of memories ('3 memories from this day')",
+        "Tapping card opens dedicated On This Day view",
+        "On This Day view groups memories by year with large year headers",
+        "Years displayed in reverse chronological order (oldest memory year to most recent)",
+        "If no memories on this day, card is hidden (no empty state)",
+        "Memories from exactly 1 year ago get special 'One year ago today' badge",
+        "Share button in On This Day view allows exporting collage (future story)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "share-export",
+      "title": "Share individual memories and export data",
+      "description": "Allow sharing memories to other apps and exporting all data for backup or migration.",
+      "acceptance": [
+        "Share button on memory detail triggers native Web Share API on supported devices",
+        "Share includes photo and caption text",
+        "Fallback for non-Web Share browsers: copy link to clipboard with toast confirmation",
+        "Settings page accessible via minimal gear icon in timeline header",
+        "Export button generates ZIP file with all photos and memories.json manifest",
+        "Export includes full resolution photos, not thumbnails",
+        "memories.json contains array of {caption, date, filename} objects",
+        "Export progress shown with determinate progress bar",
+        "Import function accepts previously exported ZIP to restore memories"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "search-filter",
+      "title": "Search memories by caption and filter by date range",
+      "description": "Find specific memories through text search and date filtering without disrupting the minimal UI.",
+      "acceptance": [
+        "Search icon in timeline header expands to full-width search input on tap",
+        "Search queries caption text with debounced input (300ms)",
+        "Results update timeline in real-time as user types",
+        "Search highlights matching text in caption previews",
+        "Filter button opens bottom sheet with date range picker",
+        "Quick filters: This year, Last year, Specific month picker",
+        "Active filters shown as dismissible chips below search bar",
+        "Clear all filters returns to full chronological timeline",
+        "Empty search results show friendly 'No memories found' message",
+        "Search and filter state preserved in URL query params for shareability"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

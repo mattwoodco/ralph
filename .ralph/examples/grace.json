@@ -1,0 +1,128 @@
+{
+  "name": "Grace",
+  "stories": [
+    {
+      "id": "init",
+      "title": "Project initialization",
+      "description": "Bootstrap the Grace gratitude journaling app with Next.js 16, TypeScript, Tailwind v4, shadcn/ui, and SQLite persistence",
+      "acceptance": [
+        "Next.js 16 app created with: bunx create-next-app@latest app --ts --tailwind --app --src-dir --use-bun --yes",
+        "Biome configured for linting/formatting: cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+        "Tailwind v4 configured with CSS-first configuration",
+        "shadcn/ui initialized with bunx shadcn@latest init using borderless, minimal theme tokens",
+        "SQLite database configured with better-sqlite3 and Drizzle ORM",
+        "Database schema includes entries table (id, content[], createdAt, userId) and users table (id, shareToken)",
+        "Light/dark mode automatic via prefers-color-scheme with CSS variables",
+        "Base typography scale using clamp() for fluid sizing (e.g., clamp(1.5rem, 5vw, 3rem))",
+        "Mobile-first viewport meta and touch-action CSS for swipe gestures",
+        "Whimsical serif font (e.g., Playfair Display) for headings, clean sans-serif for body"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "daily-entry",
+      "title": "Daily gratitude entry form",
+      "description": "Create the core experience: writing three things you're grateful for today",
+      "acceptance": [
+        "Full-viewport form with three large text inputs stacked vertically",
+        "Inputs use dynamic sizing (min-height: 20vh) with fluid typography",
+        "Placeholder text rotates through gentle prompts (e.g., 'Something small...', 'Someone who helped...')",
+        "Soft keyboard-aware layout that adjusts smoothly on mobile",
+        "Submit button appears only when all three fields have content",
+        "Haptic feedback on successful save (navigator.vibrate)",
+        "Entry saves to SQLite via API route POST /api/entries",
+        "After save, gentle fade transition to confirmation with today's streak count",
+        "No borders on inputs, just subtle bottom dividers or spacing"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "entry-history",
+      "title": "Beautiful entry history",
+      "description": "Browse past gratitude entries in a swipeable, typographic timeline",
+      "acceptance": [
+        "Vertical scrolling timeline of entries grouped by month",
+        "Each entry card shows date (large, typographic) and three gratitudes",
+        "Swipe left on entry to reveal subtle delete action",
+        "Pull-to-refresh gesture loads latest entries",
+        "Infinite scroll pagination via API route GET /api/entries?cursor=",
+        "Empty state shows encouraging message with large decorative typography",
+        "Entries fetched from SQLite ordered by createdAt DESC",
+        "Smooth momentum scrolling with -webkit-overflow-scrolling: touch",
+        "Date headers stick during scroll (position: sticky)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "streak-tracking",
+      "title": "Streak tracking and visualization",
+      "description": "Track consecutive days of gratitude practice with motivating visuals",
+      "acceptance": [
+        "Current streak count displayed prominently on home (large typographic number)",
+        "Streak calculated from consecutive days with entries in SQLite",
+        "Longest streak stored and displayed as personal best",
+        "Simple dot calendar view showing last 30 days (filled = entry exists)",
+        "Streak breaks shown gently, no guilt-inducing UI",
+        "API route GET /api/streak returns { current, longest, recentDays[] }",
+        "Streak resets at midnight in user's local timezone",
+        "Celebratory micro-animation at streak milestones (7, 30, 100 days)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "partner-sharing",
+      "title": "Share with partner via link",
+      "description": "Generate a private link to share your gratitude entries with one person",
+      "acceptance": [
+        "Settings area with 'Share with partner' toggle",
+        "Generates unique shareToken stored in users table",
+        "Shareable URL format: /shared/[shareToken]",
+        "Shared view is read-only, shows entry history with same beautiful UI",
+        "Partner sees entries but cannot edit or delete",
+        "Ability to regenerate token (invalidates old link)",
+        "Ability to disable sharing entirely",
+        "No account required for partner to view (token-based auth)",
+        "API route GET /api/shared/[token] returns entries for that user"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "reminders",
+      "title": "Gentle daily reminders",
+      "description": "Optional push notification reminders to practice gratitude",
+      "acceptance": [
+        "Settings toggle to enable daily reminder",
+        "Time picker for preferred reminder time (default 9pm)",
+        "Uses Web Push API with service worker registration",
+        "Push subscription stored in SQLite (endpoint, keys)",
+        "Notification text rotates through gentle prompts",
+        "API route POST /api/reminders/subscribe and DELETE to unsubscribe",
+        "Respects system notification permissions gracefully",
+        "Falls back to showing in-app badge if push denied"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "offline-support",
+      "title": "Offline-first experience",
+      "description": "Allow writing gratitudes even without internet connection",
+      "acceptance": [
+        "Service worker caches app shell for offline access",
+        "Entries saved to IndexedDB when offline",
+        "Background sync uploads entries when connection restored",
+        "Visual indicator shows offline/syncing status",
+        "No data loss if app closed while offline",
+        "Conflict resolution: server timestamp wins on sync",
+        "Works as installable PWA with manifest.json"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "name": "Canvas",
+  "stories": [
+    {
+      "id": "init",
+      "title": "Project initialization and base setup",
+      "description": "Bootstrap a Next.js 16 app with TypeScript, Tailwind v4, shadcn/ui, and SQLite persistence. Establish the minimal, borderless design system with automatic light/dark mode support.",
+      "acceptance": [
+        "Next.js 16 app created with App Router and TypeScript using `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Biome configured for linting and formatting using `cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init`",
+        "Tailwind v4 configured with CSS variables for light/dark mode via prefers-color-scheme",
+        "shadcn/ui initialized with `bunx shadcn@latest init` using borderless, minimal theme customization",
+        "SQLite database setup with better-sqlite3 and Drizzle ORM",
+        "Database schema created for journal entries (id, date, content, prompt, createdAt, updatedAt)",
+        "Typography scale established using clamp() for fluid sizing (display, heading, body, caption)",
+        "Base layout uses dynamic viewport units (dvh, svh) for mobile-first full-screen experience",
+        "Whimsical serif font loaded for headings, clean sans-serif for body text"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "daily-editor",
+      "title": "Daily journal entry editor",
+      "description": "Create the core writing experience - a full-screen, distraction-free editor that saves automatically. One entry per calendar day, seamlessly creating or editing based on the current date.",
+      "acceptance": [
+        "Full-viewport editor with no visible chrome or borders",
+        "Auto-save triggers on pause (debounced 1s) and blur events",
+        "Date displayed prominently using typographic hierarchy at top of screen",
+        "Textarea grows with content, minimum height 60vh on mobile",
+        "Placeholder text fades gracefully when typing begins",
+        "Loading state shows subtle skeleton, not spinner",
+        "Entry persists to SQLite via API route on save",
+        "Keyboard dismissal on mobile doesn't cause layout shift",
+        "Works offline-first with optimistic UI updates"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "daily-prompts",
+      "title": "Rotating daily writing prompts",
+      "description": "Display an optional, rotating prompt to inspire writing. Prompts change daily and can be dismissed or shown based on user preference.",
+      "acceptance": [
+        "Pool of 30+ thoughtful, non-cheesy journal prompts stored in codebase",
+        "One prompt selected per day using date-based deterministic rotation",
+        "Prompt displays above editor in muted, smaller typography",
+        "Tap/click prompt to dismiss it for the session",
+        "Swipe up gesture on prompt area also dismisses",
+        "Dismissed state persists in localStorage for current day only",
+        "Prompt reappears on new day automatically",
+        "Empty state without prompt still feels complete and intentional"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "entry-history",
+      "title": "Browse past journal entries",
+      "description": "A clean reading experience for reviewing past entries. Swipe-friendly navigation between days with elegant empty states for days without entries.",
+      "acceptance": [
+        "History view accessible via subtle gesture or minimal nav element",
+        "Entries displayed in reverse chronological order as scrollable list",
+        "Each entry card shows date, prompt (if used), and content preview",
+        "Tap entry to open full reading view with large, comfortable typography",
+        "Swipe left/right in reading view to navigate between entries",
+        "Empty days show graceful empty state, not errors",
+        "Smooth page transitions with subtle fade/slide animations",
+        "Pull-to-refresh gesture loads latest entries on mobile"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "calendar-nav",
+      "title": "Calendar-based entry navigation",
+      "description": "Visual calendar view showing which days have entries, allowing quick jumps to any date for reading or writing.",
+      "acceptance": [
+        "Minimal calendar grid with current month displayed",
+        "Days with entries indicated by subtle dot or highlight",
+        "Tap any day to navigate to that entry (view or create)",
+        "Swipe between months fluidly",
+        "Today button for quick return to current date",
+        "Calendar overlays current view as modal/sheet on mobile",
+        "Respects system dark mode with appropriate date styling",
+        "Week starts on Sunday or Monday based on locale"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "search",
+      "title": "Full-text search across entries",
+      "description": "Search through all journal entries by content. Fast, local search with highlighted results.",
+      "acceptance": [
+        "Search input accessible from history view",
+        "Real-time filtering as user types (debounced 300ms)",
+        "Results show matching entries with search term highlighted",
+        "Search queries content field using SQLite LIKE or FTS",
+        "Empty search state shows recent entries or suggestions",
+        "No results state is friendly and suggests trying different terms",
+        "Tap result navigates to full entry with search term still highlighted",
+        "Search input has clear button and keyboard submit support"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "export",
+      "title": "Export journal entries",
+      "description": "Allow users to export their journal data in portable formats for backup or migration purposes.",
+      "acceptance": [
+        "Export option accessible from minimal settings/menu area",
+        "Export all entries as JSON with full metadata",
+        "Export all entries as Markdown with date headers",
+        "Export triggers native file download on all platforms",
+        "Export filename includes date range of entries",
+        "Progress indicator for large exports",
+        "Success confirmation with entry count exported",
+        "Export works offline using local SQLite data"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "gestures",
+      "title": "Touch gestures and mobile polish",
+      "description": "Implement swipe gestures and mobile-specific interactions that make the app feel native and fluid on touch devices.",
+      "acceptance": [
+        "Swipe right from editor edge opens history view",
+        "Swipe left from history closes back to editor",
+        "Swipe between entries in reading mode with momentum",
+        "Pull down on editor dismisses keyboard on iOS/Android",
+        "Long-press on entry shows quick actions (delete, edit date)",
+        "Haptic feedback on gesture completions where supported",
+        "All gestures have visual affordances showing drag progress",
+        "Gestures disabled when text is selected to prevent conflicts"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}

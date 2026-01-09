@@ -1,0 +1,145 @@
+{
+  "name": "Sprint",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Sprint project with Next.js 16 and core dependencies",
+      "description": "Scaffold a minimal Next.js 16 app with TypeScript, Tailwind v4, shadcn/ui, and SQLite persistence. No onboarding, no splash screens—straight to the task list.",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes",
+        "Biome configured for linting and formatting: cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+        "Tailwind v4 configured with CSS-first approach",
+        "shadcn/ui initialized with default theme using bunx shadcn@latest init",
+        "better-sqlite3 installed and configured with a tasks.db file",
+        "Drizzle ORM set up with a tasks table schema (id, title, bucket, completed, createdAt, updatedAt)",
+        "Light/dark mode automatic via prefers-color-scheme media query",
+        "Base typography scale using clamp() for fluid sizing (headings 6vw-10vw, body 4vw-5vw)",
+        "Mobile viewport meta tag configured for swipe-friendly touch behavior"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "bucket-ui",
+      "title": "Three-bucket swipeable view with Today, Tomorrow, Someday",
+      "description": "Create the core horizontal swipe interface showing three buckets. Each bucket fills the viewport. Swipe left/right to navigate. No tabs, no sidebars—just swipe.",
+      "acceptance": [
+        "Full-viewport container with horizontal scroll-snap behavior",
+        "Three sections: Today, Tomorrow, Someday—each 100vw wide",
+        "Large typographic bucket titles using 10vh font size with whimsical weight variation",
+        "Subtle dot indicators showing current bucket position",
+        "Smooth CSS scroll-snap-type: x mandatory for crisp bucket stops",
+        "Touch-action configured for optimal horizontal swipe on mobile",
+        "Borderless design with generous whitespace (padding 8vw horizontal)",
+        "Empty state shows subtle placeholder text per bucket"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "task-crud",
+      "title": "Create, read, update, and delete tasks",
+      "description": "Implement full task CRUD via API routes. Tasks belong to a bucket and can be completed. Minimal UI—tap to add, tap to edit, swipe to delete.",
+      "acceptance": [
+        "POST /api/tasks creates a task with title and bucket (defaults to Today)",
+        "GET /api/tasks returns all tasks grouped by bucket",
+        "PATCH /api/tasks/[id] updates title, bucket, or completed status",
+        "DELETE /api/tasks/[id] removes a task permanently",
+        "Floating '+' button in bottom-right opens inline text input",
+        "Input auto-focuses with large 6vw placeholder text",
+        "Tap existing task to edit inline with same input style",
+        "Swipe-to-delete with red background reveal and trash icon",
+        "All mutations use React Hook Form with loading spinners",
+        "Optimistic UI updates with error rollback"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "task-list",
+      "title": "Render task lists with typographic hierarchy",
+      "description": "Display tasks within each bucket as a clean vertical list. Typography-driven with no borders, cards, or visual noise. Completed tasks show struck-through with reduced opacity.",
+      "acceptance": [
+        "Tasks render as simple text rows with 5vw font size",
+        "Completed tasks show line-through and 40% opacity",
+        "Tap checkbox circle to toggle completion (no actual checkbox UI—just a subtle circle)",
+        "Task list scrolls vertically within each bucket",
+        "useId hook generates stable keys for task list items",
+        "Empty bucket shows centered italic placeholder (e.g., 'Nothing for today')",
+        "Task order: incomplete first, then completed, both sorted by createdAt",
+        "Subtle fade gradient at bottom when list overflows"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "swipe-move",
+      "title": "Swipe task left/right to move between buckets",
+      "description": "Individual tasks can be swiped horizontally to move them to adjacent buckets. Swipe left moves forward (Today→Tomorrow→Someday), swipe right moves back.",
+      "acceptance": [
+        "Horizontal swipe gesture detected on individual task rows",
+        "Swipe left on Today task moves it to Tomorrow",
+        "Swipe left on Tomorrow task moves it to Someday",
+        "Swipe right on Tomorrow task moves it to Today",
+        "Swipe right on Someday task moves it to Tomorrow",
+        "Visual feedback: task slides out in swipe direction with opacity fade",
+        "Destination bucket name briefly flashes as toast (e.g., '→ Tomorrow')",
+        "Swipe threshold of 30% task width to trigger move",
+        "Haptic feedback on iOS/Android if available via navigator.vibrate"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "completion-animation",
+      "title": "Satisfying completion animation when marking tasks done",
+      "description": "When a task is completed, play a delightful micro-animation. No confetti overload—just a subtle, satisfying acknowledgment.",
+      "acceptance": [
+        "Tap completion circle triggers animation sequence",
+        "Circle fills with a quick scale-up pulse (100ms ease-out)",
+        "Checkmark draws in with SVG stroke animation (150ms)",
+        "Task text strikes through with left-to-right reveal (200ms)",
+        "Whole row fades to 40% opacity after animation completes",
+        "Optional: subtle particle burst of 3-5 dots that fade out",
+        "Animation respects prefers-reduced-motion media query",
+        "Uncompleting a task reverses animation smoothly"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "daily-rollover",
+      "title": "Automatic daily rollover of incomplete tasks",
+      "description": "At midnight (or on app open after midnight), incomplete Tomorrow tasks roll to Today. Incomplete Today tasks stay in Today. Someday is untouched.",
+      "acceptance": [
+        "On app load, check if a new day has started since last visit",
+        "Store lastVisitDate in localStorage",
+        "If new day: move all incomplete Tomorrow tasks to Today bucket",
+        "Today incomplete tasks remain in Today (no auto-Someday punishment)",
+        "Someday tasks never auto-move",
+        "Show subtle toast on rollover: 'X tasks rolled to Today'",
+        "Rollover happens via API route POST /api/tasks/rollover",
+        "Rollover is idempotent—safe to call multiple times same day"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "persistence-sync",
+      "title": "Reliable SQLite persistence with offline resilience",
+      "description": "Ensure all task data persists to SQLite and survives page reloads. Handle offline gracefully with queued mutations.",
+      "acceptance": [
+        "All task mutations persist to SQLite via better-sqlite3",
+        "Page refresh loads tasks from database on initial render",
+        "Drizzle queries use proper prepared statements for security",
+        "Database file stored in project root as sprint.db",
+        "Offline mutations queue in localStorage and sync on reconnect",
+        "Visual indicator when offline (subtle gray dot near title)",
+        "Failed mutations show inline error with retry button",
+        "Database migrations run automatically on app start"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}
