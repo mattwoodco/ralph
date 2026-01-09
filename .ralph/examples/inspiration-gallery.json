@@ -1,0 +1,532 @@
+{
+  "name": "Inspiration Gallery",
+  "description": "A curated design inspiration website that aggregates screenshots from 144+ RSS feeds of design gallery websites, with local image caching, deduplication, and comprehensive filtering/search capabilities.",
+  "branchName": "ralph/inspiration-gallery",
+  "techStack": {
+    "framework": "Next.js (latest via create-next-app)",
+    "language": "TypeScript",
+    "styling": "Tailwind CSS",
+    "linting": "Biome",
+    "hosting": "Vercel",
+    "storage": "Local filesystem (public/cache)"
+  },
+  "rssSourceCategories": {
+    "description": "At least 144 RSS sources organized by category. Use variables to iterate and populate sources programmatically.",
+    "categories": [
+      {
+        "name": "Design Galleries",
+        "count": 24,
+        "examples": ["Awwwards", "CSS Design Awards", "FWA", "Webby Awards", "SiteInspire", "Dribbble", "Behance", "Land-book", "Lapa.ninja", "Httpster", "One Page Love", "Bestfolios"]
+      },
+      {
+        "name": "UI/UX Blogs",
+        "count": 24,
+        "examples": ["Smashing Magazine", "CSS-Tricks", "Codrops", "A List Apart", "UX Collective", "Nielsen Norman Group", "UX Planet", "Muzli", "Sidebar.io", "Web Designer Depot", "Designmodo", "Speckyboy"]
+      },
+      {
+        "name": "Agency Portfolios",
+        "count": 24,
+        "examples": ["Fantasy", "Active Theory", "Locomotive", "Huge", "R/GA", "Pentagram", "IDEO", "Frog Design", "ueno", "Work & Co", "Instrument", "Basic Agency"]
+      },
+      {
+        "name": "Product Hunt & Tech",
+        "count": 24,
+        "examples": ["Product Hunt", "Hacker News", "TechCrunch Design", "The Verge", "Wired Design", "Fast Company Design", "Creative Bloq", "It's Nice That", "Design Week", "Eye Magazine", "AIGA Eye on Design", "Communication Arts"]
+      },
+      {
+        "name": "Typography & Branding",
+        "count": 24,
+        "examples": ["Fonts In Use", "Typewolf", "Brand New", "Logo Design Love", "Identity Designed", "BP&O", "The Dieline", "Mindsparkle Mag", "Design Made in Germany", "Swiss Miss", "Grain Edit", "Abduzeedo"]
+      },
+      {
+        "name": "Indie & Community",
+        "count": 24,
+        "examples": ["IndieHackers", "Minimal Gallery", "Godly.website", "Dark Mode Design", "Brutalist Websites", "Hover States", "Really Good Emails", "Email Love", "SaaS Landing Page", "SaaSFrame", "Screenlane", "Mobbin"]
+      }
+    ],
+    "totalSources": 144
+  },
+  "dataSchema": {
+    "design": {
+      "id": "string (unique hash of URL)",
+      "url": "string (canonical website URL)",
+      "title": "string",
+      "description": "string",
+      "screenshotPath": "string (local cached path)",
+      "screenshotUrl": "string (original URL)",
+      "thumbnailPath": "string (local thumbnail path)",
+      "metadata": {
+        "site": "string (website name)",
+        "author": "string (designer/creator name)",
+        "designer": "string (design studio/agency)",
+        "content": "string (page type: landing, portfolio, blog, etc.)",
+        "industry": "string (tech, fashion, food, finance, etc.)",
+        "tags": "string[] (array of descriptive tags)"
+      },
+      "sources": "Source[] (array of RSS sources where this design appeared)",
+      "firstSeen": "Date",
+      "lastUpdated": "Date",
+      "duplicateCount": "number (how many sources referenced this)"
+    },
+    "source": {
+      "feedUrl": "string",
+      "feedName": "string",
+      "category": "string",
+      "foundAt": "Date"
+    }
+  },
+  "deduplicationStrategy": {
+    "description": "Same website URL appears only once in the gallery, but tracks all sources that referenced it",
+    "method": "URL normalization and hashing",
+    "steps": [
+      "Normalize URL (remove trailing slashes, www, query params, fragments)",
+      "Generate unique hash from normalized URL",
+      "If hash exists, append new source to sources array and increment duplicateCount",
+      "If hash is new, create new design entry with initial source"
+    ]
+  },
+  "preCommitChecks": {
+    "description": "MANDATORY: Run these checks before every commit. The project MUST pass all checks.",
+    "commands": {
+      "lint": "bunx biome check --write .",
+      "typecheck": "bunx tsc --noEmit",
+      "build": "bun run build"
+    },
+    "sequence": [
+      "1. Run lint: bunx biome check --write .",
+      "2. Run type check: bunx tsc --noEmit",
+      "3. Run build: bun run build",
+      "4. Only commit if ALL commands pass with exit code 0",
+      "5. If any check fails, fix the issues before committing"
+    ],
+    "huskySetup": {
+      "install": "bunx husky init",
+      "preCommitHook": "bunx biome check --write . && bunx tsc --noEmit && bun run build"
+    }
+  },
+  "stories": [
+    {
+      "id": "SETUP-001",
+      "title": "Initialize Next.js project with Biome and Tailwind",
+      "description": "Bootstrap the project using create-next-app CLI with TypeScript, Tailwind CSS, and configure Biome for linting instead of ESLint.",
+      "acceptance": [
+        "Created with: bunx create-next-app@latest inspiration-gallery --typescript --tailwind --app --use-bun --no-eslint",
+        "Remove any ESLint config files if present",
+        "Install Biome: bun add -D @biomejs/biome",
+        "Create biome.json with recommended rules",
+        "next.config.ts exists and configured",
+        "tailwind.config.ts exists with content paths",
+        "bun run dev starts on port 3000"
+      ],
+      "priority": "critical",
+      "passes": false
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Configure Biome linting rules",
+      "description": "Set up Biome configuration with strict TypeScript rules and formatting.",
+      "acceptance": [
+        "biome.json configured with linter enabled",
+        "JavaScript and TypeScript rules configured",
+        "Formatter configured for consistent code style",
+        "Import organization rules enabled",
+        "bunx biome check . runs without errors"
+      ],
+      "priority": "critical",
+      "passes": false
+    },
+    {
+      "id": "SETUP-003",
+      "title": "Set up pre-commit hooks",
+      "description": "Configure Husky and pre-commit hooks to enforce lint, type check, and build before commits.",
+      "acceptance": [
+        "bun add -D husky",
+        "bunx husky init creates .husky directory",
+        ".husky/pre-commit runs: bunx biome check --write . && bunx tsc --noEmit && bun run build",
+        "Commits are blocked if any check fails",
+        "package.json has prepare script for husky"
+      ],
+      "priority": "critical",
+      "passes": false
+    },
+    {
+      "id": "SETUP-004",
+      "title": "Configure Vercel deployment",
+      "description": "Set up vercel.json configuration for optimal deployment.",
+      "acceptance": [
+        "vercel.json exists with build settings",
+        "Environment variables documented in .env.example",
+        "Build command: bun run build",
+        "Output directory configured correctly",
+        ".vercelignore excludes cache and node_modules"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DATA-001",
+      "title": "Create RSS source configuration",
+      "description": "Define the 144+ RSS feed sources organized by category using variable iteration patterns.",
+      "acceptance": [
+        "src/config/sources.ts exports RSS_SOURCES array",
+        "Sources organized into 6 categories with 24 sources each",
+        "Each source has: id, name, feedUrl, category, active status",
+        "Total of at least 144 unique RSS sources",
+        "Helper function to iterate sources by category"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DATA-002",
+      "title": "Create design data schema and types",
+      "description": "Define TypeScript types for design entries with full metadata support.",
+      "acceptance": [
+        "src/types/design.ts defines Design interface",
+        "Includes: id, url, title, description, screenshotPath, thumbnailPath",
+        "Metadata includes: site, author, designer, content, industry, tags",
+        "Source tracking with sources array and duplicateCount",
+        "Timestamps: firstSeen, lastUpdated"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DATA-003",
+      "title": "Implement URL deduplication logic",
+      "description": "Create deduplication system that normalizes URLs and tracks multiple sources.",
+      "acceptance": [
+        "src/lib/deduplication.ts with normalizeUrl function",
+        "Removes www, trailing slashes, query params, fragments",
+        "generateHash function creates unique ID from normalized URL",
+        "mergeDesignSources function combines sources for duplicates",
+        "Unit tests for deduplication logic"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "RSS-001",
+      "title": "Implement RSS feed parser",
+      "description": "Create RSS feed parser that extracts design entries from feeds.",
+      "acceptance": [
+        "bun add rss-parser",
+        "src/lib/rss-parser.ts handles feed parsing",
+        "Extracts title, link, description, image URLs",
+        "Handles different RSS/Atom feed formats",
+        "Error handling for failed feeds"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "RSS-002",
+      "title": "Create feed aggregation service",
+      "description": "Build service to fetch and process all 144+ RSS sources.",
+      "acceptance": [
+        "src/services/feed-aggregator.ts orchestrates feed fetching",
+        "Batch processing to avoid rate limits",
+        "Progress tracking for feed processing",
+        "Deduplication applied during aggregation",
+        "Results saved to local JSON data store"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "CACHE-001",
+      "title": "Implement local image caching system",
+      "description": "Create system to download and cache screenshots locally on the filesystem.",
+      "acceptance": [
+        "src/lib/image-cache.ts handles image downloading",
+        "Images saved to public/cache/screenshots/",
+        "Thumbnails generated and saved to public/cache/thumbnails/",
+        "Uses hash-based filenames to avoid collisions",
+        "Checks if image already cached before downloading"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "CACHE-002",
+      "title": "Add image optimization and thumbnails",
+      "description": "Optimize cached images and generate thumbnails for gallery grid.",
+      "acceptance": [
+        "bun add sharp",
+        "Full-size images optimized and converted to WebP",
+        "Thumbnails generated at 400px width",
+        "Original aspect ratio preserved",
+        "Both paths stored in design entry"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "CACHE-003",
+      "title": "Create cache management API routes",
+      "description": "Build API routes for cache operations and status checking.",
+      "acceptance": [
+        "app/api/cache/status/route.ts returns cache statistics",
+        "app/api/cache/refresh/route.ts triggers cache update",
+        "app/api/cache/clear/route.ts clears old entries",
+        "Cache directory size tracking",
+        "Last refresh timestamp tracking"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "DB-001",
+      "title": "Set up local JSON data store",
+      "description": "Implement file-based JSON storage for design data (no external database required).",
+      "acceptance": [
+        "src/lib/data-store.ts manages data persistence",
+        "Data stored in data/designs.json",
+        "CRUD operations for designs",
+        "Atomic writes to prevent corruption",
+        "Index file for fast lookups by tag/industry"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DB-002",
+      "title": "Create metadata extraction utilities",
+      "description": "Build utilities to extract and enrich metadata from design entries.",
+      "acceptance": [
+        "src/lib/metadata-extractor.ts for metadata parsing",
+        "Extract site name from URL domain",
+        "Parse author/designer from feed data",
+        "Content type classification (landing, portfolio, blog, etc.)",
+        "Industry detection from keywords"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "UI-001",
+      "title": "Create responsive gallery grid layout",
+      "description": "Build the main gallery grid component with responsive breakpoints.",
+      "acceptance": [
+        "src/components/gallery/gallery-grid.tsx component",
+        "CSS Grid with responsive columns (1-4 based on viewport)",
+        "Masonry-style layout for varied image heights",
+        "Lazy loading for images below fold",
+        "Tailwind classes for styling"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "UI-002",
+      "title": "Create design card component",
+      "description": "Build individual design card with thumbnail, metadata, and hover effects.",
+      "acceptance": [
+        "src/components/gallery/design-card.tsx component",
+        "Shows thumbnail image with hover zoom effect",
+        "Displays site name, designer, and primary tags",
+        "Source count badge for deduplicated entries",
+        "Click to open detail view or external link"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "UI-003",
+      "title": "Create design detail modal",
+      "description": "Build modal/drawer for viewing full design details.",
+      "acceptance": [
+        "src/components/gallery/design-detail.tsx component",
+        "Full-size screenshot display",
+        "All metadata fields visible",
+        "List of all sources that referenced this design",
+        "External link to original website",
+        "Close on escape or click outside"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "FILTER-001",
+      "title": "Implement filter sidebar",
+      "description": "Create sidebar with filter options for all metadata fields.",
+      "acceptance": [
+        "src/components/filters/filter-sidebar.tsx component",
+        "Collapsible filter sections",
+        "Filters for: industry, content type, tags, sources",
+        "Multi-select checkboxes for each filter",
+        "Clear all filters button",
+        "Active filter count display"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "FILTER-002",
+      "title": "Create search functionality",
+      "description": "Implement search across design titles, descriptions, and metadata.",
+      "acceptance": [
+        "src/components/search/search-bar.tsx component",
+        "Real-time search as user types",
+        "Searches: title, description, site, author, designer, tags",
+        "Debounced input to prevent excessive re-renders",
+        "Clear search button",
+        "Search result count display"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "FILTER-003",
+      "title": "Implement filter state management",
+      "description": "Create state management for filters and search with URL sync.",
+      "acceptance": [
+        "src/hooks/use-filters.ts custom hook",
+        "Filters sync to URL query params",
+        "Shareable filtered URLs",
+        "Combine search and filters",
+        "Reset to defaults function"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "PAGE-001",
+      "title": "Create main gallery page",
+      "description": "Build the home page with gallery grid, filters, and search.",
+      "acceptance": [
+        "app/page.tsx as main gallery view",
+        "Search bar at top",
+        "Filter sidebar (collapsible on mobile)",
+        "Gallery grid in main content area",
+        "Pagination or infinite scroll",
+        "Total results count"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "PAGE-002",
+      "title": "Create admin/management page",
+      "description": "Build admin page for managing RSS sources and cache.",
+      "acceptance": [
+        "app/admin/page.tsx for administration",
+        "List of all RSS sources with status",
+        "Trigger manual feed refresh",
+        "Cache statistics and management",
+        "Add/remove/edit sources (optional)"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "API-001",
+      "title": "Create designs API routes",
+      "description": "Build API routes for fetching and filtering designs.",
+      "acceptance": [
+        "app/api/designs/route.ts for listing designs",
+        "Supports query params for filters",
+        "Pagination with limit/offset",
+        "app/api/designs/[id]/route.ts for single design",
+        "Returns design with full metadata and sources"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "API-002",
+      "title": "Create RSS sync API routes",
+      "description": "Build API routes for RSS feed synchronization.",
+      "acceptance": [
+        "app/api/sync/route.ts triggers full sync",
+        "app/api/sync/status/route.ts returns sync status",
+        "Background processing for long-running syncs",
+        "Progress reporting",
+        "Error logging for failed feeds"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "SCRIPT-001",
+      "title": "Create RSS sync script",
+      "description": "Build standalone script for syncing RSS feeds (can run as cron job).",
+      "acceptance": [
+        "scripts/sync-feeds.ts for CLI sync",
+        "Can run with: bun run scripts/sync-feeds.ts",
+        "Iterates through all 144+ sources",
+        "Progress output during sync",
+        "Summary report at completion"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "SCRIPT-002",
+      "title": "Create cache cleanup script",
+      "description": "Build script to clean up old or orphaned cached images.",
+      "acceptance": [
+        "scripts/cleanup-cache.ts for cache management",
+        "Removes images not referenced in data store",
+        "Configurable age threshold for cleanup",
+        "Dry-run mode to preview deletions",
+        "Reports space recovered"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "TEST-001",
+      "title": "Add unit tests for core utilities",
+      "description": "Write unit tests for deduplication, URL normalization, and data handling.",
+      "acceptance": [
+        "bun add -D vitest @testing-library/react",
+        "tests/lib/deduplication.test.ts",
+        "tests/lib/data-store.test.ts",
+        "Tests pass: bun run test",
+        "Coverage for edge cases"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "PERF-001",
+      "title": "Optimize gallery performance",
+      "description": "Implement performance optimizations for smooth gallery experience.",
+      "acceptance": [
+        "Virtual scrolling for large datasets",
+        "Image placeholder/skeleton loading",
+        "Prefetch adjacent pages",
+        "Debounced filter updates",
+        "Lighthouse score > 90"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "DEPLOY-001",
+      "title": "Final verification and deployment",
+      "description": "Complete final checks and deploy to Vercel.",
+      "acceptance": [
+        "All lint checks pass: bunx biome check .",
+        "All type checks pass: bunx tsc --noEmit",
+        "Build succeeds: bun run build",
+        "Preview deployment works on Vercel",
+        "Production deployment successful"
+      ],
+      "priority": "critical",
+      "passes": false
+    }
+  ],
+  "deploymentChecklist": [
+    "Run bunx biome check --write . to lint and format",
+    "Run bunx tsc --noEmit to type check",
+    "Run bun run build to verify production build",
+    "Verify all tests pass with bun run test",
+    "Create .env.example with required variables",
+    "Push to GitHub repository",
+    "Connect repository to Vercel",
+    "Configure environment variables in Vercel",
+    "Deploy and verify production site"
+  ]
+}
