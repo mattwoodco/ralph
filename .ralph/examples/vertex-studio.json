@@ -1,0 +1,660 @@
+{
+  "name": "Vertex Studio",
+  "description": "A marketing website for a technologically advanced design agency that creates artwork, websites, motion graphics, and brand collateral for enterprise businesses. Features industry-specific landing pages with customized problem-solution-CTA messaging.",
+  "stories": [
+    {
+      "id": "init-project",
+      "title": "Initialize Next.js project with Biome and Tailwind",
+      "description": "Bootstrap the marketing website using create-next-app CLI with TypeScript, Tailwind CSS, and Biome for linting. This establishes the foundational architecture.",
+      "acceptance": [
+        "Project created using: npx create-next-app@latest vertex-studio --typescript --tailwind --eslint --app --src-dir --use-npm",
+        "Navigate to project: cd vertex-studio",
+        "Remove ESLint in favor of Biome: npm remove eslint eslint-config-next && rm .eslintrc.json",
+        "Install Biome: npm install --save-dev @biomejs/biome",
+        "Initialize Biome: npx @biomejs/biome init",
+        "Configure biome.json with recommended rules, formatter enabled, and organizeImports enabled",
+        "Update package.json scripts: lint uses 'biome check --apply .', format uses 'biome format --write .'",
+        "Tailwind CSS v3+ configured with custom design tokens in tailwind.config.ts",
+        "TypeScript strict mode enabled in tsconfig.json",
+        "Base layout component created at src/app/layout.tsx with metadata and viewport configuration",
+        "Global CSS imports Tailwind directives and custom CSS variables for brand colors",
+        "Project runs successfully with npm run dev on localhost:3000"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "design-system",
+      "title": "Establish design system and brand components",
+      "description": "Create a cohesive design system with reusable components that reflect the agency's technologically advanced aesthetic. Includes typography, color palette, spacing system, and core UI components.",
+      "acceptance": [
+        "Brand color palette defined: primary (electric blue #0066FF), secondary (deep purple #6B21A8), accent (vibrant cyan #00D4FF), neutrals (slate scale)",
+        "Typography scale using Inter for headings and system-ui for body, with fluid sizing using clamp()",
+        "Spacing system follows 4px base unit (4, 8, 12, 16, 24, 32, 48, 64, 96, 128)",
+        "Button component with variants: primary, secondary, outline, ghost - all with hover/focus states",
+        "Card component with glass morphism effect option and subtle border gradients",
+        "Section component with max-width container and responsive padding",
+        "Animated gradient backgrounds using CSS animations for hero sections",
+        "Icon system using Lucide React for consistent iconography",
+        "Motion utilities using CSS transitions and transforms (no heavy animation libraries)",
+        "Dark mode support using Tailwind's dark: modifier with system preference detection",
+        "All components follow accessibility best practices (WCAG 2.1 AA compliance)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "homepage",
+      "title": "Build agency homepage with hero and services overview",
+      "description": "Create the main homepage showcasing the agency's capabilities, featured work, and value proposition. Serves as the primary entry point for all visitors.",
+      "acceptance": [
+        "Hero section with animated headline, subheadline, and dual CTA buttons (View Work, Get in Touch)",
+        "Hero background features subtle animated gradient mesh or particle effect",
+        "Services grid displaying: Brand Identity, Web Design, Motion Graphics, UI/UX, Print & Collateral, Digital Campaigns",
+        "Each service card links to detailed service page with hover animation",
+        "Featured work carousel showing 4-6 enterprise client projects with category tags",
+        "Social proof section with enterprise client logos (placeholder logos acceptable)",
+        "Statistics banner: Years in Business, Projects Delivered, Enterprise Clients, Team Members",
+        "Testimonial section with rotating quotes from enterprise clients",
+        "CTA section before footer with headline and contact button",
+        "Smooth scroll behavior and intersection observer animations on scroll",
+        "Mobile-responsive with hamburger navigation on smaller screens"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "navigation",
+      "title": "Create global navigation and footer components",
+      "description": "Build the site-wide navigation header and footer with all necessary links, including the industries dropdown menu.",
+      "acceptance": [
+        "Fixed header with logo, main navigation links, and CTA button",
+        "Navigation items: Work, Services, Industries (dropdown), About, Contact",
+        "Industries dropdown displays all 15 industry pages in organized grid layout",
+        "Header background transitions from transparent to solid on scroll",
+        "Mobile navigation with slide-out drawer or full-screen overlay",
+        "Footer with company info, navigation links, social media icons, and newsletter signup",
+        "Footer includes industry page links organized by category",
+        "Legal links: Privacy Policy, Terms of Service, Cookie Policy",
+        "Accessibility: skip-to-content link, keyboard navigation support, ARIA labels",
+        "Navigation highlights current page/section",
+        "Smooth transitions between navigation states"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "industry-template",
+      "title": "Create reusable industry landing page template",
+      "description": "Build a flexible page template for industry-specific landing pages that accepts dynamic content for problem, solution, and CTA sections while maintaining consistent design.",
+      "acceptance": [
+        "Dynamic route at src/app/industries/[industry]/page.tsx using Next.js App Router",
+        "Page template sections: Hero, Problem Statement, Solution Overview, Benefits Grid, Case Study Preview, CTA",
+        "Hero section accepts: industry name, headline, subheadline, hero image/illustration",
+        "Problem section displays 3 industry-specific pain points with icons",
+        "Solution section shows how agency services address each pain point",
+        "Benefits grid with 4-6 key benefits specific to the industry",
+        "Case study preview card linking to relevant portfolio piece",
+        "CTA section with industry-specific messaging and contact form trigger",
+        "SEO metadata generated dynamically: title, description, OpenGraph tags",
+        "Breadcrumb navigation showing Home > Industries > [Industry Name]",
+        "Related industries section at bottom linking to similar verticals",
+        "generateStaticParams exports all industry slugs for static generation"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "industry-healthcare",
+      "title": "Healthcare & Pharmaceuticals industry page",
+      "description": "Create industry-specific landing page for healthcare and pharmaceutical enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/healthcare",
+        "Headline: 'Design That Builds Trust in Healthcare'",
+        "Problem 1: Complex medical information is difficult to communicate clearly to patients and providers",
+        "Problem 2: Regulatory compliance requirements make creative work challenging and slow",
+        "Problem 3: Outdated digital experiences erode patient trust and engagement",
+        "Solution 1: Clear, compliant visual communication that simplifies complex medical concepts",
+        "Solution 2: Streamlined approval workflows with HIPAA and FDA-aware design processes",
+        "Solution 3: Modern, accessible digital experiences that build confidence and improve outcomes",
+        "Benefits: Patient trust, Regulatory compliance, Clear communication, Accessible design, HIPAA-aware, Modern UX",
+        "CTA: 'Transform Your Healthcare Brand' with consultation request form",
+        "Visual style: Clean, trustworthy, clinical yet warm color accents"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "industry-financial",
+      "title": "Financial Services & Banking industry page",
+      "description": "Create industry-specific landing page for financial services and banking enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/financial-services",
+        "Headline: 'Elevate Your Financial Brand'",
+        "Problem 1: Legacy brand assets fail to convey innovation and digital-first capabilities",
+        "Problem 2: Complex financial products are difficult to explain to diverse customer segments",
+        "Problem 3: Competing fintechs are winning customers with superior digital experiences",
+        "Solution 1: Modern brand systems that balance tradition with innovation",
+        "Solution 2: Clear, engaging content design that makes complex products accessible",
+        "Solution 3: Digital experiences that rival fintech competitors while maintaining enterprise security",
+        "Benefits: Trust signals, Compliance-ready, Clear messaging, Digital transformation, Competitive edge, Security-focused",
+        "CTA: 'Modernize Your Financial Brand' with consultation request",
+        "Visual style: Sophisticated, trustworthy, premium with subtle blue/gold accents"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "industry-technology",
+      "title": "Technology & SaaS industry page",
+      "description": "Create industry-specific landing page for technology and SaaS enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/technology",
+        "Headline: 'Design for Tech Companies That Ship'",
+        "Problem 1: Rapid product evolution makes maintaining consistent brand presence difficult",
+        "Problem 2: Technical features need translation into compelling customer benefits",
+        "Problem 3: Standing out in crowded markets requires exceptional creative differentiation",
+        "Solution 1: Scalable design systems that evolve with your product roadmap",
+        "Solution 2: Story-driven creative that transforms features into customer outcomes",
+        "Solution 3: Bold, distinctive brand identities that cut through market noise",
+        "Benefits: Scalable systems, Feature storytelling, Market differentiation, Rapid iteration, Developer-friendly, Growth-ready",
+        "CTA: 'Scale Your Tech Brand' with consultation request",
+        "Visual style: Bold, innovative, dynamic with gradient accents and geometric elements"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "industry-legal",
+      "title": "Legal Services industry page",
+      "description": "Create industry-specific landing page for law firms and legal service enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/legal",
+        "Headline: 'Commanding Presence for Legal Leaders'",
+        "Problem 1: Traditional law firm branding fails to differentiate in competitive markets",
+        "Problem 2: Digital presence doesn't reflect the caliber of legal expertise",
+        "Problem 3: Client acquisition increasingly depends on strong online presence",
+        "Solution 1: Distinguished brand identities that convey authority and expertise",
+        "Solution 2: Premium digital experiences that match the quality of your counsel",
+        "Solution 3: Strategic content design that builds thought leadership and client trust",
+        "Benefits: Professional authority, Client trust, Market differentiation, Thought leadership, Digital presence, Referral-ready",
+        "CTA: 'Elevate Your Firm's Presence' with consultation request",
+        "Visual style: Authoritative, refined, traditional with modern sophistication"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "industry-manufacturing",
+      "title": "Manufacturing & Industrial industry page",
+      "description": "Create industry-specific landing page for manufacturing and industrial enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/manufacturing",
+        "Headline: 'Industrial Strength Brand Design'",
+        "Problem 1: B2B buyers expect consumer-grade digital experiences from industrial suppliers",
+        "Problem 2: Complex product catalogs and specifications are difficult to present effectively",
+        "Problem 3: Brand perception lags behind operational and technological capabilities",
+        "Solution 1: Modern B2B experiences that meet elevated buyer expectations",
+        "Solution 2: Clear product visualization and specification presentation systems",
+        "Solution 3: Brand transformation that showcases innovation and reliability",
+        "Benefits: B2B excellence, Product clarity, Brand modernization, Catalog systems, Technical accuracy, Global scalability",
+        "CTA: 'Modernize Your Industrial Brand' with consultation request",
+        "Visual style: Strong, precise, technical with bold typography and structural elements"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-realestate",
+      "title": "Real Estate & Property industry page",
+      "description": "Create industry-specific landing page for real estate and property enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/real-estate",
+        "Headline: 'Design That Moves Properties'",
+        "Problem 1: Property marketing materials fail to create emotional connection with buyers",
+        "Problem 2: Digital listing experiences don't showcase properties effectively",
+        "Problem 3: Brand consistency across developments and regions is difficult to maintain",
+        "Solution 1: Compelling visual storytelling that sells the lifestyle, not just the property",
+        "Solution 2: Immersive digital experiences including virtual tours and interactive floor plans",
+        "Solution 3: Scalable brand systems for multi-property and regional consistency",
+        "Benefits: Emotional connection, Virtual experiences, Brand consistency, Lifestyle marketing, Premium positioning, Multi-property systems",
+        "CTA: 'Elevate Your Property Marketing' with consultation request",
+        "Visual style: Aspirational, luxurious, lifestyle-focused with rich imagery"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-retail",
+      "title": "Retail & E-commerce industry page",
+      "description": "Create industry-specific landing page for retail and e-commerce enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/retail",
+        "Headline: 'Design That Drives Commerce'",
+        "Problem 1: Omnichannel presence requires consistent brand experience across touchpoints",
+        "Problem 2: E-commerce conversion rates suffer from poor visual merchandising",
+        "Problem 3: Seasonal campaigns require rapid creative production at scale",
+        "Solution 1: Unified brand systems that work seamlessly across physical and digital channels",
+        "Solution 2: Conversion-optimized product presentation and shopping experiences",
+        "Solution 3: Agile creative processes that deliver campaign assets at retail speed",
+        "Benefits: Omnichannel consistency, Conversion optimization, Rapid production, Visual merchandising, Campaign agility, Scale-ready",
+        "CTA: 'Transform Your Retail Experience' with consultation request",
+        "Visual style: Vibrant, consumer-friendly, trend-aware with dynamic compositions"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-energy",
+      "title": "Energy & Utilities industry page",
+      "description": "Create industry-specific landing page for energy and utilities enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/energy",
+        "Headline: Powering the Future of Energy Brands",
+        "Problem 1: Sustainability messaging needs to be authentic, not greenwashing",
+        "Problem 2: Technical infrastructure projects require clear stakeholder communication",
+        "Problem 3: Energy transition demands brand evolution while maintaining trust",
+        "Solution 1: Genuine sustainability storytelling backed by transparent communication design",
+        "Solution 2: Clear, compelling infrastructure project communication for all stakeholders",
+        "Solution 3: Brand evolution strategies that honor heritage while embracing the future",
+        "Benefits: Authentic sustainability, Stakeholder clarity, Brand evolution, Project communication, Trust preservation, Future-ready",
+        "CTA: 'Energize Your Brand' with consultation request",
+        "Visual style: Progressive, sustainable, powerful with nature-inspired and tech elements"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-education",
+      "title": "Education & EdTech industry page",
+      "description": "Create industry-specific landing page for education and EdTech enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/education",
+        "Headline: 'Design That Inspires Learning'",
+        "Problem 1: Traditional institutions struggle to appeal to digital-native students",
+        "Problem 2: EdTech products need to balance engagement with educational rigor",
+        "Problem 3: Complex program offerings are difficult to communicate clearly",
+        "Solution 1: Modern brand experiences that resonate with contemporary learners",
+        "Solution 2: Engaging product design that makes learning effective and enjoyable",
+        "Solution 3: Clear information architecture for program discovery and enrollment",
+        "Benefits: Student engagement, Learning outcomes, Clear navigation, Modern appeal, Enrollment optimization, Accessibility",
+        "CTA: 'Transform Your Educational Brand' with consultation request",
+        "Visual style: Inspiring, accessible, youthful yet credible with warm, inviting colors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-hospitality",
+      "title": "Hospitality & Travel industry page",
+      "description": "Create industry-specific landing page for hospitality and travel enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/hospitality",
+        "Headline: 'Design That Creates Unforgettable Experiences'",
+        "Problem 1: Digital touchpoints fail to capture the magic of physical experiences",
+        "Problem 2: Multi-property brands struggle with consistency while maintaining local character",
+        "Problem 3: Post-pandemic travelers have elevated expectations for digital booking experiences",
+        "Solution 1: Immersive digital storytelling that previews the guest experience",
+        "Solution 2: Flexible brand systems that balance global consistency with local authenticity",
+        "Solution 3: Seamless booking experiences that build anticipation and reduce friction",
+        "Benefits: Experience preview, Brand flexibility, Booking optimization, Local authenticity, Guest anticipation, Multi-property systems",
+        "CTA: 'Elevate Your Guest Experience' with consultation request",
+        "Visual style: Experiential, luxurious, wanderlust-inspiring with rich photography"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-automotive",
+      "title": "Automotive industry page",
+      "description": "Create industry-specific landing page for automotive enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/automotive",
+        "Headline: 'Design That Drives Desire'",
+        "Problem 1: Electric and autonomous transitions require brand repositioning",
+        "Problem 2: Dealership experiences lag behind direct-to-consumer competitors",
+        "Problem 3: Complex vehicle configurations need intuitive presentation",
+        "Solution 1: Future-forward brand evolution that embraces mobility transformation",
+        "Solution 2: Premium digital showroom experiences that complement physical retail",
+        "Solution 3: Intuitive configurator design that makes complex choices simple",
+        "Benefits: Future positioning, Digital showrooms, Configuration clarity, Brand evolution, Premium experience, Mobility-ready",
+        "CTA: 'Accelerate Your Automotive Brand' with consultation request",
+        "Visual style: Dynamic, premium, precision-engineered with dramatic lighting and motion"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-telecom",
+      "title": "Telecommunications industry page",
+      "description": "Create industry-specific landing page for telecommunications enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/telecommunications",
+        "Headline: 'Connecting Brands to Customers'",
+        "Problem 1: Commoditized services make brand differentiation critical",
+        "Problem 2: Complex plan structures confuse customers and increase churn",
+        "Problem 3: 5G and emerging tech require clear benefit communication",
+        "Solution 1: Distinctive brand positioning that creates emotional connection beyond price",
+        "Solution 2: Clear, transparent plan presentation that builds customer confidence",
+        "Solution 3: Compelling technology storytelling that translates specs into life benefits",
+        "Benefits: Brand differentiation, Plan clarity, Tech storytelling, Customer retention, Emotional connection, Future-ready messaging",
+        "CTA: 'Strengthen Your Telecom Brand' with consultation request",
+        "Visual style: Connected, innovative, human with network/connectivity visual metaphors"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-insurance",
+      "title": "Insurance industry page",
+      "description": "Create industry-specific landing page for insurance enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/insurance",
+        "Headline: 'Design That Builds Confidence'",
+        "Problem 1: Insurance products are intangible and difficult to differentiate visually",
+        "Problem 2: Policy complexity creates confusion and erodes customer trust",
+        "Problem 3: Insurtech disruptors are winning with superior digital experiences",
+        "Solution 1: Tangible brand experiences that make protection feel real and valuable",
+        "Solution 2: Clear, jargon-free communication design that demystifies coverage",
+        "Solution 3: Modern digital experiences that match insurtech innovation with enterprise trust",
+        "Benefits: Trust building, Clarity of coverage, Digital innovation, Brand tangibility, Customer confidence, Competitive positioning",
+        "CTA: 'Modernize Your Insurance Brand' with consultation request",
+        "Visual style: Reassuring, protective, modern with warm, trustworthy color palette"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-logistics",
+      "title": "Logistics & Supply Chain industry page",
+      "description": "Create industry-specific landing page for logistics and supply chain enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/logistics",
+        "Headline: 'Design That Moves Business Forward'",
+        "Problem 1: Complex global operations are difficult to communicate to prospective clients",
+        "Problem 2: Digital tracking and visibility tools lack user-friendly interfaces",
+        "Problem 3: B2B logistics brands often appear interchangeable in crowded markets",
+        "Solution 1: Clear visual systems that make operational complexity comprehensible",
+        "Solution 2: Intuitive dashboard and tracking interface design for all user types",
+        "Solution 3: Distinctive brand positioning that highlights your operational advantages",
+        "Benefits: Operational clarity, Interface excellence, Brand differentiation, Global consistency, User experience, B2B excellence",
+        "CTA: 'Optimize Your Logistics Brand' with consultation request",
+        "Visual style: Efficient, global, systematic with motion and flow visual elements"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "industry-consulting",
+      "title": "Professional Services & Consulting industry page",
+      "description": "Create industry-specific landing page for professional services and consulting enterprise clients with tailored messaging.",
+      "acceptance": [
+        "URL: /industries/consulting",
+        "Headline: 'Design for Thought Leaders'",
+        "Problem 1: Intellectual capital and expertise are difficult to visualize and differentiate",
+        "Problem 2: Partner-driven firms struggle with consistent brand application",
+        "Problem 3: Thought leadership content needs compelling presentation to break through",
+        "Solution 1: Visual frameworks that make abstract expertise tangible and memorable",
+        "Solution 2: Flexible brand systems that maintain consistency while allowing partner expression",
+        "Solution 3: Engaging content design that elevates research and insights above the noise",
+        "Benefits: Expertise visualization, Brand flexibility, Content excellence, Thought leadership, Partner alignment, Premium positioning",
+        "CTA: 'Elevate Your Professional Brand' with consultation request",
+        "Visual style: Intelligent, refined, thought-provoking with clean, structured layouts"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "contact-page",
+      "title": "Contact and consultation request page",
+      "description": "Build the contact page with consultation request form that captures industry context and project details.",
+      "acceptance": [
+        "URL: /contact",
+        "Page headline: 'Let's Create Something Exceptional'",
+        "Contact form fields: Name, Email, Company, Phone (optional), Industry dropdown, Project Type multi-select, Budget Range, Timeline, Project Description",
+        "Industry dropdown pre-populated if visitor came from industry page",
+        "Project types: Brand Identity, Website Design, Motion Graphics, UI/UX, Print & Collateral, Digital Campaign, Other",
+        "Form validation with clear error messages and success confirmation",
+        "Form submission creates email notification and stores in database/CRM",
+        "Alternative contact methods: Email address, Phone number, Office address with map",
+        "FAQ section addressing common questions about process, timeline, pricing",
+        "Social media links and LinkedIn company page",
+        "Thank you page with next steps and expected response time"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "work-portfolio",
+      "title": "Portfolio and case study pages",
+      "description": "Build the work/portfolio section showcasing enterprise client projects with detailed case studies.",
+      "acceptance": [
+        "URL: /work displays filterable grid of project thumbnails",
+        "Filter options: All, by Industry, by Service Type",
+        "Each project links to detailed case study page at /work/[project-slug]",
+        "Case study template includes: Hero image, Client name, Industry tag, Challenge section, Approach section, Solution section, Results/Impact, Image gallery",
+        "Results shown with metrics where available (e.g., '47% increase in engagement')",
+        "Image gallery with lightbox for full-resolution viewing",
+        "Related projects section at bottom of each case study",
+        "CTA section encouraging contact after viewing work",
+        "Minimum 6 placeholder case studies created with realistic content",
+        "Case studies span multiple industries to demonstrate versatility"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "services-pages",
+      "title": "Individual service detail pages",
+      "description": "Create detailed pages for each service offering with process information and relevant case studies.",
+      "acceptance": [
+        "Service pages: /services/brand-identity, /services/web-design, /services/motion-graphics, /services/ui-ux, /services/print-collateral, /services/digital-campaigns",
+        "Each page includes: Hero with service name, Service description, Process steps, Deliverables list, Related case studies, CTA",
+        "Process steps shown as numbered timeline or step diagram",
+        "Deliverables presented as clear checklist of what clients receive",
+        "FAQ section specific to each service addressing common questions",
+        "Pricing indication (e.g., 'Starting from $X' or 'Custom quote')",
+        "Related case studies filtered to show work in that service category",
+        "Cross-links to complementary services",
+        "Services overview page at /services with all services grid"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "about-page",
+      "title": "About page with team and company story",
+      "description": "Build the about page showcasing the agency's story, values, team, and approach to enterprise partnerships.",
+      "acceptance": [
+        "URL: /about",
+        "Company story section with founding narrative and mission",
+        "Values section highlighting: Innovation, Craft, Partnership, Results",
+        "Team grid showing key team members with photos, names, titles, and brief bios",
+        "Team member photos use consistent treatment (same background, lighting style)",
+        "Awards and recognition section if applicable",
+        "Client logos section (expanded from homepage)",
+        "Technology and tools section showing capabilities (Figma, After Effects, etc.)",
+        "Career section or link to careers page for job opportunities",
+        "Office photos or virtual tour element",
+        "CTA encouraging partnership conversation"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "seo-metadata",
+      "title": "SEO optimization and metadata",
+      "description": "Implement comprehensive SEO strategy with metadata, structured data, and technical optimization.",
+      "acceptance": [
+        "Unique title and meta description for every page",
+        "OpenGraph tags for social sharing with custom images per page",
+        "Twitter Card metadata configured",
+        "JSON-LD structured data for Organization, LocalBusiness, and Service schemas",
+        "XML sitemap generated at /sitemap.xml",
+        "robots.txt configured appropriately",
+        "Canonical URLs set on all pages",
+        "Image alt texts on all images",
+        "Heading hierarchy (h1, h2, h3) properly structured on all pages",
+        "Internal linking strategy implemented between related pages",
+        "Industry pages include relevant keywords naturally in content",
+        "Page load performance optimized (Core Web Vitals targets met)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "performance",
+      "title": "Performance optimization and Core Web Vitals",
+      "description": "Optimize site performance to meet Core Web Vitals thresholds and ensure fast loading across devices.",
+      "acceptance": [
+        "Largest Contentful Paint (LCP) under 2.5 seconds",
+        "First Input Delay (FID) under 100 milliseconds",
+        "Cumulative Layout Shift (CLS) under 0.1",
+        "Images optimized using Next.js Image component with appropriate sizes",
+        "Fonts preloaded and display:swap configured",
+        "JavaScript bundle analyzed and optimized (dynamic imports where beneficial)",
+        "Static pages generated at build time using generateStaticParams",
+        "API routes cached appropriately",
+        "Lighthouse performance score above 90 on mobile and desktop",
+        "Testing on throttled 3G network shows acceptable load times",
+        "No layout shifts during page load"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "accessibility",
+      "title": "Accessibility compliance and testing",
+      "description": "Ensure the website meets WCAG 2.1 AA accessibility standards and is usable by all visitors.",
+      "acceptance": [
+        "All interactive elements keyboard accessible with visible focus indicators",
+        "Color contrast ratios meet WCAG AA standards (4.5:1 for text, 3:1 for large text)",
+        "All images have descriptive alt text",
+        "Form inputs have associated labels",
+        "Error messages are clearly communicated to screen readers",
+        "Skip to main content link available",
+        "ARIA landmarks used appropriately (main, nav, footer, etc.)",
+        "Heading levels used in logical order without skipping",
+        "Video/motion content has reduced motion alternative",
+        "Accessibility statement page at /accessibility",
+        "Tested with screen reader (VoiceOver or NVDA)",
+        "Automated accessibility testing passes (axe or similar)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "analytics",
+      "title": "Analytics and conversion tracking",
+      "description": "Implement analytics to track visitor behavior, page performance, and form conversions.",
+      "acceptance": [
+        "Google Analytics 4 or privacy-focused alternative (Plausible, Fathom) integrated",
+        "Page view tracking on all pages",
+        "Form submission events tracked as conversions",
+        "Industry page visits tracked to understand popular verticals",
+        "Scroll depth tracking on key pages",
+        "Outbound link click tracking",
+        "CTA button click tracking",
+        "Contact form funnel analysis (form views vs submissions)",
+        "Cookie consent banner compliant with GDPR/CCPA",
+        "Analytics data excludes internal team traffic",
+        "Dashboard or report template for monthly review"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "testing",
+      "title": "Testing and quality assurance",
+      "description": "Implement testing strategy and conduct thorough QA across browsers and devices.",
+      "acceptance": [
+        "Unit tests for utility functions and data processing",
+        "Component tests for key UI components using Testing Library",
+        "End-to-end tests for critical user flows (contact form, navigation)",
+        "Visual regression testing for design consistency",
+        "Cross-browser testing: Chrome, Firefox, Safari, Edge",
+        "Mobile testing on iOS Safari and Android Chrome",
+        "Responsive testing at key breakpoints (375px, 768px, 1024px, 1440px)",
+        "Form validation tested with various inputs including edge cases",
+        "404 page displays correctly for invalid routes",
+        "All links verified (no broken links)",
+        "All industry pages render correctly with their content",
+        "Test coverage report generated with minimum 70% coverage"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "deployment",
+      "title": "Deployment and hosting configuration",
+      "description": "Configure deployment pipeline and hosting infrastructure for production launch.",
+      "acceptance": [
+        "Deployment to Vercel, Netlify, or similar Next.js-optimized hosting",
+        "Production environment variables configured securely",
+        "Custom domain configured with SSL certificate",
+        "Preview deployments enabled for pull requests",
+        "Build optimizations enabled (output: standalone if needed)",
+        "Environment-specific configurations (development, staging, production)",
+        "Error monitoring integrated (Sentry or similar)",
+        "Uptime monitoring configured with alerting",
+        "Backup and recovery plan documented",
+        "CDN caching configured for static assets",
+        "Security headers configured (CSP, X-Frame-Options, etc.)",
+        "Launch checklist completed and verified"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ],
+  "bestPractices": {
+    "projectSetup": [
+      "Use create-next-app CLI: npx create-next-app@latest [project-name] --typescript --tailwind --app --src-dir",
+      "Replace ESLint with Biome: npm remove eslint eslint-config-next && npm install --save-dev @biomejs/biome && npx @biomejs/biome init",
+      "Configure Biome in biome.json with formatter, linter, and organizeImports enabled",
+      "Enable TypeScript strict mode in tsconfig.json for better type safety",
+      "Set up path aliases in tsconfig.json (e.g., @/* for src/*)"
+    ],
+    "codeQuality": [
+      "Run Biome check before every commit: npx biome check --apply .",
+      "Use TypeScript strictly - avoid 'any' types",
+      "Keep components small and focused on single responsibility",
+      "Extract reusable logic into custom hooks",
+      "Use Server Components by default, Client Components only when needed"
+    ],
+    "designSystem": [
+      "Define design tokens in Tailwind config or CSS custom properties",
+      "Create consistent spacing using Tailwind's spacing scale",
+      "Use semantic color names (primary, secondary) not literal (blue, purple)",
+      "Build mobile-first, then enhance for larger screens",
+      "Ensure all interactive elements have clear hover/focus states"
+    ],
+    "performance": [
+      "Use Next.js Image component for all images",
+      "Implement dynamic imports for below-the-fold content",
+      "Minimize client-side JavaScript where possible",
+      "Use static generation (generateStaticParams) for all predictable routes",
+      "Monitor Core Web Vitals during development"
+    ],
+    "accessibility": [
+      "Test with keyboard navigation throughout development",
+      "Maintain proper heading hierarchy on every page",
+      "Ensure sufficient color contrast for all text",
+      "Add descriptive alt text to all meaningful images",
+      "Use semantic HTML elements (nav, main, section, article)"
+    ],
+    "seo": [
+      "Write unique, compelling titles and descriptions for every page",
+      "Include target keywords naturally in content and headings",
+      "Implement structured data for rich search results",
+      "Ensure all pages are discoverable and in sitemap",
+      "Use descriptive, keyword-rich URLs for all pages"
+    ],
+    "industryPages": [
+      "Lead with the client's problem, not your capabilities",
+      "Use industry-specific terminology and pain points",
+      "Include social proof relevant to that industry",
+      "Make the CTA specific and low-commitment",
+      "Connect problems directly to solutions - show the transformation"
+    ]
+  }
+}
