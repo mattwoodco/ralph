@@ -1,0 +1,757 @@
+{
+  "name": "Signup Stripe Vercel Deploy",
+  "description": "A Next.js 16 application enabling user signup, Stripe payments, and programmatic Vercel project deployments with AI-powered features",
+  "stories": [
+    {
+      "id": "SETUP-001",
+      "title": "Initialize Next.js 16 Project",
+      "description": "Bootstrap a new Next.js 16 project with TypeScript, Tailwind CSS, and the App Router for modern React Server Components support.",
+      "acceptance": [
+        "Created with `bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes`",
+        "Next.js version 16.x confirmed in package.json",
+        "TypeScript strict mode enabled in tsconfig.json",
+        "App Router structure with src/app directory",
+        "`bun run dev` starts development server on port 3000"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "SETUP-002",
+      "title": "Configure Biome for Linting and Formatting",
+      "description": "Replace ESLint with Biome for faster linting and formatting with a single tool.",
+      "acceptance": [
+        "Biome installed via `bun add -d @biomejs/biome`",
+        "Biome initialized with `bunx @biomejs/biome init`",
+        "biome.json configured with recommended rules",
+        "Scripts added: `bun run lint` and `bun run format`",
+        "ESLint config removed or disabled to avoid conflicts"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "SETUP-003",
+      "title": "Install and Configure shadcn/ui",
+      "description": "Set up shadcn/ui component library for consistent, accessible UI components.",
+      "acceptance": [
+        "shadcn/ui initialized via `bunx shadcn@latest init`",
+        "components.json created with proper configuration",
+        "lib/utils.ts contains cn() helper function",
+        "Base components installed: Button, Input, Label, Card, Dialog, Form",
+        "CSS variables configured for theming in globals.css"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DB-001",
+      "title": "Set Up Database with Drizzle ORM",
+      "description": "Configure PostgreSQL database connection with Drizzle ORM for type-safe database operations.",
+      "acceptance": [
+        "Drizzle ORM installed via `bun add drizzle-orm postgres`",
+        "Drizzle Kit installed via `bun add -d drizzle-kit`",
+        "drizzle.config.ts created with database connection",
+        "DATABASE_URL environment variable defined in .env.local",
+        "db/index.ts exports configured drizzle instance"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DB-002",
+      "title": "Create Users Schema",
+      "description": "Define the users table schema with essential fields for authentication and profile management.",
+      "acceptance": [
+        "db/schema/users.ts exports users table definition",
+        "Schema includes: id (uuid), email (unique), name, password_hash, email_verified, created_at, updated_at",
+        "Schema includes: stripe_customer_id (nullable), subscription_status (enum: free, active, canceled, past_due)",
+        "Drizzle relations defined for user -> projects relationship",
+        "Migration generated via `bunx drizzle-kit generate`"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DB-003",
+      "title": "Create Projects Schema",
+      "description": "Define the projects table schema for storing user projects and their Vercel deployment status.",
+      "acceptance": [
+        "db/schema/projects.ts exports projects table definition",
+        "Schema includes: id (uuid), user_id (foreign key), name, description, repository_url",
+        "Schema includes: vercel_project_id (nullable), vercel_deployment_url (nullable), deployment_status (enum: pending, building, ready, error)",
+        "Schema includes: framework (enum: nextjs, react, vue, etc), created_at, updated_at",
+        "Index on user_id for efficient queries"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DB-004",
+      "title": "Create Subscriptions Schema",
+      "description": "Define the subscriptions table for tracking Stripe subscription details and billing history.",
+      "acceptance": [
+        "db/schema/subscriptions.ts exports subscriptions table",
+        "Schema includes: id, user_id (foreign key), stripe_subscription_id (unique), stripe_price_id",
+        "Schema includes: status (enum matching Stripe statuses), current_period_start, current_period_end",
+        "Schema includes: cancel_at_period_end (boolean), canceled_at (nullable timestamp)",
+        "Migration generated and applied successfully"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AUTH-001",
+      "title": "Install and Configure NextAuth.js v5",
+      "description": "Set up NextAuth.js v5 (Auth.js) for modern authentication with credential and OAuth support.",
+      "acceptance": [
+        "NextAuth v5 installed via `bun add next-auth@beta`",
+        "auth.ts created in project root with NextAuth configuration",
+        "AUTH_SECRET environment variable generated and set",
+        "Drizzle adapter installed via `bun add @auth/drizzle-adapter`",
+        "Session strategy set to JWT for serverless compatibility"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AUTH-002",
+      "title": "Implement Email/Password Signup",
+      "description": "Create a secure signup flow with email verification and password hashing.",
+      "acceptance": [
+        "POST /api/auth/signup endpoint accepts email, password, name",
+        "Password hashed using bcrypt with salt rounds >= 12",
+        "Email uniqueness validated before account creation",
+        "Password strength validation: min 8 chars, 1 uppercase, 1 number",
+        "Returns appropriate error messages for validation failures"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AUTH-003",
+      "title": "Create Signup Form Component",
+      "description": "Build a responsive signup form with client-side validation and loading states.",
+      "acceptance": [
+        "src/components/auth/signup-form.tsx created",
+        "Form uses react-hook-form with zod validation",
+        "Fields: name, email, password, confirm password",
+        "Real-time validation feedback on each field",
+        "Loading spinner during form submission",
+        "Error toast on failure, redirect to dashboard on success"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AUTH-004",
+      "title": "Create Login Form Component",
+      "description": "Build a login form with credentials provider integration.",
+      "acceptance": [
+        "src/components/auth/login-form.tsx created",
+        "Form uses react-hook-form with zod validation",
+        "Fields: email, password, remember me checkbox",
+        "signIn() from next-auth/react called on submit",
+        "Error handling for invalid credentials",
+        "Redirect to callback URL or dashboard on success"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AUTH-005",
+      "title": "Create Auth Pages Layout",
+      "description": "Build a consistent layout for authentication pages with branding.",
+      "acceptance": [
+        "src/app/(auth)/layout.tsx created for auth pages",
+        "Centered card layout with logo at top",
+        "Link to toggle between login and signup",
+        "Responsive design works on mobile",
+        "Dark mode support via CSS variables"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "AUTH-006",
+      "title": "Implement Email Verification Flow",
+      "description": "Add email verification using magic link or token-based verification.",
+      "acceptance": [
+        "Verification token generated on signup (stored in DB)",
+        "Email sent via Resend API with verification link",
+        "GET /api/auth/verify?token=xxx validates and updates user",
+        "Verification page shows success/error state",
+        "Resend verification email option available"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "AUTH-007",
+      "title": "Add OAuth Providers",
+      "description": "Enable social login with GitHub and Google OAuth providers.",
+      "acceptance": [
+        "GitHub OAuth provider configured in auth.ts",
+        "Google OAuth provider configured in auth.ts",
+        "OAuth buttons added to login and signup forms",
+        "Environment variables: AUTH_GITHUB_ID, AUTH_GITHUB_SECRET, AUTH_GOOGLE_ID, AUTH_GOOGLE_SECRET",
+        "Account linking works when email matches existing user"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "AUTH-008",
+      "title": "Create Protected Route Middleware",
+      "description": "Implement middleware to protect authenticated routes and handle redirects.",
+      "acceptance": [
+        "middleware.ts created in project root",
+        "Unauthenticated users redirected to /login for protected routes",
+        "Authenticated users redirected from /login to /dashboard",
+        "matcher config excludes public routes and static assets",
+        "Session token validated using NextAuth middleware helper"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-001",
+      "title": "Install and Configure Stripe SDK",
+      "description": "Set up Stripe SDK with proper initialization and type safety.",
+      "acceptance": [
+        "Stripe SDK installed via `bun add stripe`",
+        "lib/stripe.ts exports configured Stripe instance",
+        "STRIPE_SECRET_KEY environment variable set",
+        "STRIPE_PUBLISHABLE_KEY environment variable set",
+        "STRIPE_WEBHOOK_SECRET environment variable set",
+        "TypeScript types for Stripe objects available"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-002",
+      "title": "Define Subscription Plans",
+      "description": "Create pricing configuration and Stripe products/prices for subscription tiers.",
+      "acceptance": [
+        "lib/pricing.ts exports plans array with tier details",
+        "Plans defined: Free (0), Pro ($19/mo), Team ($49/mo)",
+        "Each plan includes: name, description, price, stripe_price_id, features array, limits object",
+        "Limits include: max_projects, max_deployments_per_month, ai_generations_per_month",
+        "Stripe Dashboard products and prices created matching config"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-003",
+      "title": "Create Stripe Customer on Signup",
+      "description": "Automatically create a Stripe customer when a new user signs up.",
+      "acceptance": [
+        "stripe.customers.create() called during user registration",
+        "Customer created with user email and name metadata",
+        "stripe_customer_id stored in users table",
+        "Error handling if Stripe customer creation fails",
+        "Transaction rolls back user creation on Stripe failure"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-004",
+      "title": "Create Checkout Session Endpoint",
+      "description": "Build API endpoint to create Stripe Checkout sessions for subscription upgrades.",
+      "acceptance": [
+        "POST /api/stripe/checkout creates checkout session",
+        "Accepts price_id in request body",
+        "Session configured with subscription mode",
+        "success_url and cancel_url set correctly",
+        "customer_id from authenticated user used",
+        "Returns session URL for client redirect"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-005",
+      "title": "Build Pricing Page Component",
+      "description": "Create a pricing page displaying subscription tiers with upgrade CTAs.",
+      "acceptance": [
+        "src/app/(marketing)/pricing/page.tsx created",
+        "Three pricing cards displayed in responsive grid",
+        "Current plan highlighted for authenticated users",
+        "Feature comparison list with checkmarks",
+        "CTA buttons trigger checkout session creation",
+        "Loading state during checkout redirect"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-006",
+      "title": "Implement Stripe Webhook Handler",
+      "description": "Create webhook endpoint to handle Stripe subscription events.",
+      "acceptance": [
+        "POST /api/stripe/webhook endpoint created",
+        "Webhook signature verified using stripe.webhooks.constructEvent()",
+        "Handles: checkout.session.completed, customer.subscription.updated, customer.subscription.deleted",
+        "Updates user subscription_status on relevant events",
+        "Creates/updates subscription record in database",
+        "Returns 200 status for successful processing"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-007",
+      "title": "Create Customer Portal Session",
+      "description": "Enable users to manage their subscription via Stripe Customer Portal.",
+      "acceptance": [
+        "POST /api/stripe/portal creates portal session",
+        "Portal configured in Stripe Dashboard with branding",
+        "Users can update payment method",
+        "Users can cancel or change subscription",
+        "Return URL set to /dashboard/settings",
+        "Button added to settings page to access portal"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "STRIPE-008",
+      "title": "Implement Usage-Based Billing Tracking",
+      "description": "Track and report usage for metered billing features like AI generations.",
+      "acceptance": [
+        "db/schema/usage.ts exports usage_records table",
+        "Track: user_id, type (deployment, ai_generation), count, period_start, period_end",
+        "lib/usage.ts exports incrementUsage() and getUsage() functions",
+        "Usage checked before allowing actions (enforce limits)",
+        "Usage reset at billing period boundaries",
+        "Usage summary displayed in dashboard"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-001",
+      "title": "Set Up Vercel API Client",
+      "description": "Configure authenticated client for Vercel REST API interactions.",
+      "acceptance": [
+        "lib/vercel.ts exports configured API client",
+        "VERCEL_ACCESS_TOKEN environment variable set",
+        "VERCEL_TEAM_ID environment variable set (optional)",
+        "Type definitions for Vercel API responses",
+        "Error handling wrapper for API calls",
+        "Rate limiting awareness and retry logic"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-002",
+      "title": "Create Project via Vercel API",
+      "description": "Implement endpoint to programmatically create new Vercel projects.",
+      "acceptance": [
+        "POST /api/projects creates local and Vercel project",
+        "Calls POST /v10/projects Vercel API endpoint",
+        "Accepts: name, framework, git_repository (optional)",
+        "Stores vercel_project_id in projects table",
+        "Configures environment variables via API",
+        "Returns created project with Vercel details"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-003",
+      "title": "Implement Git Repository Connection",
+      "description": "Allow users to connect GitHub repositories to Vercel projects.",
+      "acceptance": [
+        "GitHub OAuth scopes include repo access",
+        "User can select repository from dropdown",
+        "Calls Vercel API to link repo to project",
+        "Configures automatic deployments on push",
+        "Branch configuration (production branch, preview branches)",
+        "Displays connected repository in project settings"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-004",
+      "title": "Trigger Manual Deployment",
+      "description": "Enable users to trigger deployments programmatically via Vercel API.",
+      "acceptance": [
+        "POST /api/projects/[id]/deploy triggers deployment",
+        "Calls POST /v13/deployments Vercel API",
+        "Supports deployment from git ref or direct upload",
+        "Returns deployment ID and status",
+        "Updates project deployment_status in database",
+        "Enforces deployment limit based on subscription"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-005",
+      "title": "Poll Deployment Status",
+      "description": "Implement real-time deployment status tracking with polling.",
+      "acceptance": [
+        "GET /api/deployments/[id]/status returns current status",
+        "Calls GET /v13/deployments/[id] Vercel API",
+        "Client polls every 5 seconds during active deployment",
+        "Status mapped: QUEUED, BUILDING, READY, ERROR, CANCELED",
+        "Build logs URL returned for detailed view",
+        "Final status persisted to database"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-006",
+      "title": "Create Projects Dashboard",
+      "description": "Build dashboard page listing all user projects with status indicators.",
+      "acceptance": [
+        "src/app/(dashboard)/dashboard/page.tsx shows projects list",
+        "Card for each project with: name, framework, deployment status, last deployed",
+        "Status badges: green (ready), yellow (building), red (error), gray (pending)",
+        "Quick actions: deploy, view logs, open production URL",
+        "Empty state with CTA to create first project",
+        "Pagination for users with many projects"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-007",
+      "title": "Build Project Detail Page",
+      "description": "Create detailed project view with deployments history and settings.",
+      "acceptance": [
+        "src/app/(dashboard)/projects/[id]/page.tsx created",
+        "Shows project name, description, connected repo",
+        "Deployments history table with: commit, status, created_at, duration",
+        "Deploy button triggers new deployment",
+        "Environment variables management section",
+        "Delete project with confirmation dialog"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "VERCEL-008",
+      "title": "Manage Environment Variables",
+      "description": "Allow users to set and manage environment variables for their Vercel projects.",
+      "acceptance": [
+        "GET /api/projects/[id]/env lists environment variables",
+        "POST /api/projects/[id]/env creates new variable",
+        "DELETE /api/projects/[id]/env/[key] removes variable",
+        "Variables scoped to: production, preview, development",
+        "Sensitive values masked in UI",
+        "Calls Vercel API to sync changes"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "AI-001",
+      "title": "Install Vercel AI SDK",
+      "description": "Set up Vercel AI SDK for streaming AI responses and integrations.",
+      "acceptance": [
+        "AI SDK installed via `bun add ai @ai-sdk/openai`",
+        "OPENAI_API_KEY environment variable set",
+        "lib/ai.ts exports configured AI client",
+        "streamText helper function created for chat completions",
+        "generateText helper for non-streaming responses",
+        "Error handling for rate limits and API failures"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AI-002",
+      "title": "Create AI Chat Endpoint",
+      "description": "Build streaming API endpoint for AI-powered chat interactions.",
+      "acceptance": [
+        "POST /api/ai/chat accepts messages array",
+        "Uses streamText() from Vercel AI SDK",
+        "System prompt defines assistant behavior",
+        "Returns streaming response using toDataStreamResponse()",
+        "Rate limiting based on user subscription tier",
+        "Usage tracking incremented per request"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AI-003",
+      "title": "Build AI Chat Component",
+      "description": "Create a chat interface component using Vercel AI SDK hooks.",
+      "acceptance": [
+        "src/components/ai/chat.tsx created",
+        "Uses useChat() hook from 'ai/react'",
+        "Message list with user/assistant distinction",
+        "Input field with send button",
+        "Loading indicator during streaming",
+        "Auto-scroll to latest message",
+        "Stop generation button during streaming"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AI-004",
+      "title": "Implement AI Project Generator",
+      "description": "Use AI to generate project boilerplate based on user description.",
+      "acceptance": [
+        "POST /api/ai/generate-project endpoint created",
+        "Accepts: description, framework preference",
+        "AI generates: project name, recommended tech stack, initial file structure",
+        "Uses structured output with zod schema validation",
+        "Returns JSON response with generation results",
+        "Can trigger project creation from results"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AI-005",
+      "title": "Build Project Generator UI",
+      "description": "Create interface for AI-assisted project generation.",
+      "acceptance": [
+        "src/app/(dashboard)/projects/new/page.tsx created",
+        "Textarea for project description input",
+        "AI generates suggestions displayed in preview",
+        "User can edit/refine before creating",
+        "Framework selection dropdown",
+        "Create project button initiates Vercel project creation"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "AI-006",
+      "title": "Implement AI Deployment Assistant",
+      "description": "AI-powered assistant to help troubleshoot deployment errors.",
+      "acceptance": [
+        "POST /api/ai/deployment-help analyzes deployment logs",
+        "Fetches failed deployment logs from Vercel API",
+        "Sends logs to AI with troubleshooting prompt",
+        "Returns structured suggestions for fixes",
+        "Accessible from deployment detail page",
+        "Caches analysis to avoid duplicate API calls"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "AI-007",
+      "title": "Add AI-Powered Project Insights",
+      "description": "Generate AI insights and recommendations for project optimization.",
+      "acceptance": [
+        "GET /api/projects/[id]/insights returns AI analysis",
+        "Analyzes: deployment frequency, build times, error rates",
+        "Generates recommendations for improvement",
+        "Displayed on project detail page",
+        "Refreshable on demand (not real-time)",
+        "Cached for 24 hours per project"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "AI-008",
+      "title": "Implement AI Code Review Suggestions",
+      "description": "Use AI to provide code review suggestions before deployment.",
+      "acceptance": [
+        "POST /api/ai/review accepts file contents",
+        "AI analyzes code for common issues",
+        "Returns: security concerns, performance suggestions, best practices",
+        "Integrates with GitHub API to fetch PR diffs",
+        "Displayed as checklist before deploying",
+        "Can be skipped by user"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "UI-001",
+      "title": "Create Dashboard Layout",
+      "description": "Build the main dashboard layout with sidebar navigation.",
+      "acceptance": [
+        "src/app/(dashboard)/layout.tsx created",
+        "Sidebar with navigation links: Dashboard, Projects, Settings, Billing",
+        "Header with user avatar and dropdown menu",
+        "Responsive: sidebar collapses to hamburger on mobile",
+        "Active route highlighted in navigation",
+        "Sign out option in user menu"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "UI-002",
+      "title": "Build Settings Page",
+      "description": "Create user settings page for profile and preferences management.",
+      "acceptance": [
+        "src/app/(dashboard)/settings/page.tsx created",
+        "Profile section: update name, email",
+        "Password change section with current password validation",
+        "Connected accounts section showing OAuth providers",
+        "Danger zone: delete account with confirmation",
+        "Toast notifications on successful updates"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "UI-003",
+      "title": "Create Billing Page",
+      "description": "Build billing page showing subscription status and usage.",
+      "acceptance": [
+        "src/app/(dashboard)/billing/page.tsx created",
+        "Current plan displayed with features",
+        "Usage meters: projects used, deployments this month, AI generations",
+        "Upgrade button linking to pricing page",
+        "Manage subscription button opening Stripe portal",
+        "Billing history table with invoice links"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "UI-004",
+      "title": "Build Marketing Landing Page",
+      "description": "Create public landing page showcasing the product.",
+      "acceptance": [
+        "src/app/(marketing)/page.tsx created",
+        "Hero section with headline, subtext, CTA buttons",
+        "Features section highlighting key capabilities",
+        "Pricing preview with link to full pricing page",
+        "Testimonials or social proof section",
+        "Footer with links and legal pages"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "UI-005",
+      "title": "Implement Dark Mode Toggle",
+      "description": "Add theme switching between light and dark modes.",
+      "acceptance": [
+        "next-themes installed via `bun add next-themes`",
+        "ThemeProvider wrapping app in root layout",
+        "Theme toggle button in header/settings",
+        "System preference respected by default",
+        "Preference persisted in localStorage",
+        "Smooth transition between themes"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "UI-006",
+      "title": "Add Toast Notifications System",
+      "description": "Implement global toast notifications for user feedback.",
+      "acceptance": [
+        "shadcn/ui Sonner component installed",
+        "Toaster component added to root layout",
+        "toast() function available via lib/toast.ts",
+        "Success, error, warning, info variants",
+        "Auto-dismiss after configurable duration",
+        "Action buttons supported in toasts"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "TEST-001",
+      "title": "Set Up Testing Framework",
+      "description": "Configure Vitest for unit and integration testing.",
+      "acceptance": [
+        "Vitest installed via `bun add -d vitest @vitejs/plugin-react`",
+        "vitest.config.ts created with proper configuration",
+        "Testing utilities installed: @testing-library/react, @testing-library/jest-dom",
+        "Test script added: `bun run test`",
+        "Coverage reporting enabled",
+        "Example test file passes"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "TEST-002",
+      "title": "Write Auth Flow Tests",
+      "description": "Create tests for authentication flows and components.",
+      "acceptance": [
+        "Unit tests for signup form validation",
+        "Unit tests for login form validation",
+        "Integration test for signup API endpoint",
+        "Integration test for login API endpoint",
+        "Mock Stripe customer creation in tests",
+        "All auth tests pass"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "TEST-003",
+      "title": "Write Stripe Integration Tests",
+      "description": "Create tests for Stripe payment flows.",
+      "acceptance": [
+        "Unit tests for checkout session creation",
+        "Unit tests for webhook event handling",
+        "Integration test for subscription flow",
+        "Mock Stripe API calls in tests",
+        "Test webhook signature verification",
+        "All Stripe tests pass"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "DEPLOY-001",
+      "title": "Configure Production Environment",
+      "description": "Set up environment variables and configuration for production deployment.",
+      "acceptance": [
+        "All required env vars documented in .env.example",
+        "Production database URL configured",
+        "Stripe live mode keys ready (not committed)",
+        "Vercel project created for the app itself",
+        "Domain configured in Vercel",
+        "SSL certificate active"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "DEPLOY-002",
+      "title": "Set Up CI/CD Pipeline",
+      "description": "Configure GitHub Actions for testing and deployment.",
+      "acceptance": [
+        ".github/workflows/ci.yml created",
+        "Runs on push to main and pull requests",
+        "Steps: install, lint, typecheck, test",
+        "Vercel deployment triggered on main branch",
+        "Preview deployments for pull requests",
+        "Required status checks enforced"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "DEPLOY-003",
+      "title": "Configure Monitoring and Logging",
+      "description": "Set up error tracking and application monitoring.",
+      "acceptance": [
+        "Vercel Analytics enabled for web vitals",
+        "Sentry or similar error tracking configured",
+        "SENTRY_DSN environment variable set",
+        "Error boundaries catch client-side errors",
+        "API errors logged with context",
+        "Alerts configured for critical errors"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}
