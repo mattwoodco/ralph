@@ -1,0 +1,533 @@
+{
+  "name": "Publish",
+  "description": "A multi-channel publication platform with Monaco editor for creating and publishing content across Twitter, LinkedIn, Medium, Dev.to, and other platforms with customized templates for each.",
+  "stories": [
+    {
+      "id": "init",
+      "title": "Project initialization with Next.js 16",
+      "description": "Bootstrap the Next.js 16 project using create-next-app CLI with TypeScript, Tailwind CSS, and Biome for linting/formatting.",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes",
+        "Remove ESLint and switch to Biome: cd app && rm -rf .eslintrc* && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+        "Update next.config.ts to remove eslint references",
+        "Tailwind v4 configured with CSS-first configuration in globals.css",
+        "bun run dev starts on port 3000 without errors",
+        "Create biome.json with recommended rules, format on save enabled",
+        "Add format and lint scripts to package.json using biome"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "shadcn-setup",
+      "title": "Install shadcn/ui component library",
+      "description": "Set up shadcn/ui for consistent, accessible UI components throughout the application.",
+      "acceptance": [
+        "shadcn/ui initialized with: bunx shadcn@latest init",
+        "Selected New York style with neutral base color",
+        "components.json exists with proper configuration",
+        "lib/utils.ts contains cn() helper function",
+        "CSS variables for theming added to globals.css",
+        "Install core components: bunx shadcn@latest add button card input textarea tabs dialog dropdown-menu toast separator badge avatar"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-setup",
+      "title": "SQLite database with Drizzle ORM",
+      "description": "Set up SQLite database for storing posts, drafts, templates, and platform credentials.",
+      "acceptance": [
+        "Install dependencies: bun add better-sqlite3 drizzle-orm && bun add -d drizzle-kit @types/better-sqlite3",
+        "Create db/index.ts with database connection utility",
+        "Create db/schema.ts with Drizzle schema definitions",
+        "Database file stored in data/publish.db with .gitignore entry",
+        "Add drizzle.config.ts for migrations",
+        "Create db/migrate.ts script for running migrations"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "db-schema",
+      "title": "Define database schema for posts and platforms",
+      "description": "Create comprehensive database schema for multi-platform publishing workflow.",
+      "acceptance": [
+        "Posts table: id, title, content, status (draft/scheduled/published), createdAt, updatedAt",
+        "Platforms table: id, name, slug, iconUrl, characterLimit, supportsMarkdown, supportsImages",
+        "PostPlatforms junction table: id, postId, platformId, platformContent, templateId, publishedAt, publishedUrl, status",
+        "Templates table: id, platformId, name, structure, variables, isDefault",
+        "Credentials table: id, platformId, accessToken (encrypted), refreshToken, expiresAt, userId",
+        "Foreign keys properly defined with cascade deletes",
+        "Seed script populates default platforms (Twitter, LinkedIn, Medium, Dev.to, Hashnode, Substack)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "monaco-setup",
+      "title": "Integrate Monaco Editor",
+      "description": "Add Monaco Editor as the primary text editing experience with markdown support and syntax highlighting.",
+      "acceptance": [
+        "Install Monaco: bun add @monaco-editor/react",
+        "Create components/editor/MonacoEditor.tsx wrapper component",
+        "Editor supports Markdown syntax highlighting",
+        "Editor uses system dark/light mode automatically",
+        "Custom theme matching app design system",
+        "Editor fills available container height responsively",
+        "Word wrap enabled by default",
+        "Minimap disabled for cleaner writing experience",
+        "Font set to monospace with comfortable line height (1.6)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "monaco-features",
+      "title": "Enhanced Monaco Editor features",
+      "description": "Add productivity features to the Monaco editor for better content creation workflow.",
+      "acceptance": [
+        "Auto-save triggers on content change (debounced 2s)",
+        "Character count displayed below editor",
+        "Word count displayed below editor",
+        "Reading time estimate displayed (based on 200 WPM)",
+        "Markdown preview toggle button in editor toolbar",
+        "Keyboard shortcuts: Cmd/Ctrl+S for manual save, Cmd/Ctrl+B for bold, Cmd/Ctrl+I for italic",
+        "Placeholder text when editor is empty",
+        "Undo/redo stack persists across component remounts"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "layout-shell",
+      "title": "Application shell and navigation",
+      "description": "Create the main application layout with sidebar navigation and responsive design.",
+      "acceptance": [
+        "Sidebar navigation on left (280px width, collapsible on mobile)",
+        "Main content area with max-width constraint for readability",
+        "Top header with app logo, search, and user menu",
+        "Navigation items: New Post, Drafts, Published, Templates, Platforms, Settings",
+        "Active route highlighted in navigation",
+        "Mobile hamburger menu for sidebar toggle",
+        "Dark mode toggle in header or settings",
+        "Keyboard shortcut Cmd/Ctrl+K for command palette"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "post-create",
+      "title": "Create new post workflow",
+      "description": "Build the main post creation page with Monaco editor and platform selection.",
+      "acceptance": [
+        "Route: /posts/new renders post creation view",
+        "Title input field at top (large, minimal styling)",
+        "Monaco editor as main content area",
+        "Platform selector sidebar showing available platforms with checkboxes",
+        "Each platform shows character limit and content preview",
+        "Save as Draft button persists to database",
+        "POST /api/posts creates new post record",
+        "Redirect to /posts/[id]/edit after creation",
+        "Unsaved changes warning when navigating away"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "post-edit",
+      "title": "Edit existing post",
+      "description": "Edit page for modifying drafts and viewing platform-specific versions.",
+      "acceptance": [
+        "Route: /posts/[id]/edit loads post from database",
+        "Pre-populate title and content in editor",
+        "Show last saved timestamp",
+        "Platform selection persists from draft",
+        "PATCH /api/posts/[id] updates post",
+        "DELETE /api/posts/[id] removes post with confirmation dialog",
+        "Version history sidebar showing auto-saves (last 10)",
+        "Restore from version history with single click"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "platform-templates",
+      "title": "Platform-specific templates",
+      "description": "Create and manage templates that transform content for each platform's requirements.",
+      "acceptance": [
+        "Twitter template: thread splitter (280 chars), auto-numbering (1/n), hashtag suggestions",
+        "LinkedIn template: professional tone wrapper, call-to-action footer, emoji bullet points",
+        "Medium template: full markdown support, title case headers, code block formatting",
+        "Dev.to template: frontmatter generation (title, tags, canonical_url), series support",
+        "Hashnode template: cover image placeholder, tags array, slug generation",
+        "Substack template: newsletter format, subscribe CTA, section headers",
+        "Templates stored in database with variable interpolation support",
+        "Default template auto-selected per platform"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "template-editor",
+      "title": "Template customization interface",
+      "description": "Allow users to create and modify templates for each platform.",
+      "acceptance": [
+        "Route: /templates lists all templates grouped by platform",
+        "Create new template button opens dialog",
+        "Template editor with Monaco (using custom DSL syntax highlighting)",
+        "Variable insertion dropdown: {{title}}, {{content}}, {{author}}, {{date}}, {{tags}}",
+        "Live preview panel showing template applied to sample content",
+        "Save template to database with validation",
+        "Set template as default for platform",
+        "Duplicate existing template functionality",
+        "Delete template with confirmation"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "content-transform",
+      "title": "Content transformation engine",
+      "description": "Build the system that transforms main content into platform-specific versions.",
+      "acceptance": [
+        "lib/transform.ts exports transformContent(content, platform, template) function",
+        "Twitter: intelligent thread splitting at sentence boundaries",
+        "LinkedIn: markdown to plain text with line breaks preserved",
+        "Medium: preserve full markdown, add metadata",
+        "Truncation respects word boundaries (no mid-word cuts)",
+        "Link detection and shortening suggestions",
+        "Hashtag extraction from content for relevant platforms",
+        "Character count validation per platform limits",
+        "Warning badges when content exceeds platform limits"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "preview-panel",
+      "title": "Platform preview panel",
+      "description": "Real-time preview showing how content will appear on each selected platform.",
+      "acceptance": [
+        "Preview panel as right sidebar (collapsible)",
+        "Tab for each selected platform",
+        "Twitter preview shows thread cards with accurate styling",
+        "LinkedIn preview shows post card with profile placeholder",
+        "Medium preview shows article layout",
+        "Preview updates in real-time as content changes (debounced 500ms)",
+        "Platform-specific character counters with color coding (green/yellow/red)",
+        "Copy platform-specific content to clipboard button"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "twitter-integration",
+      "title": "Twitter/X API integration",
+      "description": "Implement Twitter OAuth and posting functionality.",
+      "acceptance": [
+        "bun add twitter-api-v2 for API client",
+        "OAuth 2.0 PKCE flow for authentication",
+        "Route: /api/auth/twitter/connect initiates OAuth",
+        "Route: /api/auth/twitter/callback handles OAuth response",
+        "Store tokens securely in Credentials table (encrypted)",
+        "POST /api/publish/twitter posts single tweet or thread",
+        "Thread posting with reply chain for long content",
+        "Media upload support for images (up to 4 per tweet)",
+        "Rate limiting handling with retry logic"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "linkedin-integration",
+      "title": "LinkedIn API integration",
+      "description": "Implement LinkedIn OAuth and posting functionality.",
+      "acceptance": [
+        "OAuth 2.0 flow for LinkedIn authentication",
+        "Route: /api/auth/linkedin/connect initiates OAuth",
+        "Route: /api/auth/linkedin/callback handles OAuth response",
+        "Store tokens in Credentials table with expiration tracking",
+        "POST /api/publish/linkedin creates LinkedIn post",
+        "Support for text posts up to 3000 characters",
+        "Image attachment support via LinkedIn media API",
+        "Article sharing with custom preview support",
+        "Handle token refresh automatically"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "medium-integration",
+      "title": "Medium API integration",
+      "description": "Implement Medium OAuth and article publishing.",
+      "acceptance": [
+        "Medium API integration token stored securely",
+        "Route: /api/auth/medium/connect for token setup",
+        "POST /api/publish/medium creates Medium story",
+        "Support for draft or public publish status",
+        "Tags array support (up to 5 tags)",
+        "Canonical URL setting for cross-posting",
+        "Markdown content preserved properly",
+        "Return published URL for success confirmation"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "devto-integration",
+      "title": "Dev.to API integration",
+      "description": "Implement Dev.to API key authentication and article publishing.",
+      "acceptance": [
+        "Dev.to API key input in platform settings",
+        "Route: /api/auth/devto/connect validates and stores API key",
+        "POST /api/publish/devto creates Dev.to article",
+        "Frontmatter auto-generation from post metadata",
+        "Tags support with validation against Dev.to allowed tags",
+        "Series support for multi-part articles",
+        "Canonical URL for cross-posting",
+        "Cover image upload support"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "hashnode-integration",
+      "title": "Hashnode GraphQL API integration",
+      "description": "Implement Hashnode personal access token auth and publishing.",
+      "acceptance": [
+        "bun add graphql-request for GraphQL client",
+        "Hashnode PAT input in platform settings",
+        "Route: /api/auth/hashnode/connect validates token",
+        "POST /api/publish/hashnode creates Hashnode article via GraphQL mutation",
+        "Publication selection for users with multiple Hashnode blogs",
+        "Tags array support",
+        "Cover image URL support",
+        "Slug customization option"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "substack-integration",
+      "title": "Substack integration (via API or email)",
+      "description": "Implement Substack publishing workflow.",
+      "acceptance": [
+        "Substack API integration if available, otherwise email-to-publish fallback",
+        "Email template formatting for Substack-compatible HTML",
+        "Newsletter-style layout with header/footer",
+        "Subscribe CTA block insertion",
+        "Draft preview in Substack email format",
+        "Manual publish option with copy-to-clipboard for Substack editor"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "platform-settings",
+      "title": "Platform connection management",
+      "description": "Settings page for connecting and managing platform credentials.",
+      "acceptance": [
+        "Route: /settings/platforms shows all available platforms",
+        "Each platform card shows connection status (connected/disconnected)",
+        "Connect button initiates OAuth flow or shows API key input",
+        "Disconnect button revokes access and removes credentials",
+        "Show connected account username/handle",
+        "Token expiration warning for platforms with expiring tokens",
+        "Re-authenticate button for expired connections",
+        "Test connection button to verify credentials"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "publish-flow",
+      "title": "Multi-platform publish workflow",
+      "description": "Orchestrate publishing to multiple platforms with progress tracking.",
+      "acceptance": [
+        "Publish button opens confirmation dialog showing selected platforms",
+        "Each platform shows preview snippet and character count",
+        "Publish Now button triggers sequential publishing",
+        "Progress indicator showing current platform being published",
+        "Success/failure status per platform with error messages",
+        "Published URLs displayed on success with copy buttons",
+        "Failed platforms can be retried individually",
+        "Post status updated to 'published' on full success",
+        "Partial success state supported (some platforms succeed, others fail)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "drafts-list",
+      "title": "Drafts management page",
+      "description": "View and manage all draft posts with filtering and sorting.",
+      "acceptance": [
+        "Route: /drafts shows all posts with status='draft'",
+        "List view with title, excerpt, platforms, last edited date",
+        "Sort by: last edited, created date, title",
+        "Search by title or content",
+        "Bulk selection for delete or publish",
+        "Quick action menu: edit, duplicate, delete, publish",
+        "Empty state with CTA to create first post",
+        "Pagination or infinite scroll for large draft lists"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "published-list",
+      "title": "Published posts history",
+      "description": "View history of published posts with platform-specific details.",
+      "acceptance": [
+        "Route: /published shows all posts with status='published'",
+        "Each post shows platforms published to with links",
+        "Platform badges with direct links to published content",
+        "Publish date and time displayed",
+        "Filter by platform",
+        "Search by title or content",
+        "Analytics preview if available (impressions, clicks)",
+        "Re-publish to additional platforms option"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "scheduling",
+      "title": "Post scheduling system",
+      "description": "Schedule posts for future publishing with timezone support.",
+      "acceptance": [
+        "Schedule option in publish dialog with date/time picker",
+        "Timezone selector defaulting to user's browser timezone",
+        "ScheduledPosts table: id, postId, scheduledAt, timezone, status",
+        "Cron job or edge function for scheduled publish execution",
+        "Scheduled posts shown in dedicated /scheduled route",
+        "Edit scheduled post before publish time",
+        "Cancel scheduled post with confirmation",
+        "Email notification on successful scheduled publish (optional)"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "image-upload",
+      "title": "Image upload and management",
+      "description": "Upload and manage images for posts across platforms.",
+      "acceptance": [
+        "Drag-and-drop image upload in editor",
+        "Paste image from clipboard support",
+        "Images stored locally in public/uploads or cloud storage",
+        "Image optimization on upload (resize, compress)",
+        "Images table: id, postId, filename, url, altText, width, height",
+        "Image gallery showing all uploaded images for current post",
+        "Alt text input for accessibility",
+        "Delete unused images option",
+        "Platform-specific image requirements shown (dimensions, file size)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "dark-mode",
+      "title": "Dark mode and theming",
+      "description": "Implement dark mode with system preference detection and manual toggle.",
+      "acceptance": [
+        "bun add next-themes for theme management",
+        "System preference detection (prefers-color-scheme)",
+        "Manual toggle in header persists to localStorage",
+        "Monaco editor theme syncs with app theme",
+        "All components properly styled for both modes",
+        "No flash of incorrect theme on page load",
+        "CSS variables for consistent color palette",
+        "Smooth transition between themes"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "command-palette",
+      "title": "Command palette for power users",
+      "description": "Implement a searchable command palette for quick actions.",
+      "acceptance": [
+        "Cmd/Ctrl+K opens command palette dialog",
+        "Search input filters available commands",
+        "Commands: new post, open drafts, open published, connect platform, toggle theme",
+        "Recent posts shown in palette for quick access",
+        "Keyboard navigation with arrow keys",
+        "Enter executes selected command",
+        "Escape closes palette",
+        "Command history for frequently used actions"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "responsive-design",
+      "title": "Mobile-responsive design",
+      "description": "Ensure the application works well on mobile devices.",
+      "acceptance": [
+        "Mobile-first CSS using Tailwind breakpoints",
+        "Sidebar collapses to hamburger menu on mobile",
+        "Editor takes full width on mobile",
+        "Preview panel moves to separate tab on mobile",
+        "Touch-friendly button sizes (min 44px tap targets)",
+        "Platform selector as bottom sheet on mobile",
+        "No horizontal scroll on any viewport size",
+        "Publish dialog as full-screen modal on mobile"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "error-handling",
+      "title": "Error handling and user feedback",
+      "description": "Implement comprehensive error handling with helpful user feedback.",
+      "acceptance": [
+        "Toast notifications for success/error/warning states",
+        "API errors display user-friendly messages",
+        "Form validation with inline error messages",
+        "Network error detection with retry option",
+        "Rate limit errors show cooldown timer",
+        "OAuth failure handling with re-auth prompt",
+        "Graceful degradation when platforms unavailable",
+        "Error boundary components for section isolation"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "keyboard-shortcuts",
+      "title": "Keyboard shortcuts throughout app",
+      "description": "Implement consistent keyboard shortcuts for common actions.",
+      "acceptance": [
+        "Cmd/Ctrl+N: New post",
+        "Cmd/Ctrl+S: Save draft",
+        "Cmd/Ctrl+Enter: Publish (when in edit view)",
+        "Cmd/Ctrl+K: Command palette",
+        "Cmd/Ctrl+/: Toggle preview panel",
+        "Escape: Close dialogs/modals",
+        "Shortcuts displayed in tooltips on buttons",
+        "Shortcuts help modal accessible from settings"
+      ],
+      "priority": "low",
+      "passes": false
+    },
+    {
+      "id": "analytics-basic",
+      "title": "Basic post analytics",
+      "description": "Display basic engagement metrics from connected platforms.",
+      "acceptance": [
+        "Fetch view/impression counts from platforms that support it",
+        "Twitter: impressions, likes, retweets, replies",
+        "LinkedIn: impressions, reactions, comments",
+        "Dev.to: views, reactions, comments",
+        "Analytics displayed on published post detail view",
+        "Refresh button to update metrics",
+        "Cache analytics data locally with TTL",
+        "Empty state when analytics unavailable"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}
