@@ -1,0 +1,238 @@
+{
+  "name": "Prospect",
+  "stories": [
+    {
+      "id": "init",
+      "title": "Project initialization",
+      "description": "Set up Next.js 16 project with TypeScript, Tailwind v4, shadcn/ui, Biome, and SQLite database for a solo agency prospect management and lead generation system",
+      "acceptance": [
+        "Next.js 16 app created using: bunx create-next-app@latest app --ts --tailwind --eslint --app --src-dir --use-bun --yes",
+        "Biome setup: cd app && bun add -d @biomejs/biome && bunx @biomejs/biome init",
+        "Tailwind v4 configured with CSS-first configuration",
+        "shadcn/ui initialized with bunx shadcn@latest init using New York style and neutral base color",
+        "better-sqlite3 installed and database connection utility created",
+        "Database schema defined with tables: prospects, outreach_campaigns, touchpoints, deals, services, portfolio_items",
+        "Global CSS includes prefers-color-scheme media queries for automatic light/dark mode",
+        "Typography scale uses clamp() for fluid sizing with professional, clean sans-serif font",
+        "Base layout is responsive with mobile-first approach for on-the-go prospecting",
+        "Environment variables configured for API integrations (LinkedIn, email, calendar)"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "ideal-client-profile",
+      "title": "Ideal Client Profile (ICP) builder",
+      "description": "Define and manage ideal client profiles to focus prospecting efforts on high-value targets for UI/UX and front-end development services",
+      "acceptance": [
+        "ICP creation form with fields: industry vertical, company size, tech stack indicators, pain points, budget range",
+        "Multiple ICP templates saved for different service offerings (UI design, React development, design systems, etc.)",
+        "Scoring rubric auto-calculates prospect fit based on ICP match (1-100 score)",
+        "ICP includes trigger events: funding rounds, job postings for designers/developers, tech stack migrations",
+        "Visual ICP card displays key characteristics at a glance",
+        "API route: GET/POST/PUT/DELETE /api/icp for CRUD operations",
+        "Default ICPs seeded for common front-end agency targets: SaaS startups, e-commerce, fintech, healthtech",
+        "ICP exports as shareable template for refinement"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "prospect-discovery",
+      "title": "Prospect discovery and research hub",
+      "description": "Centralized interface for discovering and researching potential clients through multiple channels and data sources",
+      "acceptance": [
+        "LinkedIn Sales Navigator integration for lead search and import (manual CSV fallback)",
+        "Prospect card displays: company name, website, key contacts, tech stack, recent news, ICP score",
+        "Website analyzer extracts tech stack indicators (React, Vue, Angular, legacy jQuery, etc.)",
+        "Job board scanner flags companies hiring front-end developers or designers (opportunity signal)",
+        "Funding news integration (Crunchbase/manual entry) tracks recent investment rounds",
+        "Prospect notes field with rich text for research insights",
+        "Tags system for categorizing prospects: hot lead, warm, cold, nurture, lost",
+        "Bulk import from CSV with field mapping for migration from spreadsheets",
+        "API routes: GET /api/prospects, POST /api/prospects, GET /api/prospects/:id/analyze"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "outreach-sequences",
+      "title": "Multi-channel outreach sequence builder",
+      "description": "Design and execute personalized outreach sequences across email, LinkedIn, and other channels with proven templates for agency services",
+      "acceptance": [
+        "Visual sequence builder with drag-drop steps: email, LinkedIn message, LinkedIn connection, follow-up, call",
+        "Template library with proven cold email frameworks: AIDA, PAS, BAB, value-first approach",
+        "Personalization tokens: {{firstName}}, {{company}}, {{techStack}}, {{painPoint}}, {{recentNews}}",
+        "Portfolio showcase integration embeds relevant case studies based on prospect industry",
+        "Delay configuration between steps (1 day, 3 days, 1 week, custom)",
+        "A/B test variants for subject lines and opening hooks",
+        "Sequence analytics: open rates, reply rates, meeting booked rates per template",
+        "Auto-pause sequence on prospect reply (positive or negative)",
+        "Pre-built sequences for: cold outreach, warm referral follow-up, inbound lead nurture, re-engagement"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "touchpoint-tracker",
+      "title": "Touchpoint and interaction timeline",
+      "description": "Track every interaction with prospects across all channels to maintain context and build relationships over time",
+      "acceptance": [
+        "Timeline view shows chronological history of all touchpoints per prospect",
+        "Touchpoint types: email sent, email opened, reply received, LinkedIn message, call, meeting, referral",
+        "Quick-add touchpoint with voice memo transcription for mobile logging",
+        "Automatic email tracking integration logs opens and clicks",
+        "Meeting notes template with structured fields: discussed, next steps, objections, timeline",
+        "Reminder system for follow-up actions with push notifications",
+        "Relationship strength indicator based on touchpoint frequency and recency",
+        "API routes: GET/POST /api/prospects/:id/touchpoints"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "portfolio-showcase",
+      "title": "Dynamic portfolio case study manager",
+      "description": "Manage and selectively share portfolio items and case studies tailored to prospect industry and needs",
+      "acceptance": [
+        "Case study builder with fields: client name, industry, challenge, solution, tech stack used, results/metrics",
+        "Before/after screenshot uploads with annotation tools",
+        "Video testimonial embedding (Loom, YouTube)",
+        "Industry tags for automatic matching to prospect profiles",
+        "Service tags: UI design, UX research, React development, design system, animation, accessibility",
+        "Public shareable link with custom slug for each case study",
+        "Portfolio mini-site generator with selected case studies for specific prospects",
+        "Analytics tracking: views, time on page, clicks per case study link",
+        "NDA toggle hides client names while showcasing work"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "deal-pipeline",
+      "title": "Visual deal pipeline and forecasting",
+      "description": "Kanban-style pipeline to track deals from initial contact through closed-won with revenue forecasting",
+      "acceptance": [
+        "Drag-drop kanban board with stages: Lead, Qualified, Proposal, Negotiation, Closed-Won, Closed-Lost",
+        "Deal card shows: company, contact, deal value, probability, expected close date, days in stage",
+        "Stage-specific fields: qualification criteria for Qualified, proposal link for Proposal stage",
+        "Deal value and probability auto-calculate weighted pipeline value",
+        "Stale deal alerts when no activity for configurable period (default 14 days)",
+        "Win/loss analysis prompts capture reasons on deal close",
+        "Monthly and quarterly pipeline reports with conversion metrics",
+        "Deal velocity metrics: average time in each stage, overall sales cycle length",
+        "API routes: GET/POST/PUT /api/deals, GET /api/deals/pipeline-stats"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "proposal-generator",
+      "title": "Smart proposal and estimate generator",
+      "description": "Quickly generate professional proposals with service packages, pricing, and timeline estimates tailored to front-end development projects",
+      "acceptance": [
+        "Service catalog with pre-defined offerings: UI audit, design system, React development, component library, etc.",
+        "Pricing models: fixed project, hourly retainer, value-based tiers",
+        "Proposal template with sections: understanding, approach, deliverables, timeline, investment, about me",
+        "Auto-populate prospect details and relevant case studies from CRM data",
+        "Interactive pricing table with optional add-ons",
+        "E-signature integration (DocuSign/manual) for acceptance",
+        "Proposal analytics: opened, time spent viewing, sections viewed",
+        "Version history tracks proposal revisions",
+        "PDF export with professional branding"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "content-calendar",
+      "title": "Authority content calendar and tracker",
+      "description": "Plan and track thought leadership content that attracts inbound leads and establishes expertise in UI/UX and front-end development",
+      "acceptance": [
+        "Content calendar with week/month views for planning posts across channels",
+        "Content types: LinkedIn post, Twitter thread, blog article, case study, newsletter, video",
+        "Topic idea bank categorized by pillar: UI trends, React best practices, design systems, accessibility",
+        "Content performance tracking: impressions, engagement, inbound inquiries attributed",
+        "Repurposing workflow: blog to LinkedIn to Twitter thread pipeline",
+        "Posting schedule optimizer suggests best times based on historical engagement",
+        "Draft status tracking: idea, outline, draft, review, scheduled, published",
+        "Hashtag and topic tag suggestions for discoverability",
+        "Integration hooks for Buffer/Typefully/manual posting"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "referral-network",
+      "title": "Referral partner network manager",
+      "description": "Track and nurture referral relationships with complementary service providers who can send qualified leads",
+      "acceptance": [
+        "Partner profiles: name, company, services offered, referral agreement terms",
+        "Partner categories: backend developers, branding agencies, marketing agencies, product managers",
+        "Referral tracking: referred by, referred to, outcome, commission if applicable",
+        "Partner touchpoint reminders to maintain relationships (coffee chats, check-ins)",
+        "Two-way referral history shows given and received referrals",
+        "Partner satisfaction notes and fit scoring",
+        "Warm intro request templates for asking partners to connect you with prospects",
+        "Annual referral revenue report by partner",
+        "Partner appreciation tracking (gifts, thank you notes, reciprocal referrals)"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "daily-prospecting",
+      "title": "Daily prospecting routine dashboard",
+      "description": "Gamified daily dashboard that guides solo operators through consistent prospecting activities with clear metrics",
+      "acceptance": [
+        "Daily activity goals: 10 new prospects researched, 15 personalized outreaches sent, 5 follow-ups",
+        "Progress rings show completion percentage for each activity type",
+        "Today's focus queue surfaces highest priority actions: hot leads, stale deals, scheduled follow-ups",
+        "Quick action buttons for common tasks: log call, send follow-up, add prospect",
+        "Streak counter for consecutive prospecting days with milestone celebrations",
+        "Weekly scorecard shows: new prospects, outreach volume, replies received, meetings booked, proposals sent",
+        "Time blocking suggestions based on prospect response patterns",
+        "Morning briefing email summarizes today's priorities",
+        "End-of-day reflection prompt captures wins and learnings"
+      ],
+      "priority": "high",
+      "passes": false
+    },
+    {
+      "id": "analytics-insights",
+      "title": "Conversion analytics and insights",
+      "description": "Comprehensive analytics to understand what's working in prospecting efforts and optimize for higher conversion",
+      "acceptance": [
+        "Funnel visualization: prospects → qualified → meeting → proposal → won",
+        "Conversion rates calculated between each funnel stage",
+        "Channel attribution: which discovery source produces best clients (LinkedIn, referral, inbound, cold email)",
+        "ICP performance analysis: which ideal client profiles convert best",
+        "Outreach template leaderboard: best performing subject lines and sequences",
+        "Time-to-close analysis by deal size and client type",
+        "Monthly trends: pipeline growth, activity volume, win rate",
+        "Revenue attribution to specific prospecting activities",
+        "Exportable reports for quarterly business review"
+      ],
+      "priority": "medium",
+      "passes": false
+    },
+    {
+      "id": "mobile-capture",
+      "title": "Mobile-first prospect capture",
+      "description": "PWA optimized for quick prospect capture and touchpoint logging while networking or on the go",
+      "acceptance": [
+        "Valid web app manifest with Prospect branding installable on iOS and Android",
+        "Quick-add prospect form: name, company, email, context note, photo of business card",
+        "Business card OCR extracts contact details automatically",
+        "Voice memo recording for meeting notes with transcription",
+        "Offline support caches recent data and queues new entries for sync",
+        "Push notifications for follow-up reminders",
+        "Home screen widget shows today's priority actions",
+        "QR code scanner imports vCard contact details",
+        "Minimal data entry with smart defaults and autocomplete"
+      ],
+      "priority": "low",
+      "passes": false
+    }
+  ]
+}
